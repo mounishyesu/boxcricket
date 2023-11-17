@@ -58,8 +58,8 @@ class Constants {
   static Color blackColor = Colors.black;
   static Color transparentColor = Colors.transparent;
   static Color buttonTextColor = Colors.white;
-  static Image splashImage = Image.asset(
-    "assets/images/splash_logo.png",
+  static Image bgImage = Image.asset(
+    "assets/images/ball.png",
   );
   static Icon cameraIcon = Icon(Icons.camera_alt);
 }

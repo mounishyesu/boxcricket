@@ -52,7 +52,7 @@ class _TermsAndConditionsScreenState extends State<TermsAndConditionsScreen> {
           child: Column(
             children: [
               SizedBox(
-                height: MediaQuery.of(context).size.height * 0.2,
+                height: MediaQuery.of(context).size.height * 0.1,
               ),
               Center(
                   child: Text(Constants.termsAndConditions,
@@ -62,9 +62,25 @@ class _TermsAndConditionsScreenState extends State<TermsAndConditionsScreen> {
                         fontSize: Constants.welcomeTextSize),
                   )),
               Container(
-                width: MediaQuery.of(context).size.width*0.5,
+                margin: const EdgeInsets.all(20),
                 alignment: Alignment.center,
-                margin: const EdgeInsets.all(50),
+                width: 200,
+                height: 200,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Constants.blackColor
+                ),
+                child: Text("Box Cricket",style: TextStyle(fontSize: Constants.welcomeTextSize,color: Constants.whiteColor),),
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width*0.8,
+                alignment: Alignment.center,
+               /* decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage(Constants.bgImage.toString())
+                  )
+                ),*/
+                margin: const EdgeInsets.all(20),
                 child: Text("Me Team Lo Motham 11 Nunchi 15 Aatagaallu Thappanisari Undali"
                     "Me team Thappakunda Srikakulam Lo Edho Oka Mandalam Ki Sambandhinchi Aatagaallu Matramey Undali"
                     "Me Team Yokka Captain Poorthi Samacharam Kavali"
