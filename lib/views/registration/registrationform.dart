@@ -325,10 +325,10 @@ class _RegistrationFromScreenState extends State<RegistrationFromScreen> {
                         ),
                         DottedBorder(
                             child: IconButton(
-                          onPressed: () => imageDialog(),
-                          icon: Constants.cameraIcon,
-                          iconSize: 30,
-                        )),
+                                    onPressed: () => imageDialog(),
+                                    icon: Constants.cameraIcon,
+                                    iconSize: 30,
+                                  ),),
                       ],
                     ),
                     Column(

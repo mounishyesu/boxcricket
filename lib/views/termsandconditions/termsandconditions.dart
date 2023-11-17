@@ -62,15 +62,13 @@ class _TermsAndConditionsScreenState extends State<TermsAndConditionsScreen> {
                         fontSize: Constants.welcomeTextSize),
                   )),
               Container(
+                width: MediaQuery.of(context).size.width*0.5,
                 alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: Constants.blackColor,
-                  shape: BoxShape.circle,
-                ),
                 margin: const EdgeInsets.all(50),
-                height: 200,
-                width: 200,
-                child: Text("Box Cricket",style: TextStyle(color: Constants.whiteColor,fontSize: Constants.welcomeTextSize),),
+                child: Text("Me Team Lo Motham 11 Nunchi 15 Aatagaallu Thappanisari Undali"
+                    "Me team Thappakunda Srikakulam Lo Edho Oka Mandalam Ki Sambandhinchi Aatagaallu Matramey Undali"
+                    "Me Team Yokka Captain Poorthi Samacharam Kavali"
+                    "Me Team Lo Unna Prathi Aatagaadu Aadhar Number Kachithanga Undali",style: TextStyle(color: Constants.blackColor,fontSize: Constants.headerSize),),
               ),
               GestureDetector(
                 onTap: () => Get.to(const RegistrationForm()),
