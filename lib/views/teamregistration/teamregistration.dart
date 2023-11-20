@@ -98,6 +98,25 @@ class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Container(
+                  height: 50,
+                  alignment: Alignment.center,
+                  width: MediaQuery.of(context).size.width*1,
+                  decoration: BoxDecoration(
+                    color: Constants.blueColor,
+                    borderRadius: const BorderRadius.all(Radius.circular(20))
+                  ),
+                  child: Text('SEEKOL TEAM',style: TextStyle(fontSize: Constants.loginBtnTextSize,color: Constants.whiteColor),),
+                ),
+                SizedBox(
+                  height: Constants.gapBetweenFields,
+                ),
+                Container(
+                    alignment: Alignment.center,
+                    child: Text("You can add only 11 - 15 Team Players Only",style: TextStyle(fontSize: Constants.headerSize),)),
+                SizedBox(
+                  height: Constants.gapBetweenFields1,
+                ),
                 Text(
                   Constants.playerName,
                   style: TextStyle(fontSize: Constants.headerSize),
@@ -413,10 +432,10 @@ class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
                         height: Constants.gapBetweenFields,
                       ),
                       GestureDetector(
-                        onTap: ()=>imageDialog,
+                        onTap: ()=>imageDialog(),
                         child:  names.isEmpty?DottedBorder(
                           child: IconButton(
-                            onPressed: () => {},
+                            onPressed: () => imageDialog(),
                             icon: Constants.cameraIcon,
                             iconSize: 30,
                           ),
@@ -425,19 +444,6 @@ class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
                     ],
                   ),
                 ),
-                // SizedBox(
-                //   height: Constants.gapBetweenFields,
-                // ),
-                // Center(
-                //   child: SizedBox(
-                //     width: 150,
-                //     height: 150,
-                //     child: Container(
-                //       color: Colors.black,
-                //       child:  names.isEmpty?Container():Image.file(File(paths[0])),
-                //     ),
-                //   ),
-                // ),
                 SizedBox(
                   height: Constants.gapBetweenFields1,
                 ),

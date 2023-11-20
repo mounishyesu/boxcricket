@@ -64,8 +64,16 @@ class _RegistrationFromScreenState extends State<RegistrationFromScreen> {
   TextEditingController aadharNumController = TextEditingController();
   TextEditingController addressController = TextEditingController();
   TextEditingController panchayatController = TextEditingController();
-  List names = [], paths = [], baseImg = [];
-  File? image, selectedImage;
+  List names = [],
+      paths = [],
+      baseImg = [],
+      frontNames = [],
+      frontPaths = [],
+      backPaths = [],
+      frontbaseimg = [],
+      backbaseImg = [],
+      backNames = [];
+  File? image, selectedImage, frontSelectedImage, backSelectedImage;
 
   @override
   Widget build(BuildContext context) {
@@ -325,19 +333,17 @@ class _RegistrationFromScreenState extends State<RegistrationFromScreen> {
                           height: Constants.gapBetweenFields,
                         ),
                         GestureDetector(
-                          onTap: (){
-                            imageDialog();
-                          },
-                          child: names.isEmpty
+                          onTap: () => frontimageDialog(),
+                          child: frontNames.isEmpty
                               ? DottedBorder(
                                   child: IconButton(
-                                    onPressed: () => {},
+                                    onPressed: () => frontimageDialog(),
                                     icon: Constants.cameraIcon,
                                     iconSize: 30,
                                   ),
                                 )
                               : Image.file(
-                                  File(paths[0]),
+                                  File(frontPaths[0]),
                                   height: 150,
                                 ),
                         ),
@@ -353,17 +359,17 @@ class _RegistrationFromScreenState extends State<RegistrationFromScreen> {
                           height: Constants.gapBetweenFields,
                         ),
                         GestureDetector(
-                          onTap: () => imageDialog,
-                          child: names.isEmpty
+                          onTap: () => backimageDialog(),
+                          child: backNames.isEmpty
                               ? DottedBorder(
                                   child: IconButton(
-                                    onPressed: () => {},
+                                    onPressed: () => backimageDialog(),
                                     icon: Constants.cameraIcon,
                                     iconSize: 30,
                                   ),
                                 )
                               : Image.file(
-                                  File(paths[0]),
+                                  File(backPaths[0]),
                                   height: 150,
                                 ),
                         ),
@@ -379,11 +385,11 @@ class _RegistrationFromScreenState extends State<RegistrationFromScreen> {
                           height: Constants.gapBetweenFields,
                         ),
                         GestureDetector(
-                          onTap: () => imageDialog,
+                          onTap: () => imageDialog(),
                           child: names.isEmpty
                               ? DottedBorder(
                                   child: IconButton(
-                                    onPressed: () => {},
+                                    onPressed: () => imageDialog(),
                                     icon: Constants.cameraIcon,
                                     iconSize: 30,
                                   ),
@@ -721,6 +727,148 @@ class _RegistrationFromScreenState extends State<RegistrationFromScreen> {
     );
   }
 
+  frontimageDialog() {
+    return showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text(
+          "Add Photo!",
+        ),
+        content: SizedBox(
+          height: 130,
+          width: 50,
+          child: ListView(
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            children: [
+              GestureDetector(
+                  child: Card(
+                    color: Constants.darkgrey,
+                    child: const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text(
+                        "Take Photo",
+                        style: TextStyle(color: Colors.white),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                  onTap: () async {
+                    fronttakePhoto(ImageSource.camera);
+                    Get.back();
+                  }),
+              GestureDetector(
+                child: Card(
+                  color: Constants.darkgrey,
+                  child: const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text(
+                      "Choose From Gallery",
+                      style: TextStyle(color: Colors.white),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+                onTap: () {
+                  fronttakePhoto(ImageSource.gallery);
+                  Get.back();
+                },
+              ),
+              GestureDetector(
+                child: Card(
+                  color: Constants.buttonRed,
+                  child: const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text(
+                      "Cancel",
+                      style: TextStyle(color: Colors.white),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  backimageDialog() {
+    return showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text(
+          "Add Photo!",
+        ),
+        content: SizedBox(
+          height: 130,
+          width: 50,
+          child: ListView(
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            children: [
+              GestureDetector(
+                  child: Card(
+                    color: Constants.darkgrey,
+                    child: const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text(
+                        "Take Photo",
+                        style: TextStyle(color: Colors.white),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                  onTap: () async {
+                    backtakePhoto(ImageSource.camera);
+                    Get.back();
+                  }),
+              GestureDetector(
+                child: Card(
+                  color: Constants.darkgrey,
+                  child: const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text(
+                      "Choose From Gallery",
+                      style: TextStyle(color: Colors.white),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+                onTap: () {
+                  backtakePhoto(ImageSource.gallery);
+                  Get.back();
+                },
+              ),
+              GestureDetector(
+                child: Card(
+                  color: Constants.buttonRed,
+                  child: const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text(
+                      "Cancel",
+                      style: TextStyle(color: Colors.white),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   takePhoto(ImageSource source) async {
     names = [];
     paths = [];
@@ -751,6 +899,66 @@ class _RegistrationFromScreenState extends State<RegistrationFromScreen> {
           log(baseImg.toString());
           log(names.toString());
           log(paths.toString());
+        });
+      }
+    } catch (e) {
+      return e;
+    }
+  }
+
+  fronttakePhoto(ImageSource source) async {
+    frontNames = [];
+    frontPaths = [];
+    frontbaseimg = [];
+
+    final image =
+        await ImagePicker().pickImage(source: source, imageQuality: 50);
+
+    final File file = File(image!.path);
+
+    log(image.toString());
+    log(file.toString());
+
+    try {
+      if (image != null) {
+        setState(() {
+          frontSelectedImage = file;
+          String fileName = image.path.toString().split('/').last;
+          List<int> imageBytes = frontSelectedImage!.readAsBytesSync();
+          var imageB64 = base64Encode(imageBytes);
+          frontbaseimg.add(imageB64);
+          frontNames.add(fileName);
+          frontPaths.add(image.path.toString());
+        });
+      }
+    } catch (e) {
+      return e;
+    }
+  }
+
+  backtakePhoto(ImageSource source) async {
+    backNames = [];
+    backPaths = [];
+    backbaseImg = [];
+
+    final image =
+        await ImagePicker().pickImage(source: source, imageQuality: 50);
+
+    final File file = File(image!.path);
+
+    log(image.toString());
+    log(file.toString());
+
+    try {
+      if (image != null) {
+        setState(() {
+          backSelectedImage = file;
+          String fileName = image.path.toString().split('/').last;
+          List<int> imageBytes = backSelectedImage!.readAsBytesSync();
+          var imageB64 = base64Encode(imageBytes);
+          backbaseImg.add(imageB64);
+          backNames.add(fileName);
+          backPaths.add(image.path.toString());
         });
       }
     } catch (e) {
