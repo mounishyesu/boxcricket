@@ -140,6 +140,11 @@ class _OtpScreenState extends State<OtpScreen> {
                       ),
                       fillColor: Constants.textFieldFilledColor,
                       filled: true,
+                      enabledBorder: OutlineInputBorder(
+                          borderRadius:
+                          const BorderRadius.all(Radius.circular(20)),
+                          borderSide: BorderSide(
+                              color: Constants.textFieldFilledColor)),
                       focusedBorder: OutlineInputBorder(
                           borderRadius:
                               const BorderRadius.all(Radius.circular(20)),

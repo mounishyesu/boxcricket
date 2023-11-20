@@ -139,8 +139,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     }
                   else
                     {
-                      // sendOtpApiService(mobileNumberController.text.toString()),
-                      Get.to(const TermsAndConditions()),
+                      sendOtpApiService(mobileNumberController.text.toString()),
+                      // Get.to(const TermsAndConditions()),
                     }
                 },
                 child: Container(

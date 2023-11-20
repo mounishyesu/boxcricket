@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:boxcricket/views/pinsetup/setpin.dart';
 import 'package:boxcricket/views/widgets/constants.dart';
 import 'package:boxcricket/views/widgets/responsive.dart';
 import 'package:dotted_border/dotted_border.dart';
@@ -81,6 +82,7 @@ class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(Constants.teamregistrationHeader),
+        titleTextStyle: TextStyle(fontSize: Constants.loginBtnTextSize,color: Constants.blackColor),
         leading: IconButton(
           icon: Icon(
             Icons.arrow_circle_left_sharp,
@@ -101,19 +103,27 @@ class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
                 Container(
                   height: 50,
                   alignment: Alignment.center,
-                  width: MediaQuery.of(context).size.width*1,
+                  width: MediaQuery.of(context).size.width * 1,
                   decoration: BoxDecoration(
-                    color: Constants.blueColor,
-                    borderRadius: const BorderRadius.all(Radius.circular(20))
+                      color: Constants.blueColor,
+                      borderRadius:
+                          const BorderRadius.all(Radius.circular(20))),
+                  child: Text(
+                    'SEEKOL TEAM',
+                    style: TextStyle(
+                        fontSize: Constants.loginBtnTextSize,
+                        color: Constants.whiteColor),
                   ),
-                  child: Text('SEEKOL TEAM',style: TextStyle(fontSize: Constants.loginBtnTextSize,color: Constants.whiteColor),),
                 ),
                 SizedBox(
                   height: Constants.gapBetweenFields,
                 ),
                 Container(
                     alignment: Alignment.center,
-                    child: Text("You can add only 11 - 15 Team Players Only",style: TextStyle(fontSize: Constants.headerSize),)),
+                    child: Text(
+                      "You can add only 11 - 15 Team Players Only",
+                      style: TextStyle(fontSize: Constants.headerSize),
+                    )),
                 SizedBox(
                   height: Constants.gapBetweenFields1,
                 ),
@@ -432,14 +442,19 @@ class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
                         height: Constants.gapBetweenFields,
                       ),
                       GestureDetector(
-                        onTap: ()=>imageDialog(),
-                        child:  names.isEmpty?DottedBorder(
-                          child: IconButton(
-                            onPressed: () => imageDialog(),
-                            icon: Constants.cameraIcon,
-                            iconSize: 30,
-                          ),
-                        ):Image.file(File(paths[0]),height: 150,),
+                        onTap: () => imageDialog(),
+                        child: names.isEmpty
+                            ? DottedBorder(
+                                child: IconButton(
+                                  onPressed: () => imageDialog(),
+                                  icon: Constants.cameraIcon,
+                                  iconSize: 30,
+                                ),
+                              )
+                            : Image.file(
+                                File(paths[0]),
+                                height: 150,
+                              ),
                       ),
                     ],
                   ),
@@ -451,6 +466,7 @@ class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
                   onTap: () => {
                     log('Pressed Continue'),
                     log(shirtSizeDropdownValue),
+                    Get.to(const SetPin()),
                   },
                   child: Center(
                     child: Container(
@@ -550,7 +566,6 @@ class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
   }
 
   takePhoto(ImageSource source) async {
-
     names = [];
     paths = [];
     baseImg = [];

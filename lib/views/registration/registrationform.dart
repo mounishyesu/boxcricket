@@ -80,6 +80,7 @@ class _RegistrationFromScreenState extends State<RegistrationFromScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(Constants.registrationHeader),
+        titleTextStyle: TextStyle(fontSize: Constants.loginBtnTextSize,color: Constants.blackColor),
         leading: IconButton(
           icon: Icon(
             Icons.arrow_circle_left_sharp,
