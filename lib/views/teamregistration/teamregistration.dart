@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:boxcricket/views/teamregistration/teamregistration.dart';
 import 'package:boxcricket/views/widgets/constants.dart';
 import 'package:boxcricket/views/widgets/responsive.dart';
 import 'package:dotted_border/dotted_border.dart';
@@ -10,18 +9,18 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
-class RegistrationForm extends StatefulWidget {
-  const RegistrationForm({super.key});
+class TeamRegistration extends StatefulWidget {
+  const TeamRegistration({super.key});
 
   @override
-  State<RegistrationForm> createState() => _RegistrationFormState();
+  State<TeamRegistration> createState() => _TeamRegistrationState();
 }
 
-class _RegistrationFormState extends State<RegistrationForm> {
+class _TeamRegistrationState extends State<TeamRegistration> {
   @override
   Widget build(BuildContext context) {
     return Responsive(
-      mobile: const RegistrationFromScreen(),
+      mobile: const TeamRegistrationScreen(),
       desktop: Row(
         children: [
           Expanded(
@@ -30,7 +29,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
               children: [
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 1,
-                  child: const RegistrationFromScreen(),
+                  child: const TeamRegistrationScreen(),
                 ),
               ],
             ),
@@ -41,37 +40,47 @@ class _RegistrationFormState extends State<RegistrationForm> {
   }
 }
 
-class RegistrationFromScreen extends StatefulWidget {
-  const RegistrationFromScreen({super.key});
+class TeamRegistrationScreen extends StatefulWidget {
+  const TeamRegistrationScreen({super.key});
 
   @override
-  State<RegistrationFromScreen> createState() => _RegistrationFromScreenState();
+  State<TeamRegistrationScreen> createState() => _TeamRegistrationScreenState();
 }
 
-class _RegistrationFromScreenState extends State<RegistrationFromScreen> {
+class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
   String dropdownValue = "";
-  var mandalList = [
-    {"id": "1", "name": "Palasa"},
-    {"id": "2", "name": "Rajam"},
-    {"id": "3", "name": "Etcherla"},
-    {"id": "4", "name": "Ranastalam"},
-    {"id": "5", "name": "Pathapatnam"},
+  String specializationDropdownValue = "";
+  String jerseyDropdownValue = "";
+  String shirtSizeDropdownValue = "";
+  var specializationList = [
+    {"id": "1", "category": "Batsman"},
+    {"id": "2", "category": "Wicket Keepers"},
+    {"id": "3", "category": "Bowlers"},
+    {"id": "4", "category": "All Rounders"},
   ];
-  TextEditingController teamNameController = TextEditingController();
-  TextEditingController captainNameController = TextEditingController();
-  TextEditingController captainMobNumController = TextEditingController();
-  TextEditingController ageController = TextEditingController();
-  TextEditingController aadharNumController = TextEditingController();
-  TextEditingController addressController = TextEditingController();
-  TextEditingController panchayatController = TextEditingController();
+  var jerseyList = [
+    {"id": "1", "number": "36"},
+    {"id": "2", "number": "197"},
+    {"id": "3", "number": "108"},
+    {"id": "4", "number": "111"},
+  ];
+  var shirtSizeList = [
+    {"id": "1", "category": "M - Medium(38)"},
+    {"id": "2", "category": "L - Large(40)"},
+    {"id": "3", "category": "XL - Extra Large(42)"},
+    {"id": "4", "category": "XXL - Double Extra Large(44)"},
+  ];
   List names = [], paths = [], baseImg = [];
   File? image, selectedImage;
-
+  TextEditingController playerNameController = TextEditingController();
+  TextEditingController playerMobNumController = TextEditingController();
+  TextEditingController playerAgeController = TextEditingController();
+  TextEditingController playerAadharController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(Constants.registrationHeader),
+        title: Text(Constants.teamregistrationHeader),
         leading: IconButton(
           icon: Icon(
             Icons.arrow_circle_left_sharp,
@@ -90,7 +99,7 @@ class _RegistrationFromScreenState extends State<RegistrationFromScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  Constants.teamName,
+                  Constants.playerName,
                   style: TextStyle(fontSize: Constants.headerSize),
                 ),
                 SizedBox(
@@ -101,52 +110,7 @@ class _RegistrationFromScreenState extends State<RegistrationFromScreen> {
                       borderRadius: BorderRadius.all(Radius.circular(15))),
                   height: Constants.registrationTextFieldHeight,
                   child: TextField(
-                    controller: teamNameController,
-                    decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Constants.textFieldFilledColor,
-                        border: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Constants.textFieldFilledColor)),
-                        focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Constants.textFieldFilledColor)),
-                        enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Constants.textFieldFilledColor)),
-                        contentPadding:
-                            const EdgeInsets.only(top: 10, left: 10),
-                        hintText: Constants.registrationHintText,
-                        hintStyle:
-                            TextStyle(color: Constants.teamNameHintTextColor)),
-                    onChanged: (value) => {
-                      if (value.length > 6)
-                        {
-                          Get.defaultDialog(
-                              title: "Alert",
-                              middleText:
-                                  "Team Name Cannot Be More Than 6 Characters"),
-                          teamNameController.clear(),
-                        }
-                    },
-                  ),
-                ),
-                SizedBox(
-                  height: Constants.gapBetweenFields1,
-                ),
-                Text(
-                  Constants.captainName,
-                  style: TextStyle(fontSize: Constants.headerSize),
-                ),
-                SizedBox(
-                  height: Constants.gapBetweenFields,
-                ),
-                Container(
-                  decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(15))),
-                  height: Constants.registrationTextFieldHeight,
-                  child: TextField(
-                    controller: captainNameController,
+                    controller: playerNameController,
                     decoration: InputDecoration(
                       filled: true,
                       fillColor: Constants.textFieldFilledColor,
@@ -161,6 +125,49 @@ class _RegistrationFromScreenState extends State<RegistrationFromScreen> {
                               color: Constants.textFieldFilledColor)),
                       contentPadding: const EdgeInsets.only(top: 10, left: 10),
                     ),
+                    onChanged: (value) => {},
+                  ),
+                ),
+                SizedBox(
+                  height: Constants.gapBetweenFields1,
+                ),
+                Text(
+                  Constants.specialization,
+                  style: TextStyle(fontSize: Constants.headerSize),
+                ),
+                SizedBox(
+                  height: Constants.gapBetweenFields,
+                ),
+                Container(
+                  decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(15))),
+                  // height: ,
+                  child: DropdownButtonFormField(
+                    decoration: InputDecoration(
+                      hintText: Constants.specializationHintText,
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Constants.textFieldFilledColor)),
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Constants.textFieldFilledColor)),
+                      filled: true,
+                      fillColor: Constants.textFieldFilledColor,
+                    ),
+                    onChanged: (newValue) {
+                      setState(() {
+                        specializationDropdownValue = newValue.toString();
+                        log(specializationDropdownValue);
+                      });
+                    },
+                    items: specializationList.map((item) {
+                      return DropdownMenuItem<String>(
+                        value: item['id'],
+                        child: Text(
+                          item['category'].toString(),
+                        ),
+                      );
+                    }).toList(),
                   ),
                 ),
                 SizedBox(
@@ -173,7 +180,7 @@ class _RegistrationFromScreenState extends State<RegistrationFromScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          Constants.captainMobNum,
+                          Constants.playerMobNum,
                           style: TextStyle(fontSize: Constants.headerSize),
                         ),
                         SizedBox(
@@ -186,7 +193,7 @@ class _RegistrationFromScreenState extends State<RegistrationFromScreen> {
                                   BorderRadius.all(Radius.circular(15))),
                           height: Constants.registrationTextFieldHeight,
                           child: TextField(
-                            controller: captainMobNumController,
+                            controller: playerMobNumController,
                             keyboardType: TextInputType.phone,
                             decoration: InputDecoration(
                               filled: true,
@@ -210,7 +217,7 @@ class _RegistrationFromScreenState extends State<RegistrationFromScreen> {
                                     title: "Alert",
                                     middleText: "Enter Valid Mobile Number",
                                   ),
-                                  captainMobNumController.clear(),
+                                  playerMobNumController.clear(),
                                 }
                             },
                           ),
@@ -234,7 +241,7 @@ class _RegistrationFromScreenState extends State<RegistrationFromScreen> {
                                   BorderRadius.all(Radius.circular(15))),
                           height: Constants.registrationTextFieldHeight,
                           child: TextField(
-                            controller: ageController,
+                            controller: playerAgeController,
                             keyboardType: TextInputType.number,
                             decoration: InputDecoration(
                               filled: true,
@@ -258,7 +265,7 @@ class _RegistrationFromScreenState extends State<RegistrationFromScreen> {
                                     title: "Alert",
                                     middleText: "Enter Valid Age",
                                   ),
-                                  ageController.clear(),
+                                  playerAgeController.clear(),
                                 }
                             },
                           ),
@@ -271,7 +278,7 @@ class _RegistrationFromScreenState extends State<RegistrationFromScreen> {
                   height: Constants.gapBetweenFields1,
                 ),
                 Text(
-                  Constants.captainAadhar,
+                  Constants.playerAadhar,
                   style: TextStyle(fontSize: Constants.headerSize),
                 ),
                 SizedBox(
@@ -282,7 +289,7 @@ class _RegistrationFromScreenState extends State<RegistrationFromScreen> {
                       borderRadius: BorderRadius.all(Radius.circular(15))),
                   height: Constants.registrationTextFieldHeight,
                   child: TextField(
-                    controller: aadharNumController,
+                    controller: playerAadharController,
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                       filled: true,
@@ -299,172 +306,22 @@ class _RegistrationFromScreenState extends State<RegistrationFromScreen> {
                       contentPadding: const EdgeInsets.only(top: 10, left: 10),
                     ),
                     onChanged: (value) => {
+                      log(value.length.toString()),
                       if (value.length > 12)
                         {
                           Get.defaultDialog(
                               title: "Alert",
                               middleText: "Enter Valid Aadhar Number"),
-                          aadharNumController.clear(),
+                          playerAadharController.clear(),
                         }
                     },
                   ),
                 ),
                 SizedBox(
-                  height: Constants.gapBetweenFields1,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Column(
-                      children: [
-                        Text(
-                          Constants.aadharFrontside,
-                          style: TextStyle(fontSize: Constants.subHeaderSize),
-                        ),
-                        SizedBox(
-                          height: Constants.gapBetweenFields,
-                        ),
-                        GestureDetector(
-                          onTap: (){
-                            imageDialog();
-                          },
-                          child: names.isEmpty
-                              ? DottedBorder(
-                                  child: IconButton(
-                                    onPressed: () => {},
-                                    icon: Constants.cameraIcon,
-                                    iconSize: 30,
-                                  ),
-                                )
-                              : Image.file(
-                                  File(paths[0]),
-                                  height: 150,
-                                ),
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Text(
-                          Constants.aadharBackside,
-                          style: TextStyle(fontSize: Constants.subHeaderSize),
-                        ),
-                        SizedBox(
-                          height: Constants.gapBetweenFields,
-                        ),
-                        GestureDetector(
-                          onTap: () => imageDialog,
-                          child: names.isEmpty
-                              ? DottedBorder(
-                                  child: IconButton(
-                                    onPressed: () => {},
-                                    icon: Constants.cameraIcon,
-                                    iconSize: 30,
-                                  ),
-                                )
-                              : Image.file(
-                                  File(paths[0]),
-                                  height: 150,
-                                ),
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Text(
-                          Constants.profilePic,
-                          style: TextStyle(fontSize: Constants.subHeaderSize),
-                        ),
-                        SizedBox(
-                          height: Constants.gapBetweenFields,
-                        ),
-                        GestureDetector(
-                          onTap: () => imageDialog,
-                          child: names.isEmpty
-                              ? DottedBorder(
-                                  child: IconButton(
-                                    onPressed: () => {},
-                                    icon: Constants.cameraIcon,
-                                    iconSize: 30,
-                                  ),
-                                )
-                              : Image.file(
-                                  File(paths[0]),
-                                  height: 150,
-                                ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: Constants.gapBetweenFields1,
-                ),
-                Text(
-                  Constants.address,
-                  style: TextStyle(fontSize: Constants.headerSize),
-                ),
-                SizedBox(
                   height: Constants.gapBetweenFields,
                 ),
-                Container(
-                  decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(15))),
-                  height: Constants.registrationAddressTextFieldHeight,
-                  child: TextField(
-                    controller: addressController,
-                    maxLines: 3,
-                    minLines: 1,
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: Constants.textFieldFilledColor,
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Constants.textFieldFilledColor)),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Constants.textFieldFilledColor)),
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Constants.textFieldFilledColor)),
-                      contentPadding: const EdgeInsets.only(top: 10, left: 10),
-                    ),
-                  ),
-                ),
                 Text(
-                  Constants.panchayathi,
-                  style: TextStyle(fontSize: Constants.headerSize),
-                ),
-                SizedBox(
-                  height: Constants.gapBetweenFields,
-                ),
-                Container(
-                  decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(15))),
-                  height: Constants.registrationTextFieldHeight,
-                  child: TextField(
-                    controller: panchayatController,
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: Constants.textFieldFilledColor,
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Constants.textFieldFilledColor)),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Constants.textFieldFilledColor)),
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Constants.textFieldFilledColor)),
-                      contentPadding: const EdgeInsets.only(top: 10, left: 10),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: Constants.gapBetweenFields1,
-                ),
-                Text(
-                  Constants.mandal,
+                  Constants.tshirtSize,
                   style: TextStyle(fontSize: Constants.headerSize),
                 ),
                 SizedBox(
@@ -487,15 +344,56 @@ class _RegistrationFromScreenState extends State<RegistrationFromScreen> {
                     ),
                     onChanged: (newValue) {
                       setState(() {
-                        dropdownValue = newValue.toString();
-                        log(dropdownValue);
+                        specializationDropdownValue = newValue.toString();
+                        log(specializationDropdownValue);
                       });
                     },
-                    items: mandalList.map((item) {
+                    items: shirtSizeList.map((item) {
                       return DropdownMenuItem<String>(
                         value: item['id'],
                         child: Text(
-                          item['name'].toString(),
+                          item['category'].toString(),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ),
+                SizedBox(
+                  height: Constants.gapBetweenFields,
+                ),
+                Text(
+                  Constants.jerseyNumber,
+                  style: TextStyle(fontSize: Constants.headerSize),
+                ),
+                SizedBox(
+                  height: Constants.gapBetweenFields,
+                ),
+                Container(
+                  decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(15))),
+                  // height: ,
+                  child: DropdownButtonFormField(
+                    decoration: InputDecoration(
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Constants.textFieldFilledColor)),
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Constants.textFieldFilledColor)),
+                      filled: true,
+                      fillColor: Constants.textFieldFilledColor,
+                    ),
+                    onChanged: (newValue) {
+                      setState(() {
+                        jerseyDropdownValue = newValue.toString();
+                        log(jerseyDropdownValue);
+                      });
+                    },
+                    items: jerseyList.map((item) {
+                      return DropdownMenuItem<String>(
+                        value: item['id'],
+                        child: Text(
+                          item['number'].toString(),
                         ),
                       );
                     }).toList(),
@@ -504,125 +402,49 @@ class _RegistrationFromScreenState extends State<RegistrationFromScreen> {
                 SizedBox(
                   height: Constants.gapBetweenFields1,
                 ),
+                Center(
+                  child: Column(
+                    children: [
+                      Text(
+                        Constants.profilePic,
+                        style: TextStyle(fontSize: Constants.subHeaderSize),
+                      ),
+                      SizedBox(
+                        height: Constants.gapBetweenFields,
+                      ),
+                      GestureDetector(
+                        onTap: ()=>imageDialog,
+                        child:  names.isEmpty?DottedBorder(
+                          child: IconButton(
+                            onPressed: () => {},
+                            icon: Constants.cameraIcon,
+                            iconSize: 30,
+                          ),
+                        ):Image.file(File(paths[0]),height: 150,),
+                      ),
+                    ],
+                  ),
+                ),
+                // SizedBox(
+                //   height: Constants.gapBetweenFields,
+                // ),
+                // Center(
+                //   child: SizedBox(
+                //     width: 150,
+                //     height: 150,
+                //     child: Container(
+                //       color: Colors.black,
+                //       child:  names.isEmpty?Container():Image.file(File(paths[0])),
+                //     ),
+                //   ),
+                // ),
+                SizedBox(
+                  height: Constants.gapBetweenFields1,
+                ),
                 GestureDetector(
                   onTap: () => {
-                    Get.to(const TeamRegistration()),
-
-                    // if (teamNameController.text.isEmpty ||
-                    //     teamNameController.text.length < 3)
-                    //   {
-                    //     Get.snackbar("Alert", Constants.loginAlertMsg,
-                    //         overlayBlur: 5,
-                    //         titleText: Text(
-                    //           'Alert',
-                    //           style: TextStyle(
-                    //               fontWeight: FontWeight.bold,
-                    //               fontSize: Constants.headerSize),
-                    //         ),
-                    //         messageText:
-                    //             Text(Constants.registrationTeamNameAlertMsg)),
-                    //   }
-                    // else if (captainNameController.text.isEmpty ||
-                    //     captainNameController.text.length < 3)
-                    //   {
-                    //     Get.snackbar("Alert", Constants.loginAlertMsg,
-                    //         overlayBlur: 5,
-                    //         titleText: Text(
-                    //           'Alert',
-                    //           style: TextStyle(
-                    //               fontWeight: FontWeight.bold,
-                    //               fontSize: Constants.headerSize),
-                    //         ),
-                    //         messageText:
-                    //             Text(Constants.registrationCapNameAlertMsg)),
-                    //   }
-                    // else if (captainMobNumController.text.isEmpty ||
-                    //     captainMobNumController.text.length < 10)
-                    //   {
-                    //     Get.snackbar("Alert", Constants.loginAlertMsg,
-                    //         overlayBlur: 5,
-                    //         titleText: Text(
-                    //           'Alert',
-                    //           style: TextStyle(
-                    //               fontWeight: FontWeight.bold,
-                    //               fontSize: Constants.headerSize),
-                    //         ),
-                    //         messageText: Text(Constants.loginAlertMsg)),
-                    //   }
-                    // else if (ageController.text.isEmpty ||
-                    //     ageController.text.length < 2)
-                    //   {
-                    //     Get.snackbar("Alert", Constants.ageAlertMsg,
-                    //         overlayBlur: 5,
-                    //         titleText: Text(
-                    //           'Alert',
-                    //           style: TextStyle(
-                    //               fontWeight: FontWeight.bold,
-                    //               fontSize: Constants.headerSize),
-                    //         ),
-                    //         messageText: Text(Constants.ageAlertMsg)),
-                    //   }
-                    // else if (aadharNumController.text.isEmpty ||
-                    //     aadharNumController.text.length < 12)
-                    //   {
-                    //     Get.snackbar("Alert", Constants.aadharAlertMsg,
-                    //         overlayBlur: 5,
-                    //         titleText: Text(
-                    //           'Alert',
-                    //           style: TextStyle(
-                    //               fontWeight: FontWeight.bold,
-                    //               fontSize: Constants.headerSize),
-                    //         ),
-                    //         messageText: Text(Constants.aadharAlertMsg)),
-                    //   }
-                    // else if (addressController.text.isEmpty ||
-                    //     addressController.text.length < 8)
-                    //   {
-                    //     Get.snackbar("Alert", Constants.addressAlertMsg,
-                    //         overlayBlur: 5,
-                    //         titleText: Text(
-                    //           'Alert',
-                    //           style: TextStyle(
-                    //               fontWeight: FontWeight.bold,
-                    //               fontSize: Constants.headerSize),
-                    //         ),
-                    //         messageText: Text(Constants.addressAlertMsg)),
-                    //   }
-                    // else if (panchayatController.text.isEmpty)
-                    //   {
-                    //     Get.snackbar("Alert", Constants.panchayatAlertMsg,
-                    //         overlayBlur: 5,
-                    //         titleText: Text(
-                    //           'Alert',
-                    //           style: TextStyle(
-                    //               fontWeight: FontWeight.bold,
-                    //               fontSize: Constants.headerSize),
-                    //         ),
-                    //         messageText: Text(Constants.panchayatAlertMsg)),
-                    //   }
-                    // else if (dropdownValue.isEmpty)
-                    //   {
-                    //     Get.snackbar("Alert", Constants.mandalAlertMsg,
-                    //         overlayBlur: 5,
-                    //         titleText: Text(
-                    //           'Alert',
-                    //           style: TextStyle(
-                    //               fontWeight: FontWeight.bold,
-                    //               fontSize: Constants.headerSize),
-                    //         ),
-                    //         messageText: Text(Constants.mandalAlertMsg)),
-                    //   }
-                    // else
-                    //   {
-                    //     log("---------------Details Entere---------------"),
-                    //     log(teamNameController.text.toString()),
-                    //     log(captainNameController.text.toString()),
-                    //     log(captainMobNumController.text.toString()),
-                    //     log(aadharNumController.text.toString()),
-                    //     log(addressController.text.toString()),
-                    //     log(panchayatController.text.toString()),
-                    //     log(dropdownValue.toString()),
-                    //   }
+                    log('Pressed Continue'),
+                    log(shirtSizeDropdownValue),
                   },
                   child: Center(
                     child: Container(
@@ -722,6 +544,7 @@ class _RegistrationFromScreenState extends State<RegistrationFromScreen> {
   }
 
   takePhoto(ImageSource source) async {
+
     names = [];
     paths = [];
     baseImg = [];

@@ -1,15 +1,11 @@
-import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 
 class URLS {
-  // static const String BASE_URL = 'https://gopauatservices.isa.ae/api';
 
-  static const String BASE_URL = 'https://gopauatservices.isa.ae/api';
-
-
-
-  static const String BASE_URL1 = 'https://gopauatservices.isa.ae';
+  static const String BASE_URL = 'https://vinsretail.com/api/Users';
 
 }
 
@@ -20,34 +16,13 @@ class Headers1 {
 }
 
 class ApiService {
-  static Future login(username, password) async {
-    try {
-      final response = await http.post(
-        Uri.parse('${URLS.BASE_URL1}/asms2011mobtoken'),
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-        encoding: Encoding.getByName('utf-8'),
-        body: {
-          "username": username,
-          "password": password,
-          "grant_type": "password"
-        },
-      );
-      print('${URLS.BASE_URL1}/asms2011mobtoken');
-      print(response.statusCode);
-      return response;
-    } catch (e) {
-      return e;
-    }
-  }
 
-  static Future post(url, body, token) async {
+  static Future otpPostCall(url, body,) async {
     try {
       final response = await http.post(Uri.parse('${URLS.BASE_URL}/${url}'),
           headers: {
             "Content-type": "application/json",
-            "Authorization": "Bearer " + token
+            'x-api-key': 'vinsretail_grocery'
           },
           body: body);
       print(HttpHeaders.requestHeaders);
@@ -57,6 +32,36 @@ class ApiService {
     } catch (e) {
       return e;
     }
+  }
+
+  static Future<String> postCall(String url, Map<String, dynamic> body) async {
+    try {
+      final encodedBody = body.map((key, value) =>
+          MapEntry(key, value is List ? value.join(',') : value));
+      // log('try......');
+      final Uri path = Uri.parse('${URLS.BASE_URL}/$url');
+      // log(path.toString());
+      final response = await post(path,
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'x-api-key': 'vinsretail_grocery'
+          },
+          body: encodedBody);
+      if (response.statusCode == 200) {
+        // log(response.body.toString());
+        return response.body;
+      }
+      // print(path.toString());
+      // log(response.body);
+
+      // return response.body;
+
+      // }
+    } catch (e) {
+      log('something went.......');
+      log('registration Error: $e');
+    }
+    return "";
   }
 
   static Future postAttachment(url, body, token) async {

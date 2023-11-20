@@ -1,10 +1,14 @@
+import 'dart:convert';
 import 'dart:developer';
 
+import 'package:boxcricket/views/apiservice/restapi.dart';
 import 'package:boxcricket/views/termsandconditions/termsandconditions.dart';
 import 'package:boxcricket/views/widgets/constants.dart';
 import 'package:boxcricket/views/widgets/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import '../otp/otpscreen.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -50,9 +54,9 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: GestureDetector(
-          onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      body: GestureDetector(
+        onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+        child: SingleChildScrollView(
           child: Column(
             children: [
               SizedBox(
@@ -135,6 +139,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     }
                   else
                     {
+                      // sendOtpApiService(mobileNumberController.text.toString()),
                       Get.to(const TermsAndConditions()),
                     }
                 },
@@ -178,5 +183,25 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
+  }
+
+  sendOtpApiService(mobNumber) async {
+    var requestBody = jsonEncode({"mobile_number": mobNumber});
+    await ApiService.otpPostCall("MobileOtp", requestBody).then((success) async {
+      String data = success.body; //store response as string
+      var responseBody = json.decode(data);
+      print(responseBody);
+      print(responseBody['status']);
+      print(responseBody['data']['OTP']);
+      print(responseBody['message']);
+      if(responseBody['status'] == true && responseBody['data']['OTP']!=""){
+        Get.snackbar('Alert', responseBody['message'],messageText:Text(responseBody['message'],style: const TextStyle(fontWeight: FontWeight.w500),), );
+        Future.delayed(const Duration(seconds: 2), () async {
+          Get.to(const OtpVerification(),arguments: responseBody);
+        });
+      }else{
+        Get.snackbar('Alert',Constants.someThingWentWrong);
+      }
+    });
   }
 }

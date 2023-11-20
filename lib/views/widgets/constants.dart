@@ -4,10 +4,16 @@ class Constants {
   static Color kPrimaryColor = Color(0xFF6F35A5);
   static Color kPrimaryLightColor = Color(0xFFF1E6FF);
   static String teamName = "Team Name*";
+  static String playerName = "Player Name*";
   static String captainName = "Captain Name*";
+  static String specialization = "Specialization*";
   static String captainMobNum = "Captain Mobile No.*";
+  static String playerMobNum = "Player Mobile No.*";
   static String captainAge = "Age*";
   static String captainAadhar = "Captain Aadhar*";
+  static String playerAadhar = "Player Aadhar*";
+  static String tshirtSize = "T Shirt Size";
+  static String jerseyNumber = "Jersey Number";
   static String aadharFrontside = "Aadhar Front";
   static String aadharBackside = "Aadhar Back";
   static String profilePic = "Profile Picture";
@@ -18,10 +24,19 @@ class Constants {
   static String registrationHintText = "Only 6 Alphabets";
   static String welcomeHeader = "Welcome!";
   static String newTeam = "NEW TEAM";
+  static String seconds = "seconds";
+  static String reqOTP = "Request OTP in";
+  static String submitButton = "Submit";
+  static String resendCode = "Resend Code";
   static String cricketFan = "I'M A CRICKET FAN";
   static String termsAndConditions = "Terms & Conditions";
+  static String registrationHeader = "Registration";
+  static String teamregistrationHeader = "Team Registration";
   static String loginHintText = "Enter Your Mobile Number";
   static String loginAlertMsg = "Enter Valid Mobile Number";
+  static String tncAlertMsg = "Please accept Terms & Conditions";
+  static String otpAlertMsg = "Enter Valid OTP";
+  static String invalidOtp = "OTP entered is invalid";
   static String aadharAlertMsg = "Enter Valid Aadhar Number";
   static String ageAlertMsg = "Enter Valid Age";
   static String addressAlertMsg = "Enter Valid Address(Minimum 8 characters)";
@@ -30,6 +45,15 @@ class Constants {
   static String registrationTeamNameAlertMsg = "Team Name Must Be Atleast 3 Characters";
   static String registrationCapNameAlertMsg = "Captain Name Required(atleast 3 characters)";
   static String continueButton = "Continue";
+  static String verificationHeader = "Verification";
+  static String smsHeader = "We sent you an SMS code";
+  static String specializationHintText = "Batsman";
+  static String onNumber = "On Number";
+  static String otpHint = "Enter OTP";
+  static String someThingWentWrong = "Something went wrong! Please try later";
+  static String successText = "Success";
+  static String otpVerified = "OTP Verified Successfully";
+  static String acceptTnC = "I accept Terms & Conditions";
   static double defaultPadding = 16.0;
   static double headerSize = 16.0;
   static double welcomeTextSize = 24.0;
@@ -56,8 +80,10 @@ class Constants {
   static Color disablecolor = Colors.black26;
   static Color whiteColor = Colors.white;
   static Color blackColor = Colors.black;
+  static Color blueColor = Colors.blue;
   static Color transparentColor = Colors.transparent;
   static Color buttonTextColor = Colors.white;
+  static Color greenAccent = Colors.greenAccent;
   static Image bgImage = Image.asset(
     "assets/images/ball.png",
   );
