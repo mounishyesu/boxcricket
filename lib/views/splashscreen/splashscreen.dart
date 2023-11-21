@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:boxcricket/views/login/loginpage.dart';
+import 'package:boxcricket/views/signup/signup.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -52,7 +52,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
 
 
   void _navigateToLogin() {
-    Timer(const Duration(seconds: 3), () => Get.to(const LoginPage()));
+    Timer(const Duration(seconds: 3), () => Get.to(const SingnUpPage()));
   }
 
   @override

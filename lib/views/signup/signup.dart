@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:boxcricket/views/apiservice/restapi.dart';
-import 'package:boxcricket/views/termsandconditions/termsandconditions.dart';
 import 'package:boxcricket/views/widgets/constants.dart';
 import 'package:boxcricket/views/widgets/responsive.dart';
 import 'package:flutter/material.dart';
@@ -10,18 +9,18 @@ import 'package:get/get.dart';
 
 import '../otp/otpscreen.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class SingnUpPage extends StatefulWidget {
+  const SingnUpPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<SingnUpPage> createState() => _SingnUpPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _SingnUpPageState extends State<SingnUpPage> {
   @override
   Widget build(BuildContext context) {
     return Responsive(
-      mobile: const LoginScreen(),
+      mobile: const SingnUpScreen(),
       desktop: Row(
         children: [
           Expanded(
@@ -30,7 +29,7 @@ class _LoginPageState extends State<LoginPage> {
               children: [
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 1,
-                  child: const LoginScreen(),
+                  child: const SingnUpScreen(),
                 ),
               ],
             ),
@@ -41,14 +40,14 @@ class _LoginPageState extends State<LoginPage> {
   }
 }
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class SingnUpScreen extends StatefulWidget {
+  const SingnUpScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<SingnUpScreen> createState() => _SingnUpScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _SingnUpScreenState extends State<SingnUpScreen> {
   TextEditingController mobileNumberController = TextEditingController();
 
   @override

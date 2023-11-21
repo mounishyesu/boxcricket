@@ -49,7 +49,6 @@ class TeamRegistrationScreen extends StatefulWidget {
 }
 
 class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
-  String dropdownValue = "";
   String specializationDropdownValue = "";
   String jerseyDropdownValue = "";
   String shirtSizeDropdownValue = "";
@@ -82,7 +81,8 @@ class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(Constants.teamregistrationHeader),
-        titleTextStyle: TextStyle(fontSize: Constants.loginBtnTextSize,color: Constants.blackColor),
+        titleTextStyle: TextStyle(
+            fontSize: Constants.loginBtnTextSize, color: Constants.blackColor),
         leading: IconButton(
           icon: Icon(
             Icons.arrow_circle_left_sharp,
@@ -173,7 +173,7 @@ class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
                   // height: ,
                   child: DropdownButtonFormField(
                     decoration: InputDecoration(
-                      hintText: Constants.specializationHintText,
+                      // hintText: Constants.specializationHintText,
                       focusedBorder: OutlineInputBorder(
                           borderSide: BorderSide(
                               color: Constants.textFieldFilledColor)),
@@ -373,8 +373,8 @@ class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
                     ),
                     onChanged: (newValue) {
                       setState(() {
-                        specializationDropdownValue = newValue.toString();
-                        log(specializationDropdownValue);
+                        shirtSizeDropdownValue = newValue.toString();
+                        log(shirtSizeDropdownValue);
                       });
                     },
                     items: shirtSizeList.map((item) {
@@ -462,32 +462,116 @@ class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
                 SizedBox(
                   height: Constants.gapBetweenFields1,
                 ),
-                GestureDetector(
-                  onTap: () => {
-                    log('Pressed Continue'),
-                    log(shirtSizeDropdownValue),
-                    Get.to(const SetPin()),
-                  },
-                  child: Center(
-                    child: Container(
-                      alignment: Alignment.center,
-                      width: MediaQuery.of(context).size.width * 0.75,
-                      height: Constants.registrationTextFieldHeight,
-                      decoration: BoxDecoration(
-                          color: Constants.buttonRed,
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(10))),
-                      child: Text(
-                        Constants.continueButton,
-                        style: TextStyle(
-                            color: Constants.buttonTextColor,
-                            fontSize: Constants.loginBtnTextSize),
-                      ),
-                    ),
-                  ),
-                ),
               ],
             ),
+          ),
+        ),
+      ),
+      bottomNavigationBar: GestureDetector(
+        onTap: () => {
+          if(playerNameController.text.isEmpty){
+            Get.snackbar("Alert", Constants.registrationPlayerNameAlertMsg,
+                overlayBlur: 5,
+                backgroundColor: Constants.whiteColor,
+                titleText: Text(
+                  'Alert',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: Constants.headerSize),
+                ),
+                messageText: Text(Constants.registrationPlayerNameAlertMsg)),
+          } else if (specializationDropdownValue.isEmpty)
+            {
+              Get.snackbar("Alert", Constants.specializationAlertMsg,
+                  overlayBlur: 5,
+                  backgroundColor: Constants.whiteColor,
+                  titleText: Text(
+                    'Alert',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: Constants.headerSize),
+                  ),
+                  messageText: Text(Constants.specializationAlertMsg)),
+            } else if (playerMobNumController.text.isEmpty ||
+                playerMobNumController.text.length < 10)
+              {
+                Get.snackbar("Alert", Constants.loginAlertMsg,
+                    overlayBlur: 5,
+                    backgroundColor: Constants.whiteColor,
+                    titleText: Text(
+                      'Alert',
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: Constants.headerSize),
+                    ),
+                    messageText: Text(Constants.loginAlertMsg)),
+              }else if (playerAgeController.text.isEmpty || playerAgeController.text.length < 2)
+                {
+                  Get.snackbar("Alert", Constants.ageAlertMsg,
+                      overlayBlur: 5,
+                      backgroundColor: Constants.whiteColor,
+                      titleText: Text(
+                        'Alert',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: Constants.headerSize),
+                      ),
+                      messageText: Text(Constants.ageAlertMsg)),
+                }else if (playerAadharController.text.isEmpty ||
+                    playerAadharController.text.length < 12)
+                  {
+                    Get.snackbar("Alert", Constants.aadharAlertMsg,
+                        overlayBlur: 5,
+                        backgroundColor: Constants.whiteColor,
+                        titleText: Text(
+                          'Alert',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: Constants.headerSize),
+                        ),
+                        messageText: Text(Constants.aadharAlertMsg)),
+                  }else if (shirtSizeDropdownValue.isEmpty)
+                    {
+                      Get.snackbar("Alert", Constants.shirtAlertMsg,
+                          overlayBlur: 5,
+                          backgroundColor: Constants.whiteColor,
+                          titleText: Text(
+                            'Alert',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: Constants.headerSize),
+                          ),
+                          messageText: Text(Constants.shirtAlertMsg)),
+                    }else if (jerseyDropdownValue.isEmpty)
+                    {
+                      Get.snackbar("Alert", Constants.jerseyAlertMsg,
+                          overlayBlur: 5,
+                          backgroundColor: Constants.whiteColor,
+                          titleText: Text(
+                            'Alert',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: Constants.headerSize),
+                          ),
+                          messageText: Text(Constants.jerseyAlertMsg)),
+                    }else{
+            log('Pressed Continue'),
+            log(shirtSizeDropdownValue),
+            Get.to(const SetPin()),
+          }
+        },
+        child: Container(
+          margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          alignment: Alignment.center,
+          height: Constants.registrationTextFieldHeight,
+          decoration: BoxDecoration(
+              color: Constants.buttonRed,
+              borderRadius: const BorderRadius.all(Radius.circular(10))),
+          child: Text(
+            Constants.saveButton,
+            style: TextStyle(
+                color: Constants.buttonTextColor,
+                fontSize: Constants.loginBtnTextSize),
           ),
         ),
       ),

@@ -38,6 +38,7 @@ dependencies:
   get: ^4.6.5
   dotted_border: ^2.1.0
   image_picker: ^1.0.4
+  local_auth: ^2.1.7
 
 dev_dependencies:
   flutter_test:

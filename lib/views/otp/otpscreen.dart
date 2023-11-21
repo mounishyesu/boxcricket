@@ -142,14 +142,14 @@ class _OtpScreenState extends State<OtpScreen> {
                       filled: true,
                       enabledBorder: OutlineInputBorder(
                           borderRadius:
-                          const BorderRadius.all(Radius.circular(20)),
+                              const BorderRadius.all(Radius.circular(20)),
                           borderSide: BorderSide(
                               color: Constants.textFieldFilledColor)),
                       focusedBorder: OutlineInputBorder(
                           borderRadius:
                               const BorderRadius.all(Radius.circular(20)),
-                          borderSide:
-                              BorderSide(color: Constants.textFieldFilledColor)),
+                          borderSide: BorderSide(
+                              color: Constants.textFieldFilledColor)),
                       hintText: Constants.otpHint,
                     ),
                   ),
@@ -159,40 +159,48 @@ class _OtpScreenState extends State<OtpScreen> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    // log(argumentData.toString());
-                    // log(otpController.text);
-                    // log(argumentData['data']['OTP'].toString());
-                    // if (otpController.text.isEmpty) {
-                    //   Get.snackbar("Alert", Constants.otpAlertMsg,
-                    //       overlayBlur: 5,
-                    //       titleText: Text(
-                    //         'Alert',
-                    //         style: TextStyle(
-                    //             fontWeight: FontWeight.bold,
-                    //             fontSize: Constants.headerSize),
-                    //       ),
-                    //       messageText: Text(Constants.otpAlertMsg),
-                    //       backgroundColor: Constants.whiteColor);
-                    // } else if (argumentData['data']['OTP'].toString() !=
-                    //     otpController.text) {
-                    //   Get.snackbar("Alert", Constants.invalidOtp,
-                    //       overlayBlur: 5,
-                    //       titleText: Text(
-                    //         'Alert',
-                    //         style: TextStyle(
-                    //             fontWeight: FontWeight.bold,
-                    //             fontSize: Constants.headerSize),
-                    //       ),
-                    //       messageText: Text(Constants.invalidOtp),
-                    //       backgroundColor: Constants.whiteColor);
-                    // } else {
-                    //   Get.defaultDialog(
-                    //       title: Constants.successText,
-                    //       middleText: Constants.otpVerified);
-                    //   Future.delayed(const Duration(seconds: 2), () async {
+                    log(argumentData.toString());
+                    log(otpController.text);
+                    log(argumentData['data']['OTP'].toString());
+                    if (otpController.text.isEmpty) {
+                      Get.snackbar("Alert", Constants.otpAlertMsg,
+                          overlayBlur: 5,
+                          titleText: Text(
+                            'Alert',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: Constants.headerSize),
+                          ),
+                          messageText: Text(Constants.otpAlertMsg),
+                          backgroundColor: Constants.whiteColor);
+                    } else if (argumentData['data']['OTP'].toString() !=
+                        otpController.text) {
+                      Get.snackbar("Alert", Constants.invalidOtp,
+                          overlayBlur: 5,
+                          titleText: Text(
+                            'Alert',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: Constants.headerSize),
+                          ),
+                          messageText: Text(Constants.invalidOtp),
+                          backgroundColor: Constants.whiteColor);
+                    } else {
+                      Get.snackbar("Alert", Constants.otpVerified,
+                          overlayBlur: 5,
+                          duration: const Duration(seconds: 2),
+                          titleText: Text(
+                            'Alert',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: Constants.headerSize),
+                          ),
+                          messageText: Text(Constants.otpVerified),
+                          backgroundColor: Constants.whiteColor);
+                      Future.delayed(const Duration(seconds: 2), () async {
                         Get.to(const TermsAndConditions());
-                    //   });
-                    // }
+                      });
+                    }
                   },
                   child: Container(
                     margin: const EdgeInsets.only(top: 30),
@@ -212,16 +220,19 @@ class _OtpScreenState extends State<OtpScreen> {
                   ),
                 ),
                 Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 20,vertical: 20),
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
                         '${Constants.reqOTP} $secondsRemaining ${Constants.seconds}',
-                        style: TextStyle(color: Constants.darkgrey,fontSize: Constants.textSize),
+                        style: TextStyle(
+                            color: Constants.darkgrey,
+                            fontSize: Constants.textSize),
                       ),
                       GestureDetector(
-                        onTap: (){
+                        onTap: () {
                           log('pressed');
                           log(enableResend.toString());
                           enableResend ? _resendCode() : null;
@@ -232,11 +243,16 @@ class _OtpScreenState extends State<OtpScreen> {
                           alignment: Alignment.center,
                           decoration: const BoxDecoration(
                               borderRadius:
-                              BorderRadius.all(Radius.circular(10))),
+                                  BorderRadius.all(Radius.circular(10))),
                           child: Text(
                             Constants.resendCode,
                             style: TextStyle(
-                                color: enableResend?Constants.blueColor:Constants.disablecolor,),
+                              decoration: TextDecoration.underline,
+                              height: 2,
+                              color: enableResend
+                                  ? Constants.blueColor
+                                  : Constants.disablecolor,
+                            ),
                           ),
                         ),
                       ),
@@ -262,17 +278,25 @@ class _OtpScreenState extends State<OtpScreen> {
 
   sendOtpApiService(mobNumber) async {
     var requestBody = jsonEncode({"mobile_number": mobNumber});
-    await ApiService.otpPostCall("MobileOtp", requestBody).then((success) async {
+    await ApiService.otpPostCall("MobileOtp", requestBody)
+        .then((success) async {
       String data = success.body; //store response as string
       var responseBody = json.decode(data);
       print(responseBody);
       print(responseBody['status']);
       print(responseBody['data']['OTP']);
       print(responseBody['message']);
-      if(responseBody['status'] == true && responseBody['data']['OTP']!=""){
-        Get.snackbar('Alert', responseBody['message'],messageText:Text(responseBody['message'],style: const TextStyle(fontWeight: FontWeight.w500),), );
-      }else{
-        Get.snackbar('Alert',Constants.someThingWentWrong);
+      if (responseBody['status'] == true && responseBody['data']['OTP'] != "") {
+        Get.snackbar(
+          'Alert',
+          responseBody['message'],
+          messageText: Text(
+            responseBody['message'],
+            style: const TextStyle(fontWeight: FontWeight.w500),
+          ),
+        );
+      } else {
+        Get.snackbar('Alert', Constants.someThingWentWrong);
       }
     });
   }

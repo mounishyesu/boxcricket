@@ -80,7 +80,8 @@ class _RegistrationFromScreenState extends State<RegistrationFromScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(Constants.registrationHeader),
-        titleTextStyle: TextStyle(fontSize: Constants.loginBtnTextSize,color: Constants.blackColor),
+        titleTextStyle: TextStyle(
+            fontSize: Constants.loginBtnTextSize, color: Constants.blackColor),
         leading: IconButton(
           icon: Icon(
             Icons.arrow_circle_left_sharp,
@@ -511,146 +512,186 @@ class _RegistrationFromScreenState extends State<RegistrationFromScreen> {
                 SizedBox(
                   height: Constants.gapBetweenFields1,
                 ),
-                GestureDetector(
-                  onTap: () => {
-                    Get.to(const TeamRegistration()),
-
-                    // if (teamNameController.text.isEmpty ||
-                    //     teamNameController.text.length < 3)
-                    //   {
-                    //     Get.snackbar("Alert", Constants.loginAlertMsg,
-                    //         overlayBlur: 5,
-                    //         titleText: Text(
-                    //           'Alert',
-                    //           style: TextStyle(
-                    //               fontWeight: FontWeight.bold,
-                    //               fontSize: Constants.headerSize),
-                    //         ),
-                    //         messageText:
-                    //             Text(Constants.registrationTeamNameAlertMsg)),
-                    //   }
-                    // else if (captainNameController.text.isEmpty ||
-                    //     captainNameController.text.length < 3)
-                    //   {
-                    //     Get.snackbar("Alert", Constants.loginAlertMsg,
-                    //         overlayBlur: 5,
-                    //         titleText: Text(
-                    //           'Alert',
-                    //           style: TextStyle(
-                    //               fontWeight: FontWeight.bold,
-                    //               fontSize: Constants.headerSize),
-                    //         ),
-                    //         messageText:
-                    //             Text(Constants.registrationCapNameAlertMsg)),
-                    //   }
-                    // else if (captainMobNumController.text.isEmpty ||
-                    //     captainMobNumController.text.length < 10)
-                    //   {
-                    //     Get.snackbar("Alert", Constants.loginAlertMsg,
-                    //         overlayBlur: 5,
-                    //         titleText: Text(
-                    //           'Alert',
-                    //           style: TextStyle(
-                    //               fontWeight: FontWeight.bold,
-                    //               fontSize: Constants.headerSize),
-                    //         ),
-                    //         messageText: Text(Constants.loginAlertMsg)),
-                    //   }
-                    // else if (ageController.text.isEmpty ||
-                    //     ageController.text.length < 2)
-                    //   {
-                    //     Get.snackbar("Alert", Constants.ageAlertMsg,
-                    //         overlayBlur: 5,
-                    //         titleText: Text(
-                    //           'Alert',
-                    //           style: TextStyle(
-                    //               fontWeight: FontWeight.bold,
-                    //               fontSize: Constants.headerSize),
-                    //         ),
-                    //         messageText: Text(Constants.ageAlertMsg)),
-                    //   }
-                    // else if (aadharNumController.text.isEmpty ||
-                    //     aadharNumController.text.length < 12)
-                    //   {
-                    //     Get.snackbar("Alert", Constants.aadharAlertMsg,
-                    //         overlayBlur: 5,
-                    //         titleText: Text(
-                    //           'Alert',
-                    //           style: TextStyle(
-                    //               fontWeight: FontWeight.bold,
-                    //               fontSize: Constants.headerSize),
-                    //         ),
-                    //         messageText: Text(Constants.aadharAlertMsg)),
-                    //   }
-                    // else if (addressController.text.isEmpty ||
-                    //     addressController.text.length < 8)
-                    //   {
-                    //     Get.snackbar("Alert", Constants.addressAlertMsg,
-                    //         overlayBlur: 5,
-                    //         titleText: Text(
-                    //           'Alert',
-                    //           style: TextStyle(
-                    //               fontWeight: FontWeight.bold,
-                    //               fontSize: Constants.headerSize),
-                    //         ),
-                    //         messageText: Text(Constants.addressAlertMsg)),
-                    //   }
-                    // else if (panchayatController.text.isEmpty)
-                    //   {
-                    //     Get.snackbar("Alert", Constants.panchayatAlertMsg,
-                    //         overlayBlur: 5,
-                    //         titleText: Text(
-                    //           'Alert',
-                    //           style: TextStyle(
-                    //               fontWeight: FontWeight.bold,
-                    //               fontSize: Constants.headerSize),
-                    //         ),
-                    //         messageText: Text(Constants.panchayatAlertMsg)),
-                    //   }
-                    // else if (dropdownValue.isEmpty)
-                    //   {
-                    //     Get.snackbar("Alert", Constants.mandalAlertMsg,
-                    //         overlayBlur: 5,
-                    //         titleText: Text(
-                    //           'Alert',
-                    //           style: TextStyle(
-                    //               fontWeight: FontWeight.bold,
-                    //               fontSize: Constants.headerSize),
-                    //         ),
-                    //         messageText: Text(Constants.mandalAlertMsg)),
-                    //   }
-                    // else
-                    //   {
-                    //     log("---------------Details Entere---------------"),
-                    //     log(teamNameController.text.toString()),
-                    //     log(captainNameController.text.toString()),
-                    //     log(captainMobNumController.text.toString()),
-                    //     log(aadharNumController.text.toString()),
-                    //     log(addressController.text.toString()),
-                    //     log(panchayatController.text.toString()),
-                    //     log(dropdownValue.toString()),
-                    //   }
-                  },
-                  child: Center(
-                    child: Container(
-                      alignment: Alignment.center,
-                      width: MediaQuery.of(context).size.width * 0.75,
-                      height: Constants.registrationTextFieldHeight,
-                      decoration: BoxDecoration(
-                          color: Constants.buttonRed,
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(10))),
-                      child: Text(
-                        Constants.continueButton,
-                        style: TextStyle(
-                            color: Constants.buttonTextColor,
-                            fontSize: Constants.loginBtnTextSize),
-                      ),
-                    ),
-                  ),
-                ),
               ],
             ),
+          ),
+        ),
+      ),
+      bottomNavigationBar: GestureDetector(
+        onTap: () => {
+          if (teamNameController.text.isEmpty ||
+              teamNameController.text.length < 3)
+            {
+              Get.snackbar("Alert", Constants.registrationTeamNameAlertMsg,
+                  backgroundColor: Constants.whiteColor,
+                  overlayBlur: 5,
+                  titleText: Text(
+                    'Alert',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: Constants.headerSize),
+                  ),
+                  messageText: Text(Constants.registrationTeamNameAlertMsg)),
+            }
+          else if (captainNameController.text.isEmpty ||
+              captainNameController.text.length < 3)
+            {
+              Get.snackbar("Alert", Constants.loginAlertMsg,
+                  overlayBlur: 5,
+                  backgroundColor: Constants.whiteColor,
+                  titleText: Text(
+                    'Alert',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: Constants.headerSize),
+                  ),
+                  messageText: Text(Constants.registrationCapNameAlertMsg)),
+            }
+          else if (captainMobNumController.text.isEmpty ||
+              captainMobNumController.text.length < 10)
+            {
+              Get.snackbar("Alert", Constants.loginAlertMsg,
+                  overlayBlur: 5,
+                  backgroundColor: Constants.whiteColor,
+                  titleText: Text(
+                    'Alert',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: Constants.headerSize),
+                  ),
+                  messageText: Text(Constants.loginAlertMsg)),
+            }
+          else if (ageController.text.isEmpty || ageController.text.length < 2)
+            {
+              Get.snackbar("Alert", Constants.ageAlertMsg,
+                  overlayBlur: 5,
+                  backgroundColor: Constants.whiteColor,
+                  titleText: Text(
+                    'Alert',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: Constants.headerSize),
+                  ),
+                  messageText: Text(Constants.ageAlertMsg)),
+            }
+          else if (aadharNumController.text.isEmpty ||
+              aadharNumController.text.length < 12)
+            {
+              Get.snackbar("Alert", Constants.aadharAlertMsg,
+                  overlayBlur: 5,
+                  backgroundColor: Constants.whiteColor,
+                  titleText: Text(
+                    'Alert',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: Constants.headerSize),
+                  ),
+                  messageText: Text(Constants.aadharAlertMsg)),
+            }
+          else if (frontNames.isEmpty)
+            {
+              Get.snackbar("Alert", Constants.aadharFrontAlertMsg,
+                  overlayBlur: 5,
+                  backgroundColor: Constants.whiteColor,
+                  titleText: Text(
+                    'Alert',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: Constants.headerSize),
+                  ),
+                  messageText: Text(Constants.aadharFrontAlertMsg)),
+            }
+          else if (backNames.isEmpty)
+            {
+              Get.snackbar("Alert", Constants.aadharBackAlertMsg,
+                  overlayBlur: 5,
+                  backgroundColor: Constants.whiteColor,
+                  titleText: Text(
+                    'Alert',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: Constants.headerSize),
+                  ),
+                  messageText: Text(Constants.aadharBackAlertMsg)),
+            }
+          else if (names.isEmpty)
+            {
+              Get.snackbar("Alert", Constants.profileAlertMsg,
+                  overlayBlur: 5,
+                  backgroundColor: Constants.whiteColor,
+                  titleText: Text(
+                    'Alert',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: Constants.headerSize),
+                  ),
+                  messageText: Text(Constants.profileAlertMsg)),
+            }
+          else if (addressController.text.isEmpty ||
+              addressController.text.length < 8)
+            {
+              Get.snackbar("Alert", Constants.addressAlertMsg,
+                  overlayBlur: 5,
+                  backgroundColor: Constants.whiteColor,
+                  titleText: Text(
+                    'Alert',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: Constants.headerSize),
+                  ),
+                  messageText: Text(Constants.addressAlertMsg)),
+            }
+          else if (panchayatController.text.isEmpty)
+            {
+              Get.snackbar("Alert", Constants.panchayatAlertMsg,
+                  overlayBlur: 5,
+                  backgroundColor: Constants.whiteColor,
+                  titleText: Text(
+                    'Alert',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: Constants.headerSize),
+                  ),
+                  messageText: Text(Constants.panchayatAlertMsg)),
+            }
+          else if (dropdownValue.isEmpty)
+            {
+              Get.snackbar("Alert", Constants.mandalAlertMsg,
+                  overlayBlur: 5,
+                  backgroundColor: Constants.whiteColor,
+                  titleText: Text(
+                    'Alert',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: Constants.headerSize),
+                  ),
+                  messageText: Text(Constants.mandalAlertMsg)),
+            }
+          else
+            {
+              Get.to(const TeamRegistration()),
+              log("---------------Details Entere---------------"),
+              log(teamNameController.text.toString()),
+              log(captainNameController.text.toString()),
+              log(captainMobNumController.text.toString()),
+              log(aadharNumController.text.toString()),
+              log(addressController.text.toString()),
+              log(panchayatController.text.toString()),
+              log(dropdownValue.toString()),
+            }
+        },
+        child: Container(
+          margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          alignment: Alignment.center,
+          height: Constants.registrationTextFieldHeight,
+          decoration: BoxDecoration(
+              color: Constants.buttonRed,
+              borderRadius: const BorderRadius.all(Radius.circular(10))),
+          child: Text(
+            Constants.continueButton,
+            style: TextStyle(
+                color: Constants.buttonTextColor,
+                fontSize: Constants.loginBtnTextSize),
           ),
         ),
       ),

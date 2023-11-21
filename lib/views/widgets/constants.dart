@@ -14,9 +14,9 @@ class Constants {
   static String playerAadhar = "Player Aadhar*";
   static String tshirtSize = "T Shirt Size";
   static String jerseyNumber = "Jersey Number";
-  static String aadharFrontside = "Aadhar Front";
-  static String aadharBackside = "Aadhar Back";
-  static String profilePic = "Profile Picture";
+  static String aadharFrontside = "Aadhar Front*";
+  static String aadharBackside = "Aadhar Back*";
+  static String profilePic = "Profile Picture*";
   static String address = "Address*";
   static String panchayathi = "Panchayathi*";
   static String mandal = "Mandalam*";
@@ -26,12 +26,17 @@ class Constants {
   static String newTeam = "NEW TEAM";
   static String setPinTitle = "set PIN to create & secure your wallet";
   static String enterPIN = "Enter PIN*";
+  static String loginEnterPIN = "Enter PIN";
+  static String biometricUnlock = "Unlock using Biometric/Face ID";
   static String reenterPIN = "Re - enter PIN*";
   static String seconds = "seconds";
   static String reqOTP = "Request OTP in";
+  static String notYou = "Not You?";
   static String submitButton = "Submit";
+  static String loginButton = "LOGIN";
   static String nextButton = "Next";
   static String resendCode = "Resend Code";
+  static String forgetPin = "Forgit PIN?";
   static String cricketFan = "I'M A CRICKET FAN";
   static String termsAndConditions = "Terms & Conditions";
   static String registrationHeader = "Registration";
@@ -43,16 +48,27 @@ class Constants {
   static String otpAlertMsg = "Enter Valid OTP";
   static String invalidOtp = "OTP entered is invalid";
   static String aadharAlertMsg = "Enter Valid Aadhar Number";
+  static String aadharFrontAlertMsg = "Please upload Aadhar Front Image";
+  static String aadharBackAlertMsg = "Please upload Aadhar Back Image";
+  static String profileAlertMsg = "Please upload Profile picture";
   static String ageAlertMsg = "Enter Valid Age";
   static String addressAlertMsg = "Enter Valid Address(Minimum 8 characters)";
   static String panchayatAlertMsg = "Enter Valid Panchayathi Name";
   static String mandalAlertMsg = "Select Mandalam";
+  static String specializationAlertMsg = "Select specialization";
+  static String shirtAlertMsg = "Select shirt size";
+  static String jerseyAlertMsg = "Select jersey number";
   static String registrationTeamNameAlertMsg = "Team Name Must Be Atleast 3 Characters";
+  static String registrationPlayerNameAlertMsg = "Enter Player name";
   static String registrationCapNameAlertMsg = "Captain Name Required(atleast 3 characters)";
   static String continueButton = "Continue";
+  static String saveButton = "Save";
   static String verificationHeader = "Verification";
   static String smsHeader = "We sent you an SMS code";
   static String specializationHintText = "Batsman";
+  static String pinCheck = "PIN's entered are not matching";
+  static String enterpinCheck = "Please check Enter PIN";
+  static String reenterpinCheck = "Please check Re-enter PIN";
   static String onNumber = "On Number";
   static String otpHint = "Enter OTP";
   static String someThingWentWrong = "Something went wrong! Please try later";
@@ -89,6 +105,7 @@ class Constants {
   static Color transparentColor = Colors.transparent;
   static Color buttonTextColor = Colors.white;
   static Color greenAccent = Colors.greenAccent;
+  static Color blueGrey = Colors.blueGrey;
   static Image bgImage = Image.asset(
     "assets/images/ball.png",
   );

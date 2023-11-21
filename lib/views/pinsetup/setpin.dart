@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:boxcricket/views/login/login.dart';
 import 'package:boxcricket/views/widgets/constants.dart';
 import 'package:boxcricket/views/widgets/responsive.dart';
 import 'package:flutter/material.dart';
@@ -42,6 +45,8 @@ class SetPinScreen extends StatefulWidget {
 }
 
 class _SetPinScreenState extends State<SetPinScreen> {
+  TextEditingController pinController = TextEditingController();
+  TextEditingController confirmPinController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -84,7 +89,7 @@ class _SetPinScreenState extends State<SetPinScreen> {
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.8,
                   child: TextField(
-                    // controller: otpController,
+                    controller: pinController,
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                       border: const OutlineInputBorder(
@@ -103,6 +108,15 @@ class _SetPinScreenState extends State<SetPinScreen> {
                           borderSide: BorderSide(
                               color: Constants.textFieldFilledColor)),
                     ),
+                    onChanged: (value) => {
+                      if (value.length > 4)
+                        {
+                          Get.defaultDialog(
+                              title: "Alert",
+                              middleText: "PIN must be 4 characters only"),
+                          pinController.clear(),
+                        }
+                    },
                   ),
                 ),
                 SizedBox(
@@ -118,7 +132,7 @@ class _SetPinScreenState extends State<SetPinScreen> {
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.8,
                   child: TextField(
-                    // controller: otpController,
+                    controller: confirmPinController,
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                       border: const OutlineInputBorder(
@@ -137,6 +151,16 @@ class _SetPinScreenState extends State<SetPinScreen> {
                           borderSide: BorderSide(
                               color: Constants.textFieldFilledColor)),
                     ),
+                    onChanged: (value) => {
+                      print(value.length),
+                      if (value.length > 4)
+                        {
+                          Get.defaultDialog(
+                              title: "Alert",
+                              middleText: "PIN must be 4 characters only"),
+                          confirmPinController.clear(),
+                        }
+                    },
                   ),
                 ),
                 SizedBox(
@@ -181,10 +205,53 @@ class _SetPinScreenState extends State<SetPinScreen> {
                   ),
                 ),
                 GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    log(pinController.text);
+                    log(confirmPinController.text);
+                    if (pinController.text.isEmpty ||
+                        pinController.text.length < 4) {
+                      Get.snackbar("Alert", Constants.enterpinCheck,
+                          overlayBlur: 5,
+                          backgroundColor: Constants.whiteColor,
+                          titleText: Text(
+                            'Alert',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: Constants.headerSize),
+                          ),
+                          messageText: Text(Constants.enterpinCheck));
+                    } else if (confirmPinController.text.isEmpty ||
+                        confirmPinController.text.length < 4) {
+                      Get.snackbar("Alert", Constants.reenterpinCheck,
+                          overlayBlur: 5,
+                          backgroundColor: Constants.whiteColor,
+                          titleText: Text(
+                            'Alert',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: Constants.headerSize),
+                          ),
+                          messageText: Text(Constants.reenterpinCheck));
+                    } else if (pinController.text.toString() !=
+                        confirmPinController.text.toString()) {
+                      Get.snackbar("Alert", Constants.pinCheck,
+                          overlayBlur: 5,
+                          backgroundColor: Constants.whiteColor,
+                          titleText: Text(
+                            'Alert',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: Constants.headerSize),
+                          ),
+                          messageText: Text(Constants.pinCheck));
+                    } else {
+                      Get.to(const Login());
+                    }
+                  },
                   child: Center(
                     child: Container(
-                      margin: EdgeInsets.only(top: Constants.registrationTextFieldHeight),
+                      margin: EdgeInsets.only(
+                          top: Constants.registrationTextFieldHeight),
                       width: MediaQuery.of(context).size.width * 0.8,
                       height: Constants.loginTextFieldHeight,
                       alignment: Alignment.center,
