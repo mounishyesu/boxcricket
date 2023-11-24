@@ -2,13 +2,15 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:boxcricket/views/teamregistration/teamregistration.dart';
+import 'package:boxcricket/apiservice/restapi.dart';
+import 'package:boxcricket/views/pinsetup/setpin.dart';
 import 'package:boxcricket/views/widgets/constants.dart';
 import 'package:boxcricket/views/widgets/responsive.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RegistrationForm extends StatefulWidget {
   const RegistrationForm({super.key});
@@ -49,21 +51,18 @@ class RegistrationFromScreen extends StatefulWidget {
 }
 
 class _RegistrationFromScreenState extends State<RegistrationFromScreen> {
-  String dropdownValue = "";
-  var mandalList = [
-    {"id": "1", "name": "Palasa"},
-    {"id": "2", "name": "Rajam"},
-    {"id": "3", "name": "Etcherla"},
-    {"id": "4", "name": "Ranastalam"},
-    {"id": "5", "name": "Pathapatnam"},
-  ];
+  String mandalDropdownValue = "";
+  String districtDropdownValue = "";
+  var mandalList = [];
+  var districtList = [];
+
   TextEditingController teamNameController = TextEditingController();
   TextEditingController captainNameController = TextEditingController();
   TextEditingController captainMobNumController = TextEditingController();
   TextEditingController ageController = TextEditingController();
   TextEditingController aadharNumController = TextEditingController();
+  TextEditingController panchayathiController = TextEditingController();
   TextEditingController addressController = TextEditingController();
-  TextEditingController panchayatController = TextEditingController();
   List names = [],
       paths = [],
       baseImg = [],
@@ -76,20 +75,28 @@ class _RegistrationFromScreenState extends State<RegistrationFromScreen> {
   File? image, selectedImage, frontSelectedImage, backSelectedImage;
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getMandals();
+    getDistricts();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(Constants.registrationHeader),
         titleTextStyle: TextStyle(
             fontSize: Constants.loginBtnTextSize, color: Constants.blackColor),
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_circle_left_sharp,
-            size: Constants.backIconSize,
-            color: Constants.backIconColor,
-          ),
-          onPressed: () => Get.back(),
-        ),
+        // leading: IconButton(
+        //   icon: Icon(
+        //     Icons.arrow_circle_left_sharp,
+        //     size: Constants.backIconSize,
+        //     color: Constants.backIconColor,
+        //   ),
+        //   onPressed: () => Get.back(),
+        // ),
       ),
       body: GestureDetector(
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
@@ -196,6 +203,7 @@ class _RegistrationFromScreenState extends State<RegistrationFromScreen> {
                                   BorderRadius.all(Radius.circular(15))),
                           height: Constants.registrationTextFieldHeight,
                           child: TextField(
+                            enabled: false,
                             controller: captainMobNumController,
                             keyboardType: TextInputType.phone,
                             decoration: InputDecoration(
@@ -212,6 +220,7 @@ class _RegistrationFromScreenState extends State<RegistrationFromScreen> {
                                       color: Constants.textFieldFilledColor)),
                               contentPadding:
                                   const EdgeInsets.only(top: 10, left: 10),
+                              hintText: Constants.mobNum,
                             ),
                             onChanged: (value) => {
                               if (value.length > 10)
@@ -451,7 +460,7 @@ class _RegistrationFromScreenState extends State<RegistrationFromScreen> {
                       borderRadius: BorderRadius.all(Radius.circular(15))),
                   height: Constants.registrationTextFieldHeight,
                   child: TextField(
-                    controller: panchayatController,
+                    controller: panchayathiController,
                     decoration: InputDecoration(
                       filled: true,
                       fillColor: Constants.textFieldFilledColor,
@@ -495,15 +504,56 @@ class _RegistrationFromScreenState extends State<RegistrationFromScreen> {
                     ),
                     onChanged: (newValue) {
                       setState(() {
-                        dropdownValue = newValue.toString();
-                        log(dropdownValue);
+                        mandalDropdownValue = newValue.toString();
+                        log(mandalDropdownValue);
                       });
                     },
                     items: mandalList.map((item) {
                       return DropdownMenuItem<String>(
-                        value: item['id'],
+                        value: item['mandalam_id'],
                         child: Text(
-                          item['name'].toString(),
+                          item['mandalam_name'].toString(),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ),
+                SizedBox(
+                  height: Constants.gapBetweenFields1,
+                ),
+                Text(
+                  Constants.district,
+                  style: TextStyle(fontSize: Constants.headerSize),
+                ),
+                SizedBox(
+                  height: Constants.gapBetweenFields,
+                ),
+                Container(
+                  decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(15))),
+                  // height: ,
+                  child: DropdownButtonFormField(
+                    decoration: InputDecoration(
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Constants.textFieldFilledColor)),
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Constants.textFieldFilledColor)),
+                      filled: true,
+                      fillColor: Constants.textFieldFilledColor,
+                    ),
+                    onChanged: (newValue) {
+                      setState(() {
+                        districtDropdownValue = newValue.toString();
+                        log(districtDropdownValue);
+                      });
+                    },
+                    items: districtList.map((item) {
+                      return DropdownMenuItem<String>(
+                        value: item['district_id'],
+                        child: Text(
+                          item['district_name'].toString(),
                         ),
                       );
                     }).toList(),
@@ -546,20 +596,6 @@ class _RegistrationFromScreenState extends State<RegistrationFromScreen> {
                         fontSize: Constants.headerSize),
                   ),
                   messageText: Text(Constants.registrationCapNameAlertMsg)),
-            }
-          else if (captainMobNumController.text.isEmpty ||
-              captainMobNumController.text.length < 10)
-            {
-              Get.snackbar("Alert", Constants.loginAlertMsg,
-                  overlayBlur: 5,
-                  backgroundColor: Constants.whiteColor,
-                  titleText: Text(
-                    'Alert',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: Constants.headerSize),
-                  ),
-                  messageText: Text(Constants.loginAlertMsg)),
             }
           else if (ageController.text.isEmpty || ageController.text.length < 2)
             {
@@ -641,7 +677,7 @@ class _RegistrationFromScreenState extends State<RegistrationFromScreen> {
                   ),
                   messageText: Text(Constants.addressAlertMsg)),
             }
-          else if (panchayatController.text.isEmpty)
+          else if (panchayathiController.text.isEmpty)
             {
               Get.snackbar("Alert", Constants.panchayatAlertMsg,
                   overlayBlur: 5,
@@ -654,7 +690,7 @@ class _RegistrationFromScreenState extends State<RegistrationFromScreen> {
                   ),
                   messageText: Text(Constants.panchayatAlertMsg)),
             }
-          else if (dropdownValue.isEmpty)
+          else if (mandalDropdownValue.isEmpty)
             {
               Get.snackbar("Alert", Constants.mandalAlertMsg,
                   overlayBlur: 5,
@@ -667,17 +703,23 @@ class _RegistrationFromScreenState extends State<RegistrationFromScreen> {
                   ),
                   messageText: Text(Constants.mandalAlertMsg)),
             }
+          else if (districtDropdownValue.isEmpty)
+            {
+              Get.snackbar("Alert", Constants.districtAlertMsg,
+                  overlayBlur: 5,
+                  backgroundColor: Constants.whiteColor,
+                  titleText: Text(
+                    'Alert',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: Constants.headerSize),
+                  ),
+                  messageText: Text(Constants.districtAlertMsg)),
+            }
           else
             {
-              Get.to(const TeamRegistration()),
+              makeRegistrationApiCall(),
               log("---------------Details Entere---------------"),
-              log(teamNameController.text.toString()),
-              log(captainNameController.text.toString()),
-              log(captainMobNumController.text.toString()),
-              log(aadharNumController.text.toString()),
-              log(addressController.text.toString()),
-              log(panchayatController.text.toString()),
-              log(dropdownValue.toString()),
             }
         },
         child: Container(
@@ -1007,4 +1049,226 @@ class _RegistrationFromScreenState extends State<RegistrationFromScreen> {
       return e;
     }
   }
+
+  makeRegistrationApiCall() async {
+    log(teamNameController.text.toString());
+    log(
+      captainNameController.text.toString(),
+    );
+    log(Constants.mobNum.toString());
+    log(
+      ageController.text.toString(),
+    );
+    log(
+      aadharNumController.text.toString(),
+    );
+    log(
+      addressController.text.toString(),
+    );
+    log(
+      panchayathiController.text.toString(),
+    );
+    log(
+      mandalDropdownValue.toString(),
+    );
+    log(
+      districtDropdownValue.toString(),
+    );
+    log(
+      frontPaths[0].toString(),
+    );
+    log(
+      backPaths[0].toString(),
+    );
+    log(paths[0].toString());
+    await ApiService.registerForm(
+            "Users/userTeamRegistration",
+            teamNameController.text.toString(),
+            captainNameController.text.toString(),
+            Constants.mobNum.toString(),
+            ageController.text.toString(),
+            aadharNumController.text.toString(),
+            addressController.text.toString(),
+            panchayathiController.text.toString(),
+            mandalDropdownValue.toString(),
+            districtDropdownValue.toString(),
+            frontPaths[0].toString(),
+            backPaths[0].toString(),
+            paths[0].toString())
+        .then((success) async {
+      setState(() {
+        var responseBody = json.decode(success);
+        print(responseBody);
+        if (responseBody['status'] == true) {
+          saveUserRegistrationDetails(responseBody);
+          Get.snackbar("Alert", responseBody['message'].toString(),
+              overlayBlur: 5,
+              backgroundColor: Constants.whiteColor,
+              titleText: Text(
+                'Alert',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: Constants.headerSize),
+              ),
+              messageText: Text(responseBody['message'].toString()));
+          Get.offAll(const SetPin());
+          // if (responseBody['teamCount'] == 0) {
+          //   Get.offAll(const TeamRegistration());
+          // } else {
+          //   Get.offAll(const TeamDetails());
+          // }
+
+        } else {
+          log('errorList--------------');
+
+          var errorList = responseBody['errors'];
+
+          if (errorList['team_captain'] != null) {
+            Get.snackbar("Alert", errorList['team_captain'].toString(),
+                overlayBlur: 5,
+                backgroundColor: Constants.whiteColor,
+                titleText: Text(
+                  'Alert',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: Constants.headerSize),
+                ),
+                messageText: Text(errorList['team_captain'].toString()));
+          } else if (errorList['team_name'] != null) {
+            Get.snackbar("Alert", errorList['team_name'].toString(),
+                overlayBlur: 5,
+                backgroundColor: Constants.whiteColor,
+                titleText: Text(
+                  'Alert',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: Constants.headerSize),
+                ),
+                messageText: Text(errorList['team_name'].toString()));
+          } else if (errorList['captain_mobile'] != null) {
+            Get.snackbar("Alert", errorList['captain_mobile'].toString(),
+                overlayBlur: 5,
+                backgroundColor: Constants.whiteColor,
+                titleText: Text(
+                  'Alert',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: Constants.headerSize),
+                ),
+                messageText: Text(errorList['captain_mobile'].toString()));
+          } else if (errorList['age'] != null) {
+            Get.snackbar("Alert", errorList['age'].toString(),
+                overlayBlur: 5,
+                backgroundColor: Constants.whiteColor,
+                titleText: Text(
+                  'Alert',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: Constants.headerSize),
+                ),
+                messageText: Text(errorList['age'].toString()));
+          } else if (errorList['aadhar'] != null) {
+            Get.snackbar("Alert", errorList['aadhar'].toString(),
+                overlayBlur: 5,
+                backgroundColor: Constants.whiteColor,
+                titleText: Text(
+                  'Alert',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: Constants.headerSize),
+                ),
+                messageText: Text(errorList['aadhar'].toString()));
+          } else if (errorList['address'] != null) {
+            Get.snackbar("Alert", errorList['address'].toString(),
+                overlayBlur: 5,
+                backgroundColor: Constants.whiteColor,
+                titleText: Text(
+                  'Alert',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: Constants.headerSize),
+                ),
+                messageText: Text(errorList['address'].toString()));
+          } else if (errorList['panchayathi'] != null) {
+            Get.snackbar("Alert", errorList['panchayathi'].toString(),
+                overlayBlur: 5,
+                backgroundColor: Constants.whiteColor,
+                titleText: Text(
+                  'Alert',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: Constants.headerSize),
+                ),
+                messageText: Text(errorList['panchayathi'].toString()));
+          } else if (errorList['mandalam'] != null) {
+            Get.snackbar("Alert", errorList['mandalam'].toString(),
+                overlayBlur: 5,
+                backgroundColor: Constants.whiteColor,
+                titleText: Text(
+                  'Alert',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: Constants.headerSize),
+                ),
+                messageText: Text(errorList['mandalam'].toString()));
+          } else if (errorList['district'] != null) {
+            Get.snackbar("Alert", errorList['district'].toString(),
+                overlayBlur: 5,
+                backgroundColor: Constants.whiteColor,
+                titleText: Text(
+                  'Alert',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: Constants.headerSize),
+                ),
+                messageText: Text(errorList['district'].toString()));
+          }
+        }
+      });
+    });
+  }
+
+  getMandals() async {
+    await ApiService.get("Users/getMandalam").then((success) async {
+      setState(() {
+        var responseBody = json.decode(success.body);
+        log(responseBody.toString());
+        mandalList = responseBody['Data'];
+      });
+    });
+  }
+
+  getDistricts() async {
+    await ApiService.get("Users/getDistricts").then((success) async {
+      setState(() {
+        var responseBody = json.decode(success.body);
+        log(responseBody.toString());
+        districtList = responseBody['Data'];
+      });
+    });
+  }
+}
+
+saveUserRegistrationDetails(resposnseBody) async {
+  SharedPreferences registerPrefs = await SharedPreferences.getInstance();
+
+  registerPrefs.setString(
+      "teamID", resposnseBody["team"]['team_id'].toString());
+
+  registerPrefs.setString(
+      "teamName", resposnseBody["team"]['team_name'].toString());
+
+  registerPrefs.setString(
+      "teamCaptain", resposnseBody['team']['team_captain'].toString());
+
+  registerPrefs.setString(
+      "captainNumber", resposnseBody['team']['captain_mobile'].toString());
+
+  registerPrefs.setString(
+      "loginPIN", resposnseBody['team']['pin'].toString());
+
+  print(registerPrefs.getString('teamID'));
+  print(registerPrefs.getString('teamName'));
+  print(registerPrefs.getString('teamCaptain'));
+  print(registerPrefs.getString('captainNumber'));
 }

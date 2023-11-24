@@ -1,16 +1,21 @@
 import 'dart:async';
+import 'dart:developer';
 
+import 'package:boxcricket/views/login/login.dart';
+import 'package:boxcricket/views/pinsetup/setpin.dart';
 import 'package:boxcricket/views/signup/signup.dart';
+import 'package:boxcricket/views/widgets/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMixin {
+class _SplashScreenState extends State<SplashScreen>
+    with TickerProviderStateMixin {
   double opacityLevel = 1.0;
 
   void _changeOpacity() {
@@ -20,74 +25,65 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
   @override
   void initState() {
     super.initState();
-    Timer(Duration(seconds: 3), () {
+    Timer(const Duration(seconds: 3), () {
       _changeOpacity();
     });
-    _navigateToLogin();
 
-    // getLoginstatus().then((status) {
-    //   if (status) {
-    //     _navigateToHome();
-    //   } else {
-    //     _navigateToLogin();
-    //   }
-    // });
+    getLoginstatus();
   }
 
-  // getLoginstatus() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   await Future.delayed(Duration(milliseconds: 1500));
-  //   if (prefs.getBool('isLogin') == null) {
-  //     return false;
-  //   }
-  //   else{
-  //     return true;
-  //   }
-  // }
-
-  // void _navigateToHome() {
-  //   Timer(Duration(seconds: 3), () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => AuditHome(fromType: 'login',))));
-  //
-  // }
-
-
-  void _navigateToLogin() {
-    Timer(const Duration(seconds: 3), () => Get.to(const SingnUpPage()));
+  getLoginstatus() async {
+    SharedPreferences registerPrefs = await SharedPreferences.getInstance();
+    await Future.delayed(const Duration(milliseconds: 1500));
+    log(registerPrefs.getString('teamID').toString());
+    log(registerPrefs.getString('pin').toString());
+    log("page checking");
+    if (registerPrefs.getString('teamID') == null) {
+      Timer(const Duration(seconds: 3), () => Get.offAll(const SingnUpPage()));
+    } else {
+      if (registerPrefs.getString('loginPIN') != null && registerPrefs.getString('loginPIN') != "" ) {
+        Timer(const Duration(seconds: 3), () => Get.offAll(const Login()));
+      } else {
+        Timer(const Duration(seconds: 3), () => Get.offAll(const SetPin()));
+      }
+    }
   }
 
   @override
-
-
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-          body: Stack(
+      backgroundColor: Constants.singinBgColor,
+      body: Stack(
+        alignment: Alignment.center,
+        children: <Widget>[
+          Align(
             alignment: Alignment.center,
-            children: <Widget>[
-              Align(
-                alignment: Alignment.center,
-                child: AnimatedOpacity(
-                    opacity: opacityLevel,
-                    duration:  Duration(seconds: 3),
-                    child: Container(
-                      decoration: BoxDecoration(
-                          color: Colors.grey,
-                          borderRadius: BorderRadius.circular(15)
+            child: AnimatedOpacity(
+                opacity: opacityLevel,
+                duration: const Duration(seconds: 3),
+                child: Container(
+                  decoration: BoxDecoration(
+                      image: DecorationImage(
+                          image: AssetImage(Constants.ballImage))),
+                  width: MediaQuery.of(context).size.width * 1,
+                  height: MediaQuery.of(context).size.height * 1,
+                  margin: const EdgeInsets.all(10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.max,
+                    children: <Widget>[
+                      Image.asset(
+                        Constants.logoImage,
+                        height: 350,
+                        width: 350,
                       ),
-                      width: MediaQuery.of(context).size.width*0.7,
-                      height: MediaQuery.of(context).size.height*0.4,
-                      child: const Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.max,
-                        children: <Widget>[
-                          // Image.asset("assets/images/splash_logo.png",),
-                          Text("Welcome")
-                        ],
-                      ),
-                    )),
-              )
-            ],
-          ),
-        ));
+                    ],
+                  ),
+                )),
+          )
+        ],
+      ),
+    ));
   }
 }

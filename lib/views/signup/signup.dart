@@ -1,13 +1,17 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:boxcricket/views/apiservice/restapi.dart';
+import 'package:boxcricket/apiservice/restapi.dart';
+import 'package:boxcricket/views/teamdashboard/teamdetails.dart';
+import 'package:boxcricket/views/teamregistration/teamregistration.dart';
 import 'package:boxcricket/views/widgets/constants.dart';
 import 'package:boxcricket/views/widgets/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../otp/otpscreen.dart';
+import '../termsandconditions/termsandconditions.dart';
 
 class SingnUpPage extends StatefulWidget {
   const SingnUpPage({super.key});
@@ -53,131 +57,133 @@ class _SingnUpScreenState extends State<SingnUpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Constants.singinBgColor,
       body: GestureDetector(
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
         child: SingleChildScrollView(
-          child: Column(
-            children: [
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.2,
-              ),
-              Center(
-                  child: Text(
-                Constants.welcomeHeader,
-                style: TextStyle(
-                    color: Constants.blackColor,
-                    fontWeight: FontWeight.bold,
-                    fontSize: Constants.welcomeTextSize),
-              )),
-              Container(
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: Constants.blackColor,
-                  shape: BoxShape.circle,
+          child: Container(
+            height: MediaQuery.of(context).size.height * 1,
+            width: MediaQuery.of(context).size.width * 1,
+            decoration: BoxDecoration(
+                image: DecorationImage(
+                    image: AssetImage(Constants.bgImage), fit: BoxFit.cover)),
+            child: Column(
+              children: [
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.15,
                 ),
-                margin: const EdgeInsets.all(50),
-                height: 200,
-                width: 200,
-                child: Text(
-                  "Box Cricket",
+                Center(
+                    child: Text(
+                  Constants.welcomeHeader,
                   style: TextStyle(
-                      color: Constants.whiteColor,
+                      color: Constants.blackColor,
+                      fontWeight: FontWeight.bold,
                       fontSize: Constants.welcomeTextSize),
+                )),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.3,
                 ),
-              ),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.8,
-                child: TextField(
-                  controller: mobileNumberController,
-                  keyboardType: TextInputType.phone,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  child: TextField(
+                    controller: mobileNumberController,
+                    keyboardType: TextInputType.phone,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                      ),
+                      labelText: "Enter Your Mobile Number",
                     ),
-                    labelText: "Enter Your Mobile Number",
+                    onChanged: (value) => {
+                      if (value.length > 10)
+                        {
+                          Get.defaultDialog(
+                              title: "Alert",
+                              middleText:
+                                  "Mobile Number Cannot Be More Than 10 Characters"),
+                          mobileNumberController.clear(),
+                        }
+                      else
+                        {log(value)}
+                    },
                   ),
-                  onChanged: (value) => {
-                    if (value.length > 10)
+                ),
+                SizedBox(
+                  height: Constants.labelSize,
+                ),
+                GestureDetector(
+                  onTap: () => {
+                    if (mobileNumberController.text.toString().isEmpty)
                       {
-                        Get.defaultDialog(
-                            title: "Alert",
-                            middleText:
-                                "Mobile Number Cannot Be More Than 10 Characters"),
-                        mobileNumberController.clear(),
+                        Get.snackbar("Alert", Constants.loginAlertMsg,
+                            overlayBlur: 5,
+                            titleText: Text(
+                              'Alert',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: Constants.headerSize),
+                            ),
+                            messageText: Text(Constants.loginAlertMsg)),
+                      }
+                    else if (mobileNumberController.text.length < 10)
+                      {
+                        Get.snackbar("Alert", Constants.loginAlertMsg,
+                            overlayBlur: 5,
+                            titleText: Text(
+                              'Alert',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: Constants.headerSize),
+                            ),
+                            messageText: Text(Constants.loginAlertMsg)),
                       }
                     else
-                      {log(value)}
+                      {
+                        sendOtpApiService(mobileNumberController.text.toString()),
+                        // Get.to(const OtpVerification()),
+                      }
                   },
-                ),
-              ),
-              GestureDetector(
-                onTap: () => {
-                  if (mobileNumberController.text.toString().isEmpty)
-                    {
-                      Get.snackbar("Alert", Constants.loginAlertMsg,
-                          overlayBlur: 5,
-                          titleText: Text(
-                            'Alert',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: Constants.headerSize),
-                          ),
-                          messageText: Text(Constants.loginAlertMsg)),
-                    }
-                  else if (mobileNumberController.text.length < 10)
-                    {
-                      Get.snackbar("Alert", Constants.loginAlertMsg,
-                          overlayBlur: 5,
-                          titleText: Text(
-                            'Alert',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: Constants.headerSize),
-                          ),
-                          messageText: Text(Constants.loginAlertMsg)),
-                    }
-                  else
-                    {
-                      sendOtpApiService(mobileNumberController.text.toString()),
-                      // Get.to(const TermsAndConditions()),
-                    }
-                },
-                child: Container(
-                  margin: const EdgeInsets.only(top: 30),
-                  width: MediaQuery.of(context).size.width * 0.75,
-                  height: Constants.loginTextFieldHeight,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                      color: Constants.buttonRed,
-                      borderRadius:
-                          const BorderRadius.all(Radius.circular(10))),
-                  child: Text(
-                    Constants.newTeam,
-                    style: TextStyle(
-                        color: Constants.buttonTextColor,
-                        fontSize: Constants.loginBtnTextSize),
+                  child: Container(
+                    margin: const EdgeInsets.only(top: 30),
+                    width: MediaQuery.of(context).size.width * 0.8,
+                    height: Constants.registrationTextFieldHeight,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                        color: Constants.buttonRed,
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(30))),
+                    child: Text(
+                      Constants.newTeam,
+                      style: TextStyle(
+                          color: Constants.buttonTextColor,
+                          fontSize: Constants.loginBtnTextSize),
+                    ),
                   ),
                 ),
-              ),
-              GestureDetector(
-                onTap: () => {},
-                child: Container(
-                  margin: const EdgeInsets.only(top: 30),
-                  width: MediaQuery.of(context).size.width * 0.75,
-                  height: 60,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                      color: Constants.buttonRed,
-                      borderRadius: BorderRadius.all(Radius.circular(10))),
-                  child: Text(
-                    Constants.cricketFan,
-                    style: TextStyle(
-                        color: Constants.buttonTextColor,
-                        fontSize: Constants.loginBtnTextSize),
+                SizedBox(
+                  height: Constants.defaultPadding*2,
+                ),
+                const Text("Or",style: TextStyle(fontWeight: FontWeight.w500),),
+                GestureDetector(
+                  onTap: () => {},
+                  child: Container(
+                    margin: const EdgeInsets.only(top: 30),
+                    width: MediaQuery.of(context).size.width * 0.8,
+                    height: Constants.registrationTextFieldHeight,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                        color: Constants.buttonRed,
+                        borderRadius: const BorderRadius.all(Radius.circular(30))),
+                    child: Text(
+                      Constants.cricketFan,
+                      style: TextStyle(
+                          color: Constants.buttonTextColor,
+                          fontSize: Constants.loginBtnTextSize),
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -186,21 +192,50 @@ class _SingnUpScreenState extends State<SingnUpScreen> {
 
   sendOtpApiService(mobNumber) async {
     var requestBody = jsonEncode({"mobile_number": mobNumber});
-    await ApiService.otpPostCall("MobileOtp", requestBody).then((success) async {
-      String data = success.body; //store response as string
-      var responseBody = json.decode(data);
-      print(responseBody);
-      print(responseBody['status']);
-      print(responseBody['data']['OTP']);
-      print(responseBody['message']);
-      if(responseBody['status'] == true && responseBody['data']['OTP']!=""){
-        Get.snackbar('Alert', responseBody['message'],messageText:Text(responseBody['message'],style: const TextStyle(fontWeight: FontWeight.w500),), );
-        Future.delayed(const Duration(seconds: 2), () async {
-          Get.to(const OtpVerification(),arguments: responseBody);
-        });
-      }else{
-        Get.snackbar('Alert',Constants.someThingWentWrong);
-      }
+    await ApiService.otpPostCall("Users/MobileOtp", requestBody)
+        .then((success) async {
+      setState(() {
+        String data = success.body; //store response as string
+        var responseBody = json.decode(data);
+        print(responseBody);
+        Constants.mobNum = responseBody["data"]['Mobile Number'].toString();
+        if (responseBody['status'] == true && responseBody['data']['OTP'] != "") {
+          if(responseBody['data']['isExist'] == false){
+            Get.snackbar(
+              'Alert',
+              responseBody['message'],
+              messageText: Text(
+                responseBody['message'],
+                style: const TextStyle(fontWeight: FontWeight.w500),
+              ),
+            );
+            Future.delayed(const Duration(seconds: 2), () async {
+              Get.to(const OtpVerification(), arguments: responseBody);
+            });
+          }else{
+            saveUserDetails(responseBody);
+            if(responseBody['data']['teamCount']>0){
+              Get.offAll(const TeamDetails());
+            }else{
+              Get.to(const TeamRegistration());
+            }
+          }
+        } else {
+          Get.snackbar('Alert', Constants.someThingWentWrong);
+        }
+      });
     });
   }
+}
+
+saveUserDetails(resposnse) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.setString("userDetails", resposnse["data"]['user'].toString());
+  prefs.setString("teamID", resposnse["data"]['user']['team_id'].toString());
+  prefs.setString("teamName", resposnse["data"]['user']['team_name'].toString());
+  prefs.setString("teamCaptain", resposnse["data"]['user']['team_captain'].toString());
+  prefs.setString("mobNumber", resposnse["data"]['Mobile Number'].toString());
+  print(prefs.getString('userDetails'));
+  print(prefs.getString('teamID'));
+  print(prefs.getString('mobNumber'));
 }

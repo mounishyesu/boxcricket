@@ -2,13 +2,16 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:boxcricket/views/matchschedule/matchschedule.dart';
 import 'package:boxcricket/views/pinsetup/setpin.dart';
+import 'package:boxcricket/views/teamdashboard/teamdetails.dart';
 import 'package:boxcricket/views/widgets/constants.dart';
 import 'package:boxcricket/views/widgets/responsive.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class TeamRegistration extends StatefulWidget {
   const TeamRegistration({super.key});
@@ -52,6 +55,7 @@ class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
   String specializationDropdownValue = "";
   String jerseyDropdownValue = "";
   String shirtSizeDropdownValue = "";
+  String teamName = "Loading...";
   var specializationList = [
     {"id": "1", "category": "Batsman"},
     {"id": "2", "category": "Wicket Keepers"},
@@ -76,6 +80,14 @@ class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
   TextEditingController playerMobNumController = TextEditingController();
   TextEditingController playerAgeController = TextEditingController();
   TextEditingController playerAadharController = TextEditingController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    setTeamName();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -89,7 +101,7 @@ class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
             size: Constants.backIconSize,
             color: Constants.backIconColor,
           ),
-          onPressed: () => Get.back(),
+          onPressed: () => Get.offAll(const TeamDetails()),
         ),
       ),
       body: GestureDetector(
@@ -108,8 +120,7 @@ class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
                       color: Constants.blueColor,
                       borderRadius:
                           const BorderRadius.all(Radius.circular(20))),
-                  child: Text(
-                    'SEEKOL TEAM',
+                  child: Text(teamName.toString(),
                     style: TextStyle(
                         fontSize: Constants.loginBtnTextSize,
                         color: Constants.whiteColor),
@@ -469,96 +480,96 @@ class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
       ),
       bottomNavigationBar: GestureDetector(
         onTap: () => {
-          if(playerNameController.text.isEmpty){
-            Get.snackbar("Alert", Constants.registrationPlayerNameAlertMsg,
-                overlayBlur: 5,
-                backgroundColor: Constants.whiteColor,
-                titleText: Text(
-                  'Alert',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: Constants.headerSize),
-                ),
-                messageText: Text(Constants.registrationPlayerNameAlertMsg)),
-          } else if (specializationDropdownValue.isEmpty)
-            {
-              Get.snackbar("Alert", Constants.specializationAlertMsg,
-                  overlayBlur: 5,
-                  backgroundColor: Constants.whiteColor,
-                  titleText: Text(
-                    'Alert',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: Constants.headerSize),
-                  ),
-                  messageText: Text(Constants.specializationAlertMsg)),
-            } else if (playerMobNumController.text.isEmpty ||
-                playerMobNumController.text.length < 10)
-              {
-                Get.snackbar("Alert", Constants.loginAlertMsg,
-                    overlayBlur: 5,
-                    backgroundColor: Constants.whiteColor,
-                    titleText: Text(
-                      'Alert',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: Constants.headerSize),
-                    ),
-                    messageText: Text(Constants.loginAlertMsg)),
-              }else if (playerAgeController.text.isEmpty || playerAgeController.text.length < 2)
-                {
-                  Get.snackbar("Alert", Constants.ageAlertMsg,
-                      overlayBlur: 5,
-                      backgroundColor: Constants.whiteColor,
-                      titleText: Text(
-                        'Alert',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: Constants.headerSize),
-                      ),
-                      messageText: Text(Constants.ageAlertMsg)),
-                }else if (playerAadharController.text.isEmpty ||
-                    playerAadharController.text.length < 12)
-                  {
-                    Get.snackbar("Alert", Constants.aadharAlertMsg,
-                        overlayBlur: 5,
-                        backgroundColor: Constants.whiteColor,
-                        titleText: Text(
-                          'Alert',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: Constants.headerSize),
-                        ),
-                        messageText: Text(Constants.aadharAlertMsg)),
-                  }else if (shirtSizeDropdownValue.isEmpty)
-                    {
-                      Get.snackbar("Alert", Constants.shirtAlertMsg,
-                          overlayBlur: 5,
-                          backgroundColor: Constants.whiteColor,
-                          titleText: Text(
-                            'Alert',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: Constants.headerSize),
-                          ),
-                          messageText: Text(Constants.shirtAlertMsg)),
-                    }else if (jerseyDropdownValue.isEmpty)
-                    {
-                      Get.snackbar("Alert", Constants.jerseyAlertMsg,
-                          overlayBlur: 5,
-                          backgroundColor: Constants.whiteColor,
-                          titleText: Text(
-                            'Alert',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: Constants.headerSize),
-                          ),
-                          messageText: Text(Constants.jerseyAlertMsg)),
-                    }else{
-            log('Pressed Continue'),
-            log(shirtSizeDropdownValue),
-            Get.to(const SetPin()),
-          }
+          // if(playerNameController.text.isEmpty){
+          //   Get.snackbar("Alert", Constants.registrationPlayerNameAlertMsg,
+          //       overlayBlur: 5,
+          //       backgroundColor: Constants.whiteColor,
+          //       titleText: Text(
+          //         'Alert',
+          //         style: TextStyle(
+          //             fontWeight: FontWeight.bold,
+          //             fontSize: Constants.headerSize),
+          //       ),
+          //       messageText: Text(Constants.registrationPlayerNameAlertMsg)),
+          // } else if (specializationDropdownValue.isEmpty)
+          //   {
+          //     Get.snackbar("Alert", Constants.specializationAlertMsg,
+          //         overlayBlur: 5,
+          //         backgroundColor: Constants.whiteColor,
+          //         titleText: Text(
+          //           'Alert',
+          //           style: TextStyle(
+          //               fontWeight: FontWeight.bold,
+          //               fontSize: Constants.headerSize),
+          //         ),
+          //         messageText: Text(Constants.specializationAlertMsg)),
+          //   } else if (playerMobNumController.text.isEmpty ||
+          //       playerMobNumController.text.length < 10)
+          //     {
+          //       Get.snackbar("Alert", Constants.loginAlertMsg,
+          //           overlayBlur: 5,
+          //           backgroundColor: Constants.whiteColor,
+          //           titleText: Text(
+          //             'Alert',
+          //             style: TextStyle(
+          //                 fontWeight: FontWeight.bold,
+          //                 fontSize: Constants.headerSize),
+          //           ),
+          //           messageText: Text(Constants.loginAlertMsg)),
+          //     }else if (playerAgeController.text.isEmpty || playerAgeController.text.length < 2)
+          //       {
+          //         Get.snackbar("Alert", Constants.ageAlertMsg,
+          //             overlayBlur: 5,
+          //             backgroundColor: Constants.whiteColor,
+          //             titleText: Text(
+          //               'Alert',
+          //               style: TextStyle(
+          //                   fontWeight: FontWeight.bold,
+          //                   fontSize: Constants.headerSize),
+          //             ),
+          //             messageText: Text(Constants.ageAlertMsg)),
+          //       }else if (playerAadharController.text.isEmpty ||
+          //           playerAadharController.text.length < 12)
+          //         {
+          //           Get.snackbar("Alert", Constants.aadharAlertMsg,
+          //               overlayBlur: 5,
+          //               backgroundColor: Constants.whiteColor,
+          //               titleText: Text(
+          //                 'Alert',
+          //                 style: TextStyle(
+          //                     fontWeight: FontWeight.bold,
+          //                     fontSize: Constants.headerSize),
+          //               ),
+          //               messageText: Text(Constants.aadharAlertMsg)),
+          //         }else if (shirtSizeDropdownValue.isEmpty)
+          //           {
+          //             Get.snackbar("Alert", Constants.shirtAlertMsg,
+          //                 overlayBlur: 5,
+          //                 backgroundColor: Constants.whiteColor,
+          //                 titleText: Text(
+          //                   'Alert',
+          //                   style: TextStyle(
+          //                       fontWeight: FontWeight.bold,
+          //                       fontSize: Constants.headerSize),
+          //                 ),
+          //                 messageText: Text(Constants.shirtAlertMsg)),
+          //           }else if (jerseyDropdownValue.isEmpty)
+          //           {
+          //             Get.snackbar("Alert", Constants.jerseyAlertMsg,
+          //                 overlayBlur: 5,
+          //                 backgroundColor: Constants.whiteColor,
+          //                 titleText: Text(
+          //                   'Alert',
+          //                   style: TextStyle(
+          //                       fontWeight: FontWeight.bold,
+          //                       fontSize: Constants.headerSize),
+          //                 ),
+          //                 messageText: Text(Constants.jerseyAlertMsg)),
+          //           }else{
+          //   log('Pressed Continue'),
+          //   log(shirtSizeDropdownValue),
+          Get.to(const MatchSchedule()),
+          // }
         },
         child: Container(
           margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -685,4 +696,13 @@ class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
       return e;
     }
   }
+
+  setTeamName() async {
+    SharedPreferences registerPrefs = await SharedPreferences.getInstance();
+    log(registerPrefs.getString('teamName').toString());
+    setState(() {
+      teamName = registerPrefs.getString('teamName').toString();
+    });
+  }
+
 }

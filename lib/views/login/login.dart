@@ -1,9 +1,13 @@
 import 'dart:developer';
 
 import 'package:boxcricket/views/authentication/auth.dart';
+import 'package:boxcricket/views/pinsetup/setpin.dart';
+import 'package:boxcricket/views/teamdashboard/teamdetails.dart';
+import 'package:boxcricket/views/teamregistration/teamregistration.dart';
 import 'package:boxcricket/views/widgets/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../widgets/responsive.dart';
 
@@ -47,23 +51,29 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   TextEditingController pinController = TextEditingController();
+  String capName = "", logPIN = "", teamCount = "";
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    checkDetails();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Constants.lightgrey,
+      backgroundColor: Constants.singinBgColor,
       bottomSheet: GestureDetector(
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
         child: SingleChildScrollView(
           child: Container(
             alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: Constants.whiteColor,
-              borderRadius: const BorderRadius.only(
+            decoration: const BoxDecoration(
+              borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(30), topRight: Radius.circular(30)),
             ),
             width: MediaQuery.of(context).size.width * 1,
-            // height: MediaQuery.of(context).size.height * 0.5,
             child: Column(
               children: [
                 SizedBox(
@@ -78,7 +88,7 @@ class _LoginPageState extends State<LoginPage> {
                   height: Constants.labelSize,
                 ),
                 GestureDetector(
-                  onTap: ()async{
+                  onTap: () async {
                     bool isAuthenticated = await AuthService.authenticateUser();
                     if (isAuthenticated) {
                       log("success");
@@ -89,7 +99,7 @@ class _LoginPageState extends State<LoginPage> {
                   child: Text(
                     Constants.biometricUnlock,
                     style: TextStyle(
-                      decoration: TextDecoration.underline,
+                        decoration: TextDecoration.underline,
                         height: 2,
                         color: Constants.blueColor,
                         fontSize: Constants.textSize,
@@ -159,7 +169,7 @@ class _LoginPageState extends State<LoginPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       GestureDetector(
-                        onTap: () {},
+                        onTap: () {                        },
                         child: Text(
                           Constants.notYou,
                           style: TextStyle(
@@ -168,7 +178,9 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                       GestureDetector(
-                        onTap: (){},
+                        onTap: () {
+                          Get.to(const SetPin());
+                        },
                         child: Container(
                           width: MediaQuery.of(context).size.width * 0.3,
                           height: 40,
@@ -193,7 +205,35 @@ class _LoginPageState extends State<LoginPage> {
                   height: Constants.defaultPadding,
                 ),
                 GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    log(logPIN);
+                    log(teamCount);
+                    if(logPIN.toString() == pinController.text){
+                      if(teamCount.toString() != null || teamCount.toString() != '0'){
+                        Get.offAll(const TeamDetails());
+                      }else{
+                        Get.offAll(const TeamRegistration());
+                      }
+                    }else{
+                      Get.snackbar("Alert", "PIN is Incorrect",
+                          overlayBlur: 5,
+                          backgroundColor: Constants.buttonRed,
+                          titleText: Text(
+                            'Alert',
+                            style: TextStyle(
+                                color: Constants.whiteColor,
+                                fontWeight: FontWeight.bold,
+                                fontSize: Constants.headerSize),
+                          ),
+                          messageText: Text(
+                            "PIN is Incorrect",
+                            style: TextStyle(
+                                color: Constants.whiteColor,
+                                fontWeight: FontWeight.bold,
+                                fontSize: Constants.headerSize),
+                          ));
+                    }
+                  },
                   child: Container(
                     margin: const EdgeInsets.only(top: 30),
                     width: MediaQuery.of(context).size.width * 0.8,
@@ -225,12 +265,10 @@ class _LoginPageState extends State<LoginPage> {
             SizedBox(
               height: MediaQuery.of(context).size.height * 0.1,
             ),
-            Container(
+            Image.asset(
+              Constants.logoImage,
               height: 200,
               width: 200,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                  shape: BoxShape.circle, color: Constants.blackColor),
             ),
             SizedBox(
               height: Constants.defaultPadding * 2,
@@ -238,7 +276,7 @@ class _LoginPageState extends State<LoginPage> {
             Container(
                 alignment: Alignment.center,
                 child: Text(
-                  'Hi PAN SURYA!',
+                  'Hi ${capName.toString()}!',
                   style: TextStyle(
                       fontSize: Constants.loginBtnTextSize,
                       fontWeight: FontWeight.bold),
@@ -247,5 +285,17 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
+  }
+
+  checkDetails() async {
+    SharedPreferences registerPrefs = await SharedPreferences.getInstance();
+    log(registerPrefs.getString('teamCaptain').toString());
+    log(registerPrefs.getString('loginPIN').toString());
+    log(registerPrefs.getString('teamCount').toString());
+    setState(() {
+      capName = registerPrefs.getString('teamCaptain').toString();
+      logPIN = registerPrefs.getString('loginPIN').toString();
+      teamCount = registerPrefs.getString('teamCount').toString();
+    });
   }
 }

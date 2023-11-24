@@ -2,13 +2,12 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:boxcricket/apiservice/restapi.dart';
 import 'package:boxcricket/views/termsandconditions/termsandconditions.dart';
 import 'package:boxcricket/views/widgets/constants.dart';
 import 'package:boxcricket/views/widgets/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import '../apiservice/restapi.dart';
 
 class OtpVerification extends StatefulWidget {
   const OtpVerification({super.key});
@@ -199,6 +198,7 @@ class _OtpScreenState extends State<OtpScreen> {
                           backgroundColor: Constants.whiteColor);
                       Future.delayed(const Duration(seconds: 2), () async {
                         Get.to(const TermsAndConditions());
+                        log(Constants.mobNum.toString());
                       });
                     }
                   },
@@ -272,7 +272,7 @@ class _OtpScreenState extends State<OtpScreen> {
     setState(() {
       secondsRemaining = 30;
       enableResend = false;
-      sendOtpApiService(argumentData['data']['Mobile Number'].toString());
+      // sendOtpApiService(argumentData['data']['Mobile Number'].toString());
     });
   }
 

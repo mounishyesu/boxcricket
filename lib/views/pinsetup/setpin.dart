@@ -1,10 +1,16 @@
+import 'dart:convert';
 import 'dart:developer';
 
+import 'package:boxcricket/apiservice/restapi.dart';
 import 'package:boxcricket/views/login/login.dart';
+import 'package:boxcricket/views/registration/registrationform.dart';
+import 'package:boxcricket/views/teamdashboard/teamdetails.dart';
+import 'package:boxcricket/views/teamregistration/teamregistration.dart';
 import 'package:boxcricket/views/widgets/constants.dart';
 import 'package:boxcricket/views/widgets/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SetPin extends StatefulWidget {
   const SetPin({super.key});
@@ -54,14 +60,14 @@ class _SetPinScreenState extends State<SetPinScreen> {
         title: Text(Constants.setpinHeader),
         titleTextStyle: TextStyle(
             fontSize: Constants.loginBtnTextSize, color: Constants.blackColor),
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_circle_left_sharp,
-            size: Constants.backIconSize,
-            color: Constants.backIconColor,
-          ),
-          onPressed: () => Get.back(),
-        ),
+        // leading: IconButton(
+        //   icon: Icon(
+        //     Icons.arrow_circle_left_sharp,
+        //     size: Constants.backIconSize,
+        //     color: Constants.backIconColor,
+        //   ),
+        //   onPressed: () => Get.back(),
+        // ),
       ),
       body: GestureDetector(
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
@@ -212,40 +218,67 @@ class _SetPinScreenState extends State<SetPinScreen> {
                         pinController.text.length < 4) {
                       Get.snackbar("Alert", Constants.enterpinCheck,
                           overlayBlur: 5,
-                          backgroundColor: Constants.whiteColor,
+                          backgroundColor: Constants.buttonRed,
                           titleText: Text(
                             'Alert',
                             style: TextStyle(
+                                color: Constants.whiteColor,
                                 fontWeight: FontWeight.bold,
                                 fontSize: Constants.headerSize),
                           ),
-                          messageText: Text(Constants.enterpinCheck));
+                          messageText: Text(
+                            Constants.enterpinCheck,
+                            style: TextStyle(
+                                color: Constants.whiteColor,
+                                fontWeight: FontWeight.bold,
+                                fontSize: Constants.headerSize),
+                          ));
                     } else if (confirmPinController.text.isEmpty ||
                         confirmPinController.text.length < 4) {
-                      Get.snackbar("Alert", Constants.reenterpinCheck,
-                          overlayBlur: 5,
-                          backgroundColor: Constants.whiteColor,
-                          titleText: Text(
-                            'Alert',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: Constants.headerSize),
-                          ),
-                          messageText: Text(Constants.reenterpinCheck));
+                      Get.snackbar(
+                        "Alert",
+                        Constants.reenterpinCheck,
+                        overlayBlur: 5,
+                        backgroundColor: Constants.buttonRed,
+                        titleText: Text(
+                          'Alert',
+                          style: TextStyle(
+                              color: Constants.whiteColor,
+                              fontWeight: FontWeight.bold,
+                              fontSize: Constants.headerSize),
+                        ),
+                        messageText: Text(
+                          Constants.reenterpinCheck,
+                          style: TextStyle(
+                              color: Constants.whiteColor,
+                              fontWeight: FontWeight.bold,
+                              fontSize: Constants.headerSize),
+                        ),
+                      );
                     } else if (pinController.text.toString() !=
                         confirmPinController.text.toString()) {
-                      Get.snackbar("Alert", Constants.pinCheck,
-                          overlayBlur: 5,
-                          backgroundColor: Constants.whiteColor,
-                          titleText: Text(
-                            'Alert',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: Constants.headerSize),
-                          ),
-                          messageText: Text(Constants.pinCheck));
+                      Get.snackbar(
+                        "Alert",
+                        Constants.pinCheck,
+                        overlayBlur: 5,
+                        backgroundColor: Constants.buttonRed,
+                        titleText: Text(
+                          'Alert',
+                          style: TextStyle(
+                              color: Constants.whiteColor,
+                              fontWeight: FontWeight.bold,
+                              fontSize: Constants.headerSize),
+                        ),
+                        messageText: Text(
+                          Constants.pinCheck,
+                          style: TextStyle(
+                              color: Constants.whiteColor,
+                              fontWeight: FontWeight.bold,
+                              fontSize: Constants.headerSize),
+                        ),
+                      );
                     } else {
-                      Get.to(const Login());
+                      setPin();
                     }
                   },
                   child: Center(
@@ -275,4 +308,71 @@ class _SetPinScreenState extends State<SetPinScreen> {
       ),
     );
   }
+
+  setPin() async {
+    SharedPreferences registerPrefs = await SharedPreferences.getInstance();
+    var encodeBody = jsonEncode({
+      "mobile_number": registerPrefs.getString('captainNumber'),
+      "new_pin": confirmPinController.text
+    });
+    await ApiService.post("Users/createPin", encodeBody).then((success) async {
+      setState(() {
+        var responseBody = json.decode(success.body);
+        log(responseBody.toString());
+        if (responseBody['status'] == true) {
+          saveUserRegistrationDetails(responseBody);
+          Get.snackbar("Alert", responseBody['message'].toString(),
+              overlayBlur: 5,
+              backgroundColor: Constants.buttonRed,
+              titleText: Text(
+                'Alert',
+                style: TextStyle(
+                    color: Constants.whiteColor,
+                    fontWeight: FontWeight.bold,
+                    fontSize: Constants.headerSize),
+              ),
+              messageText: Text(
+                responseBody['message'].toString(),
+                style: TextStyle(
+                    color: Constants.whiteColor,
+                    fontWeight: FontWeight.bold,
+                    fontSize: Constants.headerSize),
+              ));
+          if (responseBody['teamCount'] > 0) {
+            Get.offAll(const TeamDetails());
+          } else {
+            Get.offAll(const TeamRegistration());
+          }
+        }
+      });
+    });
+  }
+}
+
+saveUserRegistrationDetails(resposnseBody) async {
+  SharedPreferences registerPrefs = await SharedPreferences.getInstance();
+
+  registerPrefs.setString(
+      "teamID", resposnseBody["team"]['team_id'].toString());
+
+  registerPrefs.setString(
+      "teamName", resposnseBody["team"]['team_name'].toString());
+
+  registerPrefs.setString(
+      "teamCaptain", resposnseBody['team']['team_captain'].toString());
+
+  registerPrefs.setString(
+      "captainNumber", resposnseBody['team']['captain_mobile'].toString());
+
+  registerPrefs.setString("loginPIN", resposnseBody['team']['pin'].toString());
+  registerPrefs.setString("teamCount", resposnseBody['teamCount'].toString());
+
+  SharedPreferences detailsPref = await SharedPreferences.getInstance();
+
+  print('------------------');
+  print(detailsPref.getString('teamID'));
+  print(detailsPref.getString('loginPIN'));
+  print(detailsPref.getString('teamName'));
+  print(detailsPref.getString('teamCaptain'));
+  print(detailsPref.getString('captainNumber'));
 }

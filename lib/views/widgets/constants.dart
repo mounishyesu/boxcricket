@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class Constants {
   static Color kPrimaryColor = Color(0xFF6F35A5);
   static Color kPrimaryLightColor = Color(0xFFF1E6FF);
+  static String? mobNum;
   static String teamName = "Team Name*";
   static String playerName = "Player Name*";
   static String captainName = "Captain Name*";
@@ -20,6 +21,7 @@ class Constants {
   static String address = "Address*";
   static String panchayathi = "Panchayathi*";
   static String mandal = "Mandalam*";
+  static String district = "District*";
   static String landMark = "Land Mark*";
   static String registrationHintText = "Only 6 Alphabets";
   static String welcomeHeader = "Welcome!";
@@ -34,6 +36,7 @@ class Constants {
   static String notYou = "Not You?";
   static String submitButton = "Submit";
   static String loginButton = "LOGIN";
+  static String loginNowButton = "LOGIN NOW";
   static String nextButton = "Next";
   static String resendCode = "Resend Code";
   static String forgetPin = "Forgit PIN?";
@@ -41,11 +44,14 @@ class Constants {
   static String termsAndConditions = "Terms & Conditions";
   static String registrationHeader = "Registration";
   static String teamregistrationHeader = "Team Registration";
+  static String matchScheduleHeader = "Match Schedule";
   static String setpinHeader = "Final Step!";
   static String loginHintText = "Enter Your Mobile Number";
   static String loginAlertMsg = "Enter Valid Mobile Number";
   static String tncAlertMsg = "Please accept Terms & Conditions";
   static String otpAlertMsg = "Enter Valid OTP";
+  static String registersuccessText = "Congratulations!";
+  static String registeronText = "Your team have successfully registered on";
   static String invalidOtp = "OTP entered is invalid";
   static String aadharAlertMsg = "Enter Valid Aadhar Number";
   static String aadharFrontAlertMsg = "Please upload Aadhar Front Image";
@@ -53,15 +59,19 @@ class Constants {
   static String profileAlertMsg = "Please upload Profile picture";
   static String ageAlertMsg = "Enter Valid Age";
   static String addressAlertMsg = "Enter Valid Address(Minimum 8 characters)";
-  static String panchayatAlertMsg = "Enter Valid Panchayathi Name";
+  static String panchayatAlertMsg = "Enter Panchayathi";
   static String mandalAlertMsg = "Select Mandalam";
+  static String districtAlertMsg = "Select District";
   static String specializationAlertMsg = "Select specialization";
   static String shirtAlertMsg = "Select shirt size";
   static String jerseyAlertMsg = "Select jersey number";
-  static String registrationTeamNameAlertMsg = "Team Name Must Be Atleast 3 Characters";
+  static String registrationTeamNameAlertMsg =
+      "Team Name Must Be Atleast 3 Characters";
   static String registrationPlayerNameAlertMsg = "Enter Player name";
-  static String registrationCapNameAlertMsg = "Captain Name Required(atleast 3 characters)";
+  static String registrationCapNameAlertMsg =
+      "Captain Name Required(atleast 3 characters)";
   static String continueButton = "Continue";
+  static String addPlayerButton = "Add player";
   static String saveButton = "Save";
   static String verificationHeader = "Verification";
   static String smsHeader = "We sent you an SMS code";
@@ -73,6 +83,7 @@ class Constants {
   static String otpHint = "Enter OTP";
   static String someThingWentWrong = "Something went wrong! Please try later";
   static String successText = "Success";
+  static String teamsText = "TEAMS";
   static String otpVerified = "OTP Verified Successfully";
   static String acceptTnC = "I accept Terms & Conditions";
   static double defaultPadding = 16.0;
@@ -98,6 +109,7 @@ class Constants {
   static Color bgColor = Color(0xFFe7e7e7);
   static Color cardColor = Color(0xFFdbdbdb);
   static Color editcolor = Color(0xFFdbdbdb);
+  static Color singinBgColor = Color(0xFFFFFFFF);
   static Color disablecolor = Colors.black26;
   static Color whiteColor = Colors.white;
   static Color blackColor = Colors.black;
@@ -106,8 +118,10 @@ class Constants {
   static Color buttonTextColor = Colors.white;
   static Color greenAccent = Colors.greenAccent;
   static Color blueGrey = Colors.blueGrey;
-  static Image bgImage = Image.asset(
-    "assets/images/ball.png",
-  );
+  static String logoImage = "assets/images/spl_logo.png";
+  static String ballImage = "assets/images/ball.png";
+  static String bgImage = "assets/images/bgimage.png";
+  static String defaultUserImage = "assets/images/user.jpg";
+  static String successImage = "assets/images/congratulations.jpg";
   static Icon cameraIcon = Icon(Icons.camera_alt);
 }
