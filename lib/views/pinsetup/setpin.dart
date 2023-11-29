@@ -1,14 +1,15 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 
 import 'package:boxcricket/apiservice/restapi.dart';
 import 'package:boxcricket/views/login/login.dart';
-import 'package:boxcricket/views/registration/registrationform.dart';
 import 'package:boxcricket/views/teamdashboard/teamdetails.dart';
 import 'package:boxcricket/views/teamregistration/teamregistration.dart';
 import 'package:boxcricket/views/widgets/constants.dart';
 import 'package:boxcricket/views/widgets/responsive.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -53,6 +54,7 @@ class SetPinScreen extends StatefulWidget {
 class _SetPinScreenState extends State<SetPinScreen> {
   TextEditingController pinController = TextEditingController();
   TextEditingController confirmPinController = TextEditingController();
+  Timer? _timer;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -229,9 +231,9 @@ class _SetPinScreenState extends State<SetPinScreen> {
                           messageText: Text(
                             Constants.enterpinCheck,
                             style: TextStyle(
-                                color: Constants.whiteColor,
                                 fontWeight: FontWeight.bold,
-                                fontSize: Constants.headerSize),
+                                fontSize: Constants.textSize,
+                                color: Constants.whiteColor),
                           ));
                     } else if (confirmPinController.text.isEmpty ||
                         confirmPinController.text.length < 4) {
@@ -252,7 +254,7 @@ class _SetPinScreenState extends State<SetPinScreen> {
                           style: TextStyle(
                               color: Constants.whiteColor,
                               fontWeight: FontWeight.bold,
-                              fontSize: Constants.headerSize),
+                              fontSize: Constants.textSize),
                         ),
                       );
                     } else if (pinController.text.toString() !=
@@ -310,46 +312,58 @@ class _SetPinScreenState extends State<SetPinScreen> {
   }
 
   setPin() async {
+    Constants.easyLoader();
+    EasyLoading.show(
+      status: "Saving . . .",
+    );
     SharedPreferences registerPrefs = await SharedPreferences.getInstance();
+    log(registerPrefs.getString('captainNumber').toString());
     var encodeBody = jsonEncode({
-      "mobile_number": registerPrefs.getString('captainNumber'),
+      "mobile_number": registerPrefs.getString('captainNumber').toString(),
       "new_pin": confirmPinController.text
     });
+    log(encodeBody);
     await ApiService.post("Users/createPin", encodeBody).then((success) async {
-      setState(() {
-        var responseBody = json.decode(success.body);
-        log(responseBody.toString());
-        if (responseBody['status'] == true) {
-          saveUserRegistrationDetails(responseBody);
-          Get.snackbar("Alert", responseBody['message'].toString(),
-              overlayBlur: 5,
-              backgroundColor: Constants.buttonRed,
-              titleText: Text(
-                'Alert',
-                style: TextStyle(
-                    color: Constants.whiteColor,
-                    fontWeight: FontWeight.bold,
-                    fontSize: Constants.headerSize),
-              ),
-              messageText: Text(
-                responseBody['message'].toString(),
-                style: TextStyle(
-                    color: Constants.whiteColor,
-                    fontWeight: FontWeight.bold,
-                    fontSize: Constants.headerSize),
-              ));
-          if (responseBody['teamCount'] > 0) {
-            Get.offAll(const TeamDetails());
-          } else {
-            Get.offAll(const TeamRegistration());
+      var responseBody = json.decode(success.body);
+      if (success.statusCode == 200) {
+        EasyLoading.addStatusCallback((status) {
+          if (status == EasyLoadingStatus.dismiss) {
+            _timer?.cancel();
           }
-        }
-      });
+        });
+        setState(() {
+          log(responseBody.toString());
+          if (responseBody['status'] == true) {
+            savePinDetails(responseBody);
+            // Get.snackbar("Alert", responseBody['message'].toString(),
+            //     overlayBlur: 5,
+            //     backgroundColor: Constants.green,
+            //     titleText: Text(
+            //       'Alert',
+            //       style: TextStyle(
+            //           color: Constants.whiteColor,
+            //           fontWeight: FontWeight.bold,
+            //           fontSize: Constants.headerSize),
+            //     ),
+            //     messageText: Text(
+            //       responseBody['message'].toString(),
+            //       style: TextStyle(
+            //           color: Constants.whiteColor,
+            //           fontWeight: FontWeight.bold,
+            //           fontSize: Constants.textSize),
+            //     ));
+            Get.offAll(() => const Login());
+          }
+        });
+        EasyLoading.showSuccess(responseBody['message'].toString());
+      } else {
+        EasyLoading.showInfo("PIN Creation Failed");
+      }
     });
   }
 }
 
-saveUserRegistrationDetails(resposnseBody) async {
+savePinDetails(resposnseBody) async {
   SharedPreferences registerPrefs = await SharedPreferences.getInstance();
 
   registerPrefs.setString(
@@ -367,12 +381,11 @@ saveUserRegistrationDetails(resposnseBody) async {
   registerPrefs.setString("loginPIN", resposnseBody['team']['pin'].toString());
   registerPrefs.setString("teamCount", resposnseBody['teamCount'].toString());
 
-  SharedPreferences detailsPref = await SharedPreferences.getInstance();
-
-  print('------------------');
-  print(detailsPref.getString('teamID'));
-  print(detailsPref.getString('loginPIN'));
-  print(detailsPref.getString('teamName'));
-  print(detailsPref.getString('teamCaptain'));
-  print(detailsPref.getString('captainNumber'));
+  log('------------------');
+  log(registerPrefs.getString('teamID').toString());
+  log(registerPrefs.getString('loginPIN').toString());
+  log(registerPrefs.getString('teamName').toString());
+  log(registerPrefs.getString('teamCaptain').toString());
+  log(registerPrefs.getString('teamCount').toString());
+  log(registerPrefs.getString('captainNumber').toString());
 }

@@ -46,6 +46,7 @@ class TermsAndConditionsScreen extends StatefulWidget {
 }
 
 class _TermsAndConditionsScreenState extends State<TermsAndConditionsScreen> {
+  dynamic argumentData = Get.arguments;
   bool checkedValue = false;
   @override
   Widget build(BuildContext context) {
@@ -114,22 +115,28 @@ class _TermsAndConditionsScreenState extends State<TermsAndConditionsScreen> {
                 ),
                 GestureDetector(
                   onTap: () => {
+                  log(argumentData.toString()),
                     if (checkedValue == true)
                       {
-                        Get.to(const RegistrationForm()),
+                        Get.to(()=>const RegistrationForm(),arguments: argumentData),
                       }
                     else
                       {
                         Get.snackbar("Alert", Constants.tncAlertMsg,
-                            backgroundColor: Constants.whiteColor,
+                            backgroundColor: Constants.buttonRed,
                             overlayBlur: 5,
                             titleText: Text(
                               'Alert',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  fontSize: Constants.headerSize),
+                                  fontSize: Constants.headerSize,
+                                  color: Constants.whiteColor),
                             ),
-                            messageText: Text(Constants.tncAlertMsg)),
+                            messageText: Text(Constants.tncAlertMsg,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: Constants.textSize,
+                                  color: Constants.whiteColor),)),
                       }
                   },
                   child: Container(

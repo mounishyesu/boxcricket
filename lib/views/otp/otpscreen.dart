@@ -3,11 +3,14 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:boxcricket/apiservice/restapi.dart';
+import 'package:boxcricket/views/teamdashboard/teamdetails.dart';
+import 'package:boxcricket/views/teamregistration/teamregistration.dart';
 import 'package:boxcricket/views/termsandconditions/termsandconditions.dart';
 import 'package:boxcricket/views/widgets/constants.dart';
 import 'package:boxcricket/views/widgets/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class OtpVerification extends StatefulWidget {
   const OtpVerification({super.key});
@@ -168,10 +171,17 @@ class _OtpScreenState extends State<OtpScreen> {
                             'Alert',
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                fontSize: Constants.headerSize),
+                                fontSize: Constants.headerSize,
+                                color: Constants.whiteColor),
                           ),
-                          messageText: Text(Constants.otpAlertMsg),
-                          backgroundColor: Constants.whiteColor);
+                          messageText: Text(
+                            Constants.otpAlertMsg,
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: Constants.textSize,
+                                color: Constants.whiteColor),
+                          ),
+                          backgroundColor: Constants.buttonRed);
                     } else if (argumentData['data']['OTP'].toString() !=
                         otpController.text) {
                       Get.snackbar("Alert", Constants.invalidOtp,
@@ -180,26 +190,50 @@ class _OtpScreenState extends State<OtpScreen> {
                             'Alert',
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                fontSize: Constants.headerSize),
+                                fontSize: Constants.headerSize,
+                                color: Constants.whiteColor),
                           ),
-                          messageText: Text(Constants.invalidOtp),
-                          backgroundColor: Constants.whiteColor);
-                    } else {
-                      Get.snackbar("Alert", Constants.otpVerified,
-                          overlayBlur: 5,
-                          duration: const Duration(seconds: 2),
-                          titleText: Text(
-                            'Alert',
+                          messageText: Text(
+                            Constants.invalidOtp,
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                fontSize: Constants.headerSize),
+                                fontSize: Constants.textSize,
+                                color: Constants.whiteColor),
                           ),
-                          messageText: Text(Constants.otpVerified),
-                          backgroundColor: Constants.whiteColor);
-                      Future.delayed(const Duration(seconds: 2), () async {
-                        Get.to(const TermsAndConditions());
-                        log(Constants.mobNum.toString());
-                      });
+                          backgroundColor: Constants.buttonRed);
+                    } else {
+                      if (argumentData['data']['isExist'] == false) {
+                        Get.snackbar("Alert", Constants.otpVerified,
+                            overlayBlur: 5,
+                            duration: const Duration(seconds: 2),
+                            titleText: Text(
+                              'Alert',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: Constants.headerSize,
+                                  color: Constants.whiteColor),
+                            ),
+                            messageText: Text(
+                              Constants.otpVerified,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: Constants.textSize,
+                                  color: Constants.whiteColor),
+                            ),
+                            backgroundColor: Constants.green);
+                        Future.delayed(const Duration(seconds: 2), () async {
+                          Get.to(() => const TermsAndConditions(),arguments: argumentData['data']['Mobile Number'].toString());
+                          log('========>>');
+                          log(argumentData['data']['Mobile Number']);
+                        });
+                      } else {
+                        saveUserDetails(argumentData);
+                        if (argumentData['data']['teamCount'] > 0) {
+                          Get.offAll(() => const TeamDetails());
+                        } else {
+                          Get.to(() => const TeamRegistration());
+                        }
+                      }
                     }
                   },
                   child: Container(
@@ -279,7 +313,7 @@ class _OtpScreenState extends State<OtpScreen> {
   sendOtpApiService(mobNumber) async {
     var requestBody = jsonEncode({"mobile_number": mobNumber});
     await ApiService.otpPostCall("MobileOtp", requestBody)
-        .then((success) async {
+        .then((success) {
       String data = success.body; //store response as string
       var responseBody = json.decode(data);
       print(responseBody);
@@ -290,13 +324,41 @@ class _OtpScreenState extends State<OtpScreen> {
         Get.snackbar(
           'Alert',
           responseBody['message'],
+          titleText: Text(
+            'Alert',
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: Constants.headerSize,
+                color: Constants.whiteColor),
+          ),
+          backgroundColor: Constants.green,
+          overlayBlur: 5,
           messageText: Text(
             responseBody['message'],
-            style: const TextStyle(fontWeight: FontWeight.w500),
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: Constants.textSize,
+                color: Constants.whiteColor),
           ),
         );
       } else {
-        Get.snackbar('Alert', Constants.someThingWentWrong);
+        Get.snackbar('Alert', Constants.someThingWentWrong,
+            titleText: Text(
+              'Alert',
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: Constants.headerSize,
+                  color: Constants.whiteColor),
+            ),
+            backgroundColor: Constants.buttonRed,
+            overlayBlur: 5,
+            messageText: Text(
+              Constants.someThingWentWrong,
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: Constants.textSize,
+                  color: Constants.whiteColor),
+            ));
       }
     });
   }
@@ -306,4 +368,32 @@ class _OtpScreenState extends State<OtpScreen> {
     timer?.cancel();
     super.dispose();
   }
+}
+
+saveUserDetails(resposnse) async {
+  SharedPreferences registerPrefs = await SharedPreferences.getInstance();
+  registerPrefs.setString("userDetails", resposnse["data"]['user'].toString());
+  registerPrefs.setString(
+      "teamID", resposnse["data"]['user']['team_id'].toString());
+  registerPrefs.setString(
+      "teamName", resposnse["data"]['user']['team_name'].toString());
+  registerPrefs.setString(
+      "teamCaptain", resposnse["data"]['user']['team_captain'].toString());
+  registerPrefs.setString(
+      "captainNumber", resposnse["data"]['Mobile Number'].toString());
+  registerPrefs.setString(
+      "teamCount", resposnse["data"]['teamCount'].toString());
+  registerPrefs.setString("loginPIN", resposnse["data"]['user']['pin'].toString());
+  registerPrefs.setString(
+      "capProfilePic", resposnse["data"]['user']['profile_image_url'].toString());
+  log("==================");
+  log(resposnse.toString());
+  log(registerPrefs.getString('userDetails').toString());
+  log(registerPrefs.getString('teamID').toString());
+  log(registerPrefs.getString('teamCaptain').toString());
+  log(registerPrefs.getString('captainNumber').toString());
+  log(registerPrefs.getString('teamName').toString());
+  log(registerPrefs.getString('teamCount').toString());
+  log(registerPrefs.getString('loginPIN').toString());
+  log("==================");
 }

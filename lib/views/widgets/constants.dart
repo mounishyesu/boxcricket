@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class Constants {
-  static Color kPrimaryColor = Color(0xFF6F35A5);
-  static Color kPrimaryLightColor = Color(0xFFF1E6FF);
-  static String? mobNum;
+  static Color kPrimaryColor = const Color(0xFF6F35A5);
+  static Color kPrimaryLightColor = const Color(0xFFF1E6FF);
   static String teamName = "Team Name*";
   static String playerName = "Player Name*";
   static String captainName = "Captain Name*";
@@ -46,6 +47,7 @@ class Constants {
   static String teamregistrationHeader = "Team Registration";
   static String matchScheduleHeader = "Match Schedule";
   static String setpinHeader = "Final Step!";
+  static String topstoriesHeader = "Top Stories";
   static String loginHintText = "Enter Your Mobile Number";
   static String loginAlertMsg = "Enter Valid Mobile Number";
   static String tncAlertMsg = "Please accept Terms & Conditions";
@@ -58,20 +60,20 @@ class Constants {
   static String aadharBackAlertMsg = "Please upload Aadhar Back Image";
   static String profileAlertMsg = "Please upload Profile picture";
   static String ageAlertMsg = "Enter Valid Age";
-  static String addressAlertMsg = "Enter Valid Address(Minimum 8 characters)";
+  static String addressAlertMsg = "Enter Valid Address(Minimum 3 characters)";
   static String panchayatAlertMsg = "Enter Panchayathi";
   static String mandalAlertMsg = "Select Mandalam";
   static String districtAlertMsg = "Select District";
   static String specializationAlertMsg = "Select specialization";
   static String shirtAlertMsg = "Select shirt size";
-  static String jerseyAlertMsg = "Select jersey number";
+  static String jerseyAlertMsg = "Enter jersey number";
   static String registrationTeamNameAlertMsg =
       "Team Name Must Be Atleast 3 Characters";
   static String registrationPlayerNameAlertMsg = "Enter Player name";
   static String registrationCapNameAlertMsg =
       "Captain Name Required(atleast 3 characters)";
   static String continueButton = "Continue";
-  static String addPlayerButton = "Add player";
+  static String addPlayerButton = "Add Player";
   static String saveButton = "Save";
   static String verificationHeader = "Verification";
   static String smsHeader = "We sent you an SMS code";
@@ -101,15 +103,16 @@ class Constants {
   static double gapBetweenFields1 = 20;
   static Color textFieldFilledColor = Colors.black12;
   static Color teamNameHintTextColor = Colors.black38;
-  static Color backIconColor = Color(0xFFff0041);
-  static Color buttonRed = Color(0xFFff0041);
-  static Color green = Color(0xFF216f82);
-  static Color darkgrey = Color(0xFF39454b);
-  static Color lightgrey = Color(0xFFc6c6c6);
-  static Color bgColor = Color(0xFFe7e7e7);
-  static Color cardColor = Color(0xFFdbdbdb);
-  static Color editcolor = Color(0xFFdbdbdb);
-  static Color singinBgColor = Color(0xFFFFFFFF);
+  static Color backIconColor = const Color(0xFFff0041);
+  static Color buttonRed = const Color(0xFFff0041);
+  static Color green = const Color(0xFF216f82);
+  static Color darkgrey = const Color(0xFF39454b);
+  static Color lightgrey = const Color(0xFFc6c6c6);
+  static Color bgColor = const Color(0xFFe7e7e7);
+  static Color cardColor = const Color(0xFFdbdbdb);
+  static Color editcolor = const Color(0xFFdbdbdb);
+  static Color singinBgColor = const Color(0xFFFFFFFF);
+  static Color navyBlue = const Color(0xFF000b40);
   static Color disablecolor = Colors.black26;
   static Color whiteColor = Colors.white;
   static Color blackColor = Colors.black;
@@ -123,5 +126,50 @@ class Constants {
   static String bgImage = "assets/images/bgimage.png";
   static String defaultUserImage = "assets/images/user.jpg";
   static String successImage = "assets/images/congratulations.jpg";
-  static Icon cameraIcon = Icon(Icons.camera_alt);
+  static String cricImage = "assets/images/cricketimage.png";
+  static String storyImage = "assets/images/storyImage.jpg";
+  static Icon cameraIcon = const Icon(Icons.camera_alt);
+
+
+  static void easyLoader() {
+    EasyLoading.instance
+    // ..displayDuration = const Duration(seconds: 5)
+      ..textStyle = TextStyle(fontWeight: FontWeight.bold, color: buttonRed)
+      ..loadingStyle =
+          EasyLoadingStyle.custom //This was missing in earlier code
+      ..backgroundColor = whiteColor
+      ..userInteractions = false
+      ..indicatorColor = buttonRed
+      ..indicatorWidget = SizedBox(
+        width: 80,
+        height: 80,
+        child: SpinKitCubeGrid(
+          color: buttonRed,
+          size: 60.0,
+        ),
+      )
+      ..infoWidget = SizedBox(
+        width: 80,
+        height: 80,
+        child: Center(
+            child: Icon(
+              Icons.error,
+              color: buttonRed,
+              size: 50,
+            )),
+      )
+      ..successWidget = SizedBox(
+        width: 80,
+        height: 80,
+        child: Center(
+            child: Icon(
+              Icons.check,
+              color: buttonRed,
+              size: 50,
+            )),
+      )
+      ..maskType = EasyLoadingMaskType.black
+      ..dismissOnTap = false;
+  }
+
 }

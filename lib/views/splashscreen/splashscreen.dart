@@ -34,17 +34,20 @@ class _SplashScreenState extends State<SplashScreen>
 
   getLoginstatus() async {
     SharedPreferences registerPrefs = await SharedPreferences.getInstance();
+    SharedPreferences pinPrefs = await SharedPreferences.getInstance();
     await Future.delayed(const Duration(milliseconds: 1500));
     log(registerPrefs.getString('teamID').toString());
-    log(registerPrefs.getString('pin').toString());
+    log(registerPrefs.getString('captainNumber').toString());
+    log(registerPrefs.getString('loginPIN').toString());
+    log(registerPrefs.getString('teamCount').toString());
     log("page checking");
     if (registerPrefs.getString('teamID') == null) {
-      Timer(const Duration(seconds: 3), () => Get.offAll(const SingnUpPage()));
+      Timer(const Duration(seconds: 3), () => Get.offAll(()=>const SingnUpPage()));
     } else {
-      if (registerPrefs.getString('loginPIN') != null && registerPrefs.getString('loginPIN') != "" ) {
-        Timer(const Duration(seconds: 3), () => Get.offAll(const Login()));
+      if (registerPrefs.getString('loginPIN').toString() != 'null' && registerPrefs.getString('loginPIN').toString() != "" ) {
+        Timer(const Duration(seconds: 3), () => Get.offAll(()=>const Login()));
       } else {
-        Timer(const Duration(seconds: 3), () => Get.offAll(const SetPin()));
+        Timer(const Duration(seconds: 3), () => Get.offAll(()=>const SetPin()));
       }
     }
   }

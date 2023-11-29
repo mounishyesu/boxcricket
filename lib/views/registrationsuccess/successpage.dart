@@ -102,7 +102,7 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
                   borderRadius:
                   const BorderRadius.all(Radius.circular(30))),
               child: Text(
-                Constants.loginNowButton,
+                Constants.continueButton,
                 style: TextStyle(
                     color: Constants.buttonTextColor,
                     fontSize: Constants.loginBtnTextSize),

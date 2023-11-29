@@ -14,6 +14,7 @@ class Headers1 {
 }
 
 class ApiService {
+
   static Future otpPostCall(
     url,
     body,
@@ -110,4 +111,46 @@ class ApiService {
 
     return response.stream.bytesToString();
   }
+
+
+  static Future<String> playerRegisterForm(
+      String url,
+      String teamId,
+      String playerName,
+      String playerSpecialization,
+      String playerMobile,
+      String playerAge,
+      String playerAadhar,
+      String playerShirtsize,
+      String playerJersey,
+      String profiefilepath,
+      ) async {
+    var postUri = Uri.parse('${URLS.BASE_URL}/$url');
+
+    http.MultipartRequest request = http.MultipartRequest("POST", postUri);
+
+    Map<String, String> headers = {
+      "Content-Type": "multipart/form-data",
+      'x-api-key': 'splcricket'
+    };
+    http.MultipartFile multipartFile =
+    await http.MultipartFile.fromPath('profile_image', profiefilepath);
+
+    request.files.add(multipartFile);
+    request.headers.addAll(headers);
+
+    request.fields["team_id"] = teamId;
+    request.fields["player_name"] = playerName;
+    request.fields["player_specialization"] = playerSpecialization;
+    request.fields["player_mobile"] = playerMobile;
+    request.fields["player_age"] = playerAge;
+    request.fields["player_aadhar"] = playerAadhar;
+    request.fields["player_shirt_size"] = playerShirtsize;
+    request.fields["player_jersey"] = playerJersey;
+
+    http.StreamedResponse response = await request.send();
+
+    return response.stream.bytesToString();
+  }
+
 }

@@ -1,7 +1,16 @@
+import 'dart:developer';
+import 'package:basic_utils/basic_utils.dart';
+import 'package:boxcricket/views/login/login.dart';
+import 'package:boxcricket/views/matchschedule/matchschedule.dart';
+import 'package:boxcricket/views/signup/signup.dart';
+import 'package:boxcricket/views/teamdashboard/teamdetails.dart';
+import 'package:boxcricket/views/topstories/TopStories.dart';
 import 'package:boxcricket/views/widgets/constants.dart';
 import 'package:boxcricket/views/widgets/responsive.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -42,6 +51,16 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  bool readMore = false;
+  String capName = "", teamID = "";
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    setCapName();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,14 +72,133 @@ class _HomePageState extends State<HomePage> {
               height: 1.0,
             ),
           ),
-          title: const Text("Hi Surya!"),
+          title: Text("Hi ${capName.toString()} !"),
           titleTextStyle: TextStyle(
               fontSize: Constants.loginBtnTextSize,
               color: Constants.blackColor,
               fontWeight: FontWeight.w500),
         ),
         drawer: Container(
-          color: Constants.buttonRed,
+          width: MediaQuery.of(context).size.width * 0.7,
+          color: Constants.whiteColor,
+          child: Column(
+            children: [
+              Container(
+                margin: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.height * 0.1,
+                    bottom: MediaQuery.of(context).size.height * 0.02,
+                    left: 20),
+                child: Row(
+                  children: [
+                    Align(
+                        alignment: Alignment.topLeft,
+                        child: Image.asset(
+                          Constants.logoImage,
+                          height: 100,
+                          width: 100,
+                        )),
+                    const SizedBox(
+                      width: 20,
+                    ),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.35,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'WELCOME TO SPL',
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                                fontSize: Constants.headerSize,
+                                fontWeight: FontWeight.bold,
+                                color: Constants.buttonRed),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Divider(
+                color: Constants.darkgrey,
+                thickness: 2,
+              ),
+              Column(
+                children: [
+                  ListTile(
+                    leading: Icon(
+                      Icons.person_pin,
+                      size: 30,
+                      color: Constants.darkgrey,
+                    ),
+                    title: Text(
+                      'Matches',
+                      style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Constants.darkgrey),
+                    ),
+                    onTap: () {
+                      Get.to(() => const MatchSchedule());
+                    },
+                  ),
+                  Divider(
+                    color: Constants.darkgrey,
+                  ),
+                  Visibility(
+                    visible: teamID.toString().isEmpty ? false : true,
+                    child: Column(
+                      children: [
+                        ListTile(
+                          leading: Icon(
+                            Icons.person_pin,
+                            size: 30,
+                            color: Constants.darkgrey,
+                          ),
+                          title: Text(
+                            'My Team',
+                            style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Constants.darkgrey),
+                          ),
+                          onTap: () {
+                            Get.to(() => const TeamDetails());
+                          },
+                        ),
+                        Divider(
+                          color: Constants.darkgrey,
+                        ),
+                        ListTile(
+                          leading: Icon(
+                            Icons.exit_to_app,
+                            size: 30,
+                            color: Constants.darkgrey,
+                          ),
+                          title: Text(
+                            'Logout',
+                            style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Constants.darkgrey),
+                          ),
+                          onTap: () {
+                            /// Close Navigation drawer before
+                            clearData(context);
+                            Get.offAll(() => const SingnUpPage());
+                          },
+                        ),
+                        Divider(
+                          color: Constants.darkgrey,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
         body: SingleChildScrollView(
           child: Column(
@@ -261,9 +399,9 @@ class _HomePageState extends State<HomePage> {
                       enableInfiniteScroll: true,
                       reverse: false,
                       autoPlay: true,
-                      autoPlayInterval: const Duration(seconds: 3),
+                      autoPlayInterval: const Duration(seconds: 6),
                       autoPlayAnimationDuration:
-                          const Duration(milliseconds: 800),
+                          const Duration(milliseconds: 1000),
                       autoPlayCurve: Curves.fastOutSlowIn,
                       enlargeCenterPage: true,
                       enlargeFactor: 0.3,
@@ -275,11 +413,11 @@ class _HomePageState extends State<HomePage> {
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 height: MediaQuery.of(context).size.height * 0.28,
                 width: MediaQuery.of(context).size.width * 1,
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                     gradient: LinearGradient(
                   colors: [
-                    Colors.deepPurple,
-                    Colors.deepPurple,
+                    Constants.navyBlue,
+                    Constants.navyBlue,
                   ],
                 )),
                 child: Column(
@@ -305,17 +443,8 @@ class _HomePageState extends State<HomePage> {
                           itemCount: 3,
                           itemBuilder: (BuildContext context, int itemIndex,
                                   int pageViewIndex) =>
-                              Container(
-                                padding: const EdgeInsets.all(20),
-                                margin: const EdgeInsets.only(bottom: 10),
-                                height:
-                                    MediaQuery.of(context).size.height * 0.2,
-                                width: MediaQuery.of(context).size.width * 0.8,
-                                decoration: BoxDecoration(
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(30)),
-                                  color: Constants.darkgrey,
-                                ),
+                              Image.asset(
+                                Constants.cricImage,
                               ),
                           options: CarouselOptions(
                             height: 400,
@@ -349,12 +478,10 @@ class _HomePageState extends State<HomePage> {
                               color: Constants.darkgrey,
                               fontWeight: FontWeight.bold),
                         )),
-                    Container(
-                      margin: const EdgeInsets.symmetric(vertical: 10),
-                      height: MediaQuery.of(context).size.height * 0.15,
-                      decoration: BoxDecoration(
-                        color: Constants.darkgrey,
-                      ),
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Image.asset(Constants.storyImage,
+                          height: 200, width: 500, fit: BoxFit.fill),
                     ),
                     Align(
                         alignment: Alignment.topLeft,
@@ -365,18 +492,61 @@ class _HomePageState extends State<HomePage> {
                               fontWeight: FontWeight.bold),
                         )),
                     Align(
-                        alignment: Alignment.topLeft,
-                        child: Text(
-                          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec pretium magna vel leo viverra, vitae tempor nibh imperdiet. Vestibulum luctus risus turpis, in sagittis turpis bibendum et. Curabitur suscipit tempor elit, in egestas velit imperdiet eget. ",
-                          style: TextStyle(
-                            color: Constants.darkgrey,
+                      alignment: Alignment.topLeft,
+                      child: Wrap(
+                        children: [
+                          Text(
+                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec pretium magna vel leo viverra, vitae tempor nibh imperdiet. Vestibulum luctus risus turpis, in sagittis turpis bibendum et. Curabitur suscipit tempor elit, in egestas velit imperdiet eget. ",
+                            maxLines: readMore ? 10 : 3,
+                            overflow: TextOverflow.ellipsis,
                           ),
-                        )),
+                          Container(
+                            alignment: Alignment.bottomRight,
+                            padding: const EdgeInsets.all(6),
+                            child: GestureDetector(
+                              child: Text(
+                                readMore ? "Read less" : "Read more",
+                                style: const TextStyle(color: Colors.blue),
+                              ),
+                              onTap: () {
+                                setState(() {
+                                  log('pressed');
+                                  Get.to(const TopStories());
+                                });
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),
             ],
           ),
         ));
+  }
+
+  setCapName() async {
+    SharedPreferences registerPrefs = await SharedPreferences.getInstance();
+    setState(() {
+      if (registerPrefs.getString('teamCaptain').toString() == 'null' ||
+          registerPrefs.getString('teamCaptain').toString() == "") {
+        capName = "";
+        teamID = "";
+      } else {
+        capName = StringUtils.capitalize(
+            registerPrefs.getString('teamCaptain').toString());
+        teamID = StringUtils.capitalize(
+            registerPrefs.getString('teamID').toString());
+        log(capName.toString());
+        log(teamID.toString());
+      }
+    });
+  }
+
+  clearData(context) async {
+    SharedPreferences registerPrefs = await SharedPreferences.getInstance();
+    await registerPrefs.clear();
   }
 }

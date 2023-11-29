@@ -1,9 +1,16 @@
+import 'dart:convert';
+import 'dart:developer';
+
+import 'package:basic_utils/basic_utils.dart';
+import 'package:boxcricket/apiservice/restapi.dart';
+import 'package:boxcricket/views/home/homepage.dart';
 import 'package:boxcricket/views/registrationsuccess/successpage.dart';
 import 'package:boxcricket/views/teamregistration/teamregistration.dart';
 import 'package:boxcricket/views/widgets/constants.dart';
 import 'package:boxcricket/views/widgets/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class TeamDetails extends StatefulWidget {
   const TeamDetails({super.key});
@@ -45,82 +52,37 @@ class TeamDetailScreen extends StatefulWidget {
 
 class _TeamDetailScreenState extends State<TeamDetailScreen> {
   List playersList = [];
-  List specializationList = [
-    {
-      "id": "1",
-      "category": "Batsman",
-      "players": [
-        {"id": "1", "name": "mounishmounishmounish"},
-        {"id": "2", "name": "bhanu murthy"},
-        {"id": "3", "name": "pavan"},
-        {"id": "4", "name": "ramu"},
-      ]
-    },
-    {
-      "id": "2",
-      "category": "Wicket Keepers",
-      "players": [
-        {"id": "1", "name": "manoj"},
-        {"id": "2", "name": "gosi"},
-        {"id": "3", "name": "sagar"},
-        {"id": "4", "name": "mounish4"},
-      ]
-    },
-    {
-      "id": "3",
-      "category": "Bowlers",
-      "players": [
-        {"id": "1", "name": "chandhu"},
-        {"id": "2", "name": "bahnu"},
-        {"id": "3", "name": "mounish3"},
-        {"id": "4", "name": "manohar"},
-      ]
-    },
-    {
-      "id": "4",
-      "category": "All Rounders",
-      "players": [
-        {"id": "1", "name": "mounish1"},
-        {"id": "2", "name": "mounish2"},
-        {"id": "3", "name": "mounish3"},
-        {"id": "4", "name": "mounish4"},
-      ]
-    },
-  ];
+
+  String teamName="",capName="",teamCount="",capImage="";
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getPlayersData();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Constants.singinBgColor,
       appBar: AppBar(
-        title: Row(
-          children: [
-            Container(
-              height: Constants.loginBtnTextSize * 2,
-              width: Constants.loginBtnTextSize * 2,
-              decoration: BoxDecoration(
-                  color: Constants.blackColor, shape: BoxShape.circle),
-            ),
-            SizedBox(
-              width: Constants.defaultPadding,
-            ),
-            const Text("Seekol Team"),
-          ],
-        ),
+        title: Text(teamName.toString()),
         titleTextStyle: TextStyle(
             fontSize: Constants.loginBtnTextSize,
             color: Constants.blackColor,
             fontWeight: FontWeight.bold),
-        // leading: Container(
-        //   margin: const EdgeInsets.only(left: 15),
-        //   child: IconButton(
-        //     icon: Icon(
-        //       Icons.arrow_circle_left_sharp,
-        //       size: Constants.backIconSize,
-        //       color: Constants.backIconColor,
-        //     ),
-        //     onPressed: () => Get.back(),
-        //   ),
-        // ),
+        leading: Container(
+          margin: const EdgeInsets.only(left: 15),
+          child: IconButton(
+            icon: Icon(
+              Icons.arrow_circle_left_sharp,
+              size: Constants.backIconSize,
+              color: Constants.backIconColor,
+            ),
+            onPressed: () => Get.offAll(() => const Home()),
+          ),
+        ),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -131,8 +93,6 @@ class _TeamDetailScreenState extends State<TeamDetailScreen> {
             Row(
               children: [
                 Container(
-                  height: 80,
-                  width: 80,
                   alignment: Alignment.center,
                   margin: const EdgeInsets.only(
                     left: 30,
@@ -142,10 +102,11 @@ class _TeamDetailScreenState extends State<TeamDetailScreen> {
                     color: Constants.singinBgColor,
                     shape: BoxShape.circle,
                   ),
-                  child: Image.asset(
-                    Constants.logoImage,
-                    height: 50,
-                    width: 50,
+                  child:  CircleAvatar(
+                    backgroundImage: NetworkImage(
+                      capImage.toString(),
+                    ),
+                    radius: 30,
                   ),
                 ),
                 SizedBox(
@@ -154,8 +115,7 @@ class _TeamDetailScreenState extends State<TeamDetailScreen> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      "Satish Ippili",
+                    Text(capName.toString(),
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: Constants.loginBtnTextSize),
@@ -173,29 +133,30 @@ class _TeamDetailScreenState extends State<TeamDetailScreen> {
             SizedBox(
               height: Constants.labelSize,
             ),
-            playersList.isEmpty
-                ? GestureDetector(
-                    onTap: () => {
-                      Get.to(const Congratulations()),
-                    },
-                    child: Container(
-                      margin: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 10),
-                      alignment: Alignment.center,
-                      height: Constants.registrationTextFieldHeight,
-                      decoration: BoxDecoration(
-                          color: Constants.blackColor,
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(30))),
-                      child: Text(
-                        Constants.addPlayerButton,
-                        style: TextStyle(
-                            color: Constants.buttonTextColor,
-                            fontSize: Constants.loginBtnTextSize),
+            Visibility(
+              visible: teamCount.toString() == '15'?false:true,
+              child: GestureDetector(
+                      onTap: () => {
+                        Get.to(const TeamRegistration()),
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 10),
+                        alignment: Alignment.center,
+                        height: Constants.registrationTextFieldHeight,
+                        decoration: BoxDecoration(
+                            color: Constants.blackColor,
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(30))),
+                        child: Text(
+                          Constants.addPlayerButton,
+                          style: TextStyle(
+                              color: Constants.buttonTextColor,
+                              fontSize: Constants.loginBtnTextSize),
+                        ),
                       ),
                     ),
-                  )
-                : Container(),
+            ),
             SizedBox(
               height: Constants.labelSize,
             ),
@@ -206,7 +167,7 @@ class _TeamDetailScreenState extends State<TeamDetailScreen> {
                 child: ListView.builder(
                   physics: const ScrollPhysics(),
                   shrinkWrap: true,
-                  itemCount: specializationList.length,
+                  itemCount: playersList.length,
                   itemBuilder: (BuildContext context, int index) {
                     return Container(
                         margin: const EdgeInsets.symmetric(
@@ -228,7 +189,7 @@ class _TeamDetailScreenState extends State<TeamDetailScreen> {
                               padding: const EdgeInsets.only(
                                   left: 30, top: 10, bottom: 10),
                               child: Text(
-                                specializationList[index]['category'],
+                                playersList[index]['role_name'],
                                 style: TextStyle(
                                     color: Constants.whiteColor,
                                     fontWeight: FontWeight.w500),
@@ -249,17 +210,18 @@ class _TeamDetailScreenState extends State<TeamDetailScreen> {
                                       1.0, // spacing between columns
                                 ),
                                 // padding: EdgeInsets.all(8.0), // padding around the grid
-                                itemCount: specializationList[index]['players']
+                                itemCount: playersList[index]['players']
                                     .length, // total number of items
                                 itemBuilder: (context, playerIndex) {
-                                  var playerName = specializationList[index]
-                                      ['players'][playerIndex];
+                                  var playerName = playersList[index]['players']
+                                      [playerIndex];
                                   return Row(
                                     children: [
-                                      Image.asset(
-                                        Constants.defaultUserImage,
-                                        height: 50,
-                                        width: 50,
+                                      CircleAvatar(
+                                        backgroundImage: NetworkImage(
+                                          '${playerName['profile_image_url']}',
+                                        ),
+                                        radius: 25,
                                       ),
                                       SizedBox(
                                         width: Constants.labelSize,
@@ -269,7 +231,7 @@ class _TeamDetailScreenState extends State<TeamDetailScreen> {
                                         child: Text(
                                             maxLines: 2,
                                             overflow: TextOverflow.ellipsis,
-                                            '${playerName['name']}',
+                                            '${playerName['player_name']}',
                                             style: TextStyle(
                                                 color: Constants.blackColor,
                                                 fontWeight: FontWeight.w500)),
@@ -290,4 +252,33 @@ class _TeamDetailScreenState extends State<TeamDetailScreen> {
       ),
     );
   }
+
+  getPlayersData() async {
+    SharedPreferences registerPrefs = await SharedPreferences.getInstance();
+    log(registerPrefs.getString('captainNumber').toString());
+    var teamID = registerPrefs.getString('teamID').toString();
+    capName =  StringUtils.capitalize(registerPrefs.getString('teamCaptain').toString());
+    teamCount = registerPrefs.getString('teamCount').toString();
+    capImage = registerPrefs.getString('capProfilePic').toString();
+    var encodeBody = jsonEncode({"team_id": teamID.toString()});
+    log(encodeBody);
+    log('-----------------------');
+    log(capName.toString());
+    log(teamCount.toString());
+    log(capImage.toString());
+    log('-----------------------');
+    await ApiService.post("Users/getPlayersByTeamId", encodeBody)
+        .then((success) async {
+      setState(() {
+        var responseBody = json.decode(success.body);
+        log(responseBody.toString());
+        log(responseBody.toString());
+        playersList = responseBody['team_players'];
+        log(playersList.length.toString());
+        teamName = StringUtils.capitalize(registerPrefs.getString('teamName').toString());
+      });
+    });
+  }
+
+
 }

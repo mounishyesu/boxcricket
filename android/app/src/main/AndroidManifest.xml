@@ -23,7 +23,7 @@
 
 
     <application
-        android:label="boxcricket"
+        android:label="Boxcricket"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:boxcricket/views/authentication/auth.dart';
+import 'package:boxcricket/views/home/homepage.dart';
 import 'package:boxcricket/views/pinsetup/setpin.dart';
 import 'package:boxcricket/views/teamdashboard/teamdetails.dart';
 import 'package:boxcricket/views/teamregistration/teamregistration.dart';
@@ -91,7 +92,22 @@ class _LoginPageState extends State<LoginPage> {
                   onTap: () async {
                     bool isAuthenticated = await AuthService.authenticateUser();
                     if (isAuthenticated) {
-                      log("success");
+                      log("aunthentication success");
+                      SharedPreferences registerPrefs =
+                          await SharedPreferences.getInstance();
+                      log(logPIN);
+                      log(teamCount.toString());
+                      log(registerPrefs.getString('teamCount').toString());
+                      if ((teamCount.toString() != null &&
+                              teamCount.toString() != '0') ||
+                          (registerPrefs.getString('teamCount').toString() !=
+                                  null &&
+                              registerPrefs.getString('teamCount').toString() !=
+                                  '0')) {
+                        Get.offAll(() => const TeamDetails());
+                      } else {
+                        Get.offAll(() => const TeamRegistration());
+                      }
                     } else {
                       log("failed");
                     }
@@ -169,7 +185,7 @@ class _LoginPageState extends State<LoginPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       GestureDetector(
-                        onTap: () {                        },
+                        onTap: () {},
                         child: Text(
                           Constants.notYou,
                           style: TextStyle(
@@ -179,7 +195,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          Get.to(const SetPin());
+                          Get.to(() => const SetPin());
                         },
                         child: Container(
                           width: MediaQuery.of(context).size.width * 0.3,
@@ -205,16 +221,30 @@ class _LoginPageState extends State<LoginPage> {
                   height: Constants.defaultPadding,
                 ),
                 GestureDetector(
-                  onTap: () {
+                  onTap: () async {
+                    SharedPreferences registerPrefs =
+                        await SharedPreferences.getInstance();
                     log(logPIN);
-                    log(teamCount);
-                    if(logPIN.toString() == pinController.text){
-                      if(teamCount.toString() != null || teamCount.toString() != '0'){
-                        Get.offAll(const TeamDetails());
-                      }else{
-                        Get.offAll(const TeamRegistration());
+                    log(teamCount.toString());
+                    log(registerPrefs.getString('teamCount').toString());
+                    if (logPIN.toString() == pinController.text) {
+                      if ((teamCount.toString() != null &&
+                              teamCount.toString() != '0') ||
+                          (registerPrefs.getString('teamCount').toString() !=
+                                  null &&
+                              registerPrefs.getString('teamCount').toString() !=
+                                  '0')) {
+                        if (teamCount.toString() == '15' ||
+                            registerPrefs.getString('teamCount').toString() ==
+                                '15') {
+                          Get.offAll(() => const Home());
+                        } else {
+                          Get.offAll(() => const TeamDetails());
+                        }
+                      } else {
+                        Get.offAll(() => const TeamRegistration());
                       }
-                    }else{
+                    } else {
                       Get.snackbar("Alert", "PIN is Incorrect",
                           overlayBlur: 5,
                           backgroundColor: Constants.buttonRed,
@@ -296,6 +326,10 @@ class _LoginPageState extends State<LoginPage> {
       capName = registerPrefs.getString('teamCaptain').toString();
       logPIN = registerPrefs.getString('loginPIN').toString();
       teamCount = registerPrefs.getString('teamCount').toString();
+      log('check details');
+      log(capName);
+      log(logPIN);
+      log(teamCount);
     });
   }
 }

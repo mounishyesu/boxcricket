@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
@@ -8,6 +9,7 @@ import 'package:boxcricket/views/widgets/constants.dart';
 import 'package:boxcricket/views/widgets/responsive.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -51,10 +53,12 @@ class RegistrationFromScreen extends StatefulWidget {
 }
 
 class _RegistrationFromScreenState extends State<RegistrationFromScreen> {
+  dynamic argumentData = Get.arguments;
   String mandalDropdownValue = "";
   String districtDropdownValue = "";
   var mandalList = [];
   var districtList = [];
+  Timer? _timer;
 
   TextEditingController teamNameController = TextEditingController();
   TextEditingController captainNameController = TextEditingController();
@@ -79,7 +83,6 @@ class _RegistrationFromScreenState extends State<RegistrationFromScreen> {
     // TODO: implement initState
     super.initState();
     getMandals();
-    getDistricts();
   }
 
   @override
@@ -220,7 +223,7 @@ class _RegistrationFromScreenState extends State<RegistrationFromScreen> {
                                       color: Constants.textFieldFilledColor)),
                               contentPadding:
                                   const EdgeInsets.only(top: 10, left: 10),
-                              hintText: Constants.mobNum,
+                              hintText: argumentData.toString(),
                             ),
                             onChanged: (value) => {
                               if (value.length > 10)
@@ -573,148 +576,225 @@ class _RegistrationFromScreenState extends State<RegistrationFromScreen> {
               teamNameController.text.length < 3)
             {
               Get.snackbar("Alert", Constants.registrationTeamNameAlertMsg,
-                  backgroundColor: Constants.whiteColor,
+                  backgroundColor: Constants.buttonRed,
                   overlayBlur: 5,
                   titleText: Text(
                     'Alert',
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: Constants.headerSize),
+                        fontSize: Constants.headerSize,
+                        color: Constants.whiteColor),
                   ),
-                  messageText: Text(Constants.registrationTeamNameAlertMsg)),
+                  messageText: Text(
+                    Constants.registrationTeamNameAlertMsg,
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: Constants.textSize,
+                        color: Constants.whiteColor),
+                  )),
             }
           else if (captainNameController.text.isEmpty ||
               captainNameController.text.length < 3)
             {
               Get.snackbar("Alert", Constants.loginAlertMsg,
                   overlayBlur: 5,
-                  backgroundColor: Constants.whiteColor,
+                  backgroundColor: Constants.buttonRed,
                   titleText: Text(
                     'Alert',
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: Constants.headerSize),
+                        fontSize: Constants.headerSize,
+                        color: Constants.whiteColor),
                   ),
-                  messageText: Text(Constants.registrationCapNameAlertMsg)),
+                  messageText: Text(
+                    Constants.registrationCapNameAlertMsg,
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: Constants.textSize,
+                        color: Constants.whiteColor),
+                  )),
             }
           else if (ageController.text.isEmpty || ageController.text.length < 2)
             {
               Get.snackbar("Alert", Constants.ageAlertMsg,
                   overlayBlur: 5,
-                  backgroundColor: Constants.whiteColor,
+                  backgroundColor: Constants.buttonRed,
                   titleText: Text(
                     'Alert',
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: Constants.headerSize),
+                        fontSize: Constants.headerSize,
+                        color: Constants.whiteColor),
                   ),
-                  messageText: Text(Constants.ageAlertMsg)),
+                  messageText: Text(
+                    Constants.ageAlertMsg,
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: Constants.textSize,
+                        color: Constants.whiteColor),
+                  )),
             }
           else if (aadharNumController.text.isEmpty ||
               aadharNumController.text.length < 12)
             {
               Get.snackbar("Alert", Constants.aadharAlertMsg,
                   overlayBlur: 5,
-                  backgroundColor: Constants.whiteColor,
+                  backgroundColor: Constants.buttonRed,
                   titleText: Text(
                     'Alert',
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: Constants.headerSize),
+                        fontSize: Constants.headerSize,
+                        color: Constants.whiteColor),
                   ),
-                  messageText: Text(Constants.aadharAlertMsg)),
+                  messageText: Text(
+                    Constants.aadharAlertMsg,
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: Constants.textSize,
+                        color: Constants.whiteColor),
+                  )),
             }
           else if (frontNames.isEmpty)
             {
               Get.snackbar("Alert", Constants.aadharFrontAlertMsg,
                   overlayBlur: 5,
-                  backgroundColor: Constants.whiteColor,
+                  backgroundColor: Constants.buttonRed,
                   titleText: Text(
                     'Alert',
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: Constants.headerSize),
+                        fontSize: Constants.headerSize,
+                        color: Constants.whiteColor),
                   ),
-                  messageText: Text(Constants.aadharFrontAlertMsg)),
+                  messageText: Text(
+                    Constants.aadharFrontAlertMsg,
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: Constants.textSize,
+                        color: Constants.whiteColor),
+                  )),
             }
           else if (backNames.isEmpty)
             {
               Get.snackbar("Alert", Constants.aadharBackAlertMsg,
                   overlayBlur: 5,
-                  backgroundColor: Constants.whiteColor,
+                  backgroundColor: Constants.buttonRed,
                   titleText: Text(
                     'Alert',
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: Constants.headerSize),
+                        fontSize: Constants.headerSize,
+                        color: Constants.whiteColor),
                   ),
-                  messageText: Text(Constants.aadharBackAlertMsg)),
+                  messageText: Text(
+                    Constants.aadharBackAlertMsg,
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: Constants.textSize,
+                        color: Constants.whiteColor),
+                  )),
             }
           else if (names.isEmpty)
             {
               Get.snackbar("Alert", Constants.profileAlertMsg,
                   overlayBlur: 5,
-                  backgroundColor: Constants.whiteColor,
+                  backgroundColor: Constants.buttonRed,
                   titleText: Text(
                     'Alert',
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: Constants.headerSize),
+                        fontSize: Constants.headerSize,
+                        color: Constants.whiteColor),
                   ),
-                  messageText: Text(Constants.profileAlertMsg)),
+                  messageText: Text(
+                    Constants.profileAlertMsg,
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: Constants.textSize,
+                        color: Constants.whiteColor),
+                  )),
             }
           else if (addressController.text.isEmpty ||
-              addressController.text.length < 8)
+              addressController.text.length < 3)
             {
               Get.snackbar("Alert", Constants.addressAlertMsg,
                   overlayBlur: 5,
-                  backgroundColor: Constants.whiteColor,
+                  backgroundColor: Constants.buttonRed,
                   titleText: Text(
                     'Alert',
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: Constants.headerSize),
+                        fontSize: Constants.headerSize,
+                        color: Constants.whiteColor),
                   ),
-                  messageText: Text(Constants.addressAlertMsg)),
+                  messageText: Text(
+                    Constants.addressAlertMsg,
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: Constants.textSize,
+                        color: Constants.whiteColor),
+                  )),
             }
           else if (panchayathiController.text.isEmpty)
             {
               Get.snackbar("Alert", Constants.panchayatAlertMsg,
                   overlayBlur: 5,
-                  backgroundColor: Constants.whiteColor,
+                  backgroundColor: Constants.buttonRed,
                   titleText: Text(
                     'Alert',
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: Constants.headerSize),
+                        fontSize: Constants.headerSize,
+                        color: Constants.whiteColor),
                   ),
-                  messageText: Text(Constants.panchayatAlertMsg)),
+                  messageText: Text(
+                    Constants.panchayatAlertMsg,
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: Constants.textSize,
+                        color: Constants.whiteColor),
+                  )),
             }
           else if (mandalDropdownValue.isEmpty)
             {
               Get.snackbar("Alert", Constants.mandalAlertMsg,
                   overlayBlur: 5,
-                  backgroundColor: Constants.whiteColor,
+                  backgroundColor: Constants.buttonRed,
                   titleText: Text(
                     'Alert',
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: Constants.headerSize),
+                        fontSize: Constants.headerSize,
+                        color: Constants.whiteColor),
                   ),
-                  messageText: Text(Constants.mandalAlertMsg)),
+                  messageText: Text(
+                    Constants.mandalAlertMsg,
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: Constants.textSize,
+                        color: Constants.whiteColor),
+                  )),
             }
           else if (districtDropdownValue.isEmpty)
             {
               Get.snackbar("Alert", Constants.districtAlertMsg,
                   overlayBlur: 5,
-                  backgroundColor: Constants.whiteColor,
+                  backgroundColor: Constants.buttonRed,
                   titleText: Text(
                     'Alert',
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: Constants.headerSize),
+                        fontSize: Constants.headerSize,
+                        color: Constants.whiteColor),
                   ),
-                  messageText: Text(Constants.districtAlertMsg)),
+                  messageText: Text(
+                    Constants.districtAlertMsg,
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: Constants.textSize,
+                        color: Constants.whiteColor),
+                  )),
             }
           else
             {
@@ -1051,11 +1131,15 @@ class _RegistrationFromScreenState extends State<RegistrationFromScreen> {
   }
 
   makeRegistrationApiCall() async {
+    Constants.easyLoader();
+    EasyLoading.show(
+      status: "Saving . . .",
+    );
     log(teamNameController.text.toString());
     log(
       captainNameController.text.toString(),
     );
-    log(Constants.mobNum.toString());
+    log(argumentData.toString());
     log(
       ageController.text.toString(),
     );
@@ -1085,7 +1169,7 @@ class _RegistrationFromScreenState extends State<RegistrationFromScreen> {
             "Users/userTeamRegistration",
             teamNameController.text.toString(),
             captainNameController.text.toString(),
-            Constants.mobNum.toString(),
+            argumentData.toString(),
             ageController.text.toString(),
             aadharNumController.text.toString(),
             addressController.text.toString(),
@@ -1095,156 +1179,257 @@ class _RegistrationFromScreenState extends State<RegistrationFromScreen> {
             frontPaths[0].toString(),
             backPaths[0].toString(),
             paths[0].toString())
-        .then((success) async {
+        .then((success) {
       setState(() {
         var responseBody = json.decode(success);
         print(responseBody);
         if (responseBody['status'] == true) {
-          saveUserRegistrationDetails(responseBody);
-          Get.snackbar("Alert", responseBody['message'].toString(),
-              overlayBlur: 5,
-              backgroundColor: Constants.whiteColor,
-              titleText: Text(
-                'Alert',
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: Constants.headerSize),
-              ),
-              messageText: Text(responseBody['message'].toString()));
-          Get.offAll(const SetPin());
-          // if (responseBody['teamCount'] == 0) {
-          //   Get.offAll(const TeamRegistration());
-          // } else {
-          //   Get.offAll(const TeamDetails());
-          // }
-
-        } else {
-          log('errorList--------------');
-
-          var errorList = responseBody['errors'];
-
-          if (errorList['team_captain'] != null) {
-            Get.snackbar("Alert", errorList['team_captain'].toString(),
-                overlayBlur: 5,
-                backgroundColor: Constants.whiteColor,
-                titleText: Text(
-                  'Alert',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: Constants.headerSize),
-                ),
-                messageText: Text(errorList['team_captain'].toString()));
-          } else if (errorList['team_name'] != null) {
-            Get.snackbar("Alert", errorList['team_name'].toString(),
-                overlayBlur: 5,
-                backgroundColor: Constants.whiteColor,
-                titleText: Text(
-                  'Alert',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: Constants.headerSize),
-                ),
-                messageText: Text(errorList['team_name'].toString()));
-          } else if (errorList['captain_mobile'] != null) {
-            Get.snackbar("Alert", errorList['captain_mobile'].toString(),
-                overlayBlur: 5,
-                backgroundColor: Constants.whiteColor,
-                titleText: Text(
-                  'Alert',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: Constants.headerSize),
-                ),
-                messageText: Text(errorList['captain_mobile'].toString()));
-          } else if (errorList['age'] != null) {
-            Get.snackbar("Alert", errorList['age'].toString(),
-                overlayBlur: 5,
-                backgroundColor: Constants.whiteColor,
-                titleText: Text(
-                  'Alert',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: Constants.headerSize),
-                ),
-                messageText: Text(errorList['age'].toString()));
-          } else if (errorList['aadhar'] != null) {
-            Get.snackbar("Alert", errorList['aadhar'].toString(),
-                overlayBlur: 5,
-                backgroundColor: Constants.whiteColor,
-                titleText: Text(
-                  'Alert',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: Constants.headerSize),
-                ),
-                messageText: Text(errorList['aadhar'].toString()));
-          } else if (errorList['address'] != null) {
-            Get.snackbar("Alert", errorList['address'].toString(),
-                overlayBlur: 5,
-                backgroundColor: Constants.whiteColor,
-                titleText: Text(
-                  'Alert',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: Constants.headerSize),
-                ),
-                messageText: Text(errorList['address'].toString()));
-          } else if (errorList['panchayathi'] != null) {
-            Get.snackbar("Alert", errorList['panchayathi'].toString(),
-                overlayBlur: 5,
-                backgroundColor: Constants.whiteColor,
-                titleText: Text(
-                  'Alert',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: Constants.headerSize),
-                ),
-                messageText: Text(errorList['panchayathi'].toString()));
-          } else if (errorList['mandalam'] != null) {
-            Get.snackbar("Alert", errorList['mandalam'].toString(),
-                overlayBlur: 5,
-                backgroundColor: Constants.whiteColor,
-                titleText: Text(
-                  'Alert',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: Constants.headerSize),
-                ),
-                messageText: Text(errorList['mandalam'].toString()));
-          } else if (errorList['district'] != null) {
-            Get.snackbar("Alert", errorList['district'].toString(),
-                overlayBlur: 5,
-                backgroundColor: Constants.whiteColor,
-                titleText: Text(
-                  'Alert',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: Constants.headerSize),
-                ),
-                messageText: Text(errorList['district'].toString()));
+          EasyLoading.addStatusCallback((status) {
+            if (status == EasyLoadingStatus.dismiss) {
+              _timer?.cancel();
+            }
+          });
+          if (responseBody['status'] == true) {
+            saveUserRegistrationDetails(responseBody);
+            // Get.snackbar("Alert", responseBody['message'].toString(),
+            //     overlayBlur: 5,
+            //     backgroundColor: Constants.green,
+            //     titleText: Text(
+            //       'Alert',
+            //       style: TextStyle(
+            //           fontWeight: FontWeight.bold,
+            //           fontSize: Constants.headerSize,
+            //           color: Constants.whiteColor),
+            //     ),
+            //     messageText: Text(
+            //       responseBody['message'].toString(),
+            //       style: TextStyle(
+            //           fontWeight: FontWeight.bold,
+            //           fontSize: Constants.textSize,
+            //           color: Constants.whiteColor),
+            //     ));
+            Get.offAll(() => const SetPin());
           }
+          else {
+            log('errorList--------------');
+
+            var errorList = responseBody['errors'];
+
+            if (errorList['team_captain'] != null) {
+              Get.snackbar("Alert", errorList['team_captain'].toString(),
+                  overlayBlur: 5,
+                  backgroundColor: Constants.buttonRed,
+                  titleText: Text(
+                    'Alert',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: Constants.headerSize,
+                        color: Constants.whiteColor),
+                  ),
+                  messageText: Text(
+                    errorList['team_captain'].toString(),
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: Constants.textSize,
+                        color: Constants.whiteColor),
+                  ));
+            } else if (errorList['team_name'] != null) {
+              Get.snackbar("Alert", errorList['team_name'].toString(),
+                  overlayBlur: 5,
+                  backgroundColor: Constants.buttonRed,
+                  titleText: Text(
+                    'Alert',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: Constants.headerSize,
+                        color: Constants.whiteColor),
+                  ),
+                  messageText: Text(
+                    errorList['team_name'].toString(),
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: Constants.textSize,
+                        color: Constants.whiteColor),
+                  ));
+            } else if (errorList['captain_mobile'] != null) {
+              Get.snackbar("Alert", errorList['captain_mobile'].toString(),
+                  overlayBlur: 5,
+                  backgroundColor: Constants.buttonRed,
+                  titleText: Text(
+                    'Alert',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: Constants.headerSize,
+                        color: Constants.whiteColor),
+                  ),
+                  messageText: Text(
+                    errorList['captain_mobile'].toString(),
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: Constants.textSize,
+                        color: Constants.whiteColor),
+                  ));
+            } else if (errorList['age'] != null) {
+              Get.snackbar("Alert", errorList['age'].toString(),
+                  overlayBlur: 5,
+                  backgroundColor: Constants.buttonRed,
+                  titleText: Text(
+                    'Alert',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: Constants.headerSize,
+                        color: Constants.whiteColor),
+                  ),
+                  messageText: Text(
+                    errorList['age'].toString(),
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: Constants.textSize,
+                        color: Constants.whiteColor),
+                  ));
+            } else if (errorList['aadhar'] != null) {
+              Get.snackbar("Alert", errorList['aadhar'].toString(),
+                  overlayBlur: 5,
+                  backgroundColor: Constants.buttonRed,
+                  titleText: Text(
+                    'Alert',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: Constants.headerSize,
+                        color: Constants.whiteColor),
+                  ),
+                  messageText: Text(
+                    errorList['aadhar'].toString(),
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: Constants.textSize,
+                        color: Constants.whiteColor),
+                  ));
+            } else if (errorList['address'] != null) {
+              Get.snackbar("Alert", errorList['address'].toString(),
+                  overlayBlur: 5,
+                  backgroundColor: Constants.buttonRed,
+                  titleText: Text(
+                    'Alert',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: Constants.headerSize,
+                        color: Constants.whiteColor),
+                  ),
+                  messageText: Text(
+                    errorList['address'].toString(),
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: Constants.textSize,
+                        color: Constants.whiteColor),
+                  ));
+            } else if (errorList['panchayathi'] != null) {
+              Get.snackbar("Alert", errorList['panchayathi'].toString(),
+                  overlayBlur: 5,
+                  backgroundColor: Constants.buttonRed,
+                  titleText: Text(
+                    'Alert',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: Constants.headerSize,
+                        color: Constants.whiteColor),
+                  ),
+                  messageText: Text(
+                    errorList['panchayathi'].toString(),
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: Constants.textSize,
+                        color: Constants.whiteColor),
+                  ));
+            } else if (errorList['mandalam'] != null) {
+              Get.snackbar("Alert", errorList['mandalam'].toString(),
+                  overlayBlur: 5,
+                  backgroundColor: Constants.buttonRed,
+                  titleText: Text(
+                    'Alert',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: Constants.headerSize,
+                        color: Constants.whiteColor),
+                  ),
+                  messageText: Text(
+                    errorList['mandalam'].toString(),
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: Constants.textSize,
+                        color: Constants.whiteColor),
+                  ));
+            } else if (errorList['district'] != null) {
+              Get.snackbar("Alert", errorList['district'].toString(),
+                  overlayBlur: 5,
+                  backgroundColor: Constants.buttonRed,
+                  titleText: Text(
+                    'Alert',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: Constants.headerSize,
+                        color: Constants.whiteColor),
+                  ),
+                  messageText: Text(
+                    errorList['district'].toString(),
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: Constants.textSize,
+                        color: Constants.whiteColor),
+                  ));
+            }
+          }
+          EasyLoading.showSuccess(responseBody['message'].toString());
+        } else {
+          EasyLoading.showInfo("Registration Failed");
         }
       });
     });
   }
 
   getMandals() async {
-    await ApiService.get("Users/getMandalam").then((success) async {
-      setState(() {
-        var responseBody = json.decode(success.body);
-        log(responseBody.toString());
-        mandalList = responseBody['Data'];
-      });
+    Constants.easyLoader();
+    EasyLoading.show(
+      status: "Loading . . .",
+    );
+    SharedPreferences registerPrefs = await SharedPreferences.getInstance();
+    await ApiService.get("Users/getMandalam").then((success) {
+      if (success.statusCode == 200) {
+        EasyLoading.addStatusCallback((status) {
+          if (status == EasyLoadingStatus.dismiss) {
+            _timer?.cancel();
+          }
+        });
+        setState(() {
+          var responseBody = json.decode(success.body);
+          log(responseBody.toString());
+          log(argumentData.toString());
+          mandalList = responseBody['Data'];
+          getDistricts();
+        });
+      } else {
+        EasyLoading.showInfo("Loading Failed");
+      }
     });
   }
 
   getDistricts() async {
-    await ApiService.get("Users/getDistricts").then((success) async {
-      setState(() {
-        var responseBody = json.decode(success.body);
-        log(responseBody.toString());
-        districtList = responseBody['Data'];
-      });
+    await ApiService.get("Users/getDistricts").then((success) {
+      if (success.statusCode == 200) {
+        EasyLoading.addStatusCallback((status) {
+          if (status == EasyLoadingStatus.dismiss) {
+            _timer?.cancel();
+          }
+        });
+        setState(() {
+          var responseBody = json.decode(success.body);
+          log(responseBody.toString());
+          districtList = responseBody['Data'];
+        });
+        EasyLoading.showSuccess("Loading Success");
+      } else {
+        EasyLoading.showInfo("Loading Failed");
+      }
     });
   }
 }
@@ -1263,12 +1448,17 @@ saveUserRegistrationDetails(resposnseBody) async {
 
   registerPrefs.setString(
       "captainNumber", resposnseBody['team']['captain_mobile'].toString());
-
+  registerPrefs.setString("loginPIN", resposnseBody['team']['pin'].toString());
   registerPrefs.setString(
-      "loginPIN", resposnseBody['team']['pin'].toString());
+      "teamCount", resposnseBody['team']['teamCount'].toString());
+  registerPrefs.setString(
+      "capProfilePic", resposnseBody["team"]['profile_image_url'].toString());
+  log('=====================<>===========');
+  log(resposnseBody.toString());
 
-  print(registerPrefs.getString('teamID'));
-  print(registerPrefs.getString('teamName'));
-  print(registerPrefs.getString('teamCaptain'));
-  print(registerPrefs.getString('captainNumber'));
+  log(registerPrefs.getString('teamID').toString());
+  log(registerPrefs.getString('teamName').toString());
+  log(registerPrefs.getString('teamCaptain').toString());
+  log(registerPrefs.getString('captainNumber').toString());
+  log(registerPrefs.getString('loginPIN').toString());
 }
