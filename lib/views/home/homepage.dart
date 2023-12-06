@@ -228,7 +228,7 @@ class _HomePageState extends State<HomePage> {
                                   const BorderRadius.all(Radius.circular(50))),
                           child:  matchList.isEmpty?Center(
                             child: Text(
-                              'No matche data available',
+                              'No match data available',
                               style: TextStyle(
                                   color: Constants.whiteColor,
                                   fontWeight: FontWeight.bold),

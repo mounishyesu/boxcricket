@@ -173,89 +173,86 @@ class _TeamDetailScreenState extends State<TeamDetailScreen> {
               ),
             ):SafeArea(
               bottom: true,
-              child: SizedBox(
-                height: MediaQuery.of(context).size.height * 0.65,
-                child: ListView.builder(
-                  physics: const ScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: playersList.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Container(
-                        margin: const EdgeInsets.symmetric(
-                            horizontal: 30, vertical: 10),
-                        decoration: BoxDecoration(
-                            border: Border.all(color: Constants.blackColor),
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(20))),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              width: MediaQuery.of(context).size.width * 1,
-                              decoration: BoxDecoration(
-                                  color: Constants.buttonRed,
-                                  borderRadius: const BorderRadius.only(
-                                      topRight: Radius.circular(20),
-                                      topLeft: Radius.circular(20))),
-                              padding: const EdgeInsets.only(
-                                  left: 30, top: 10, bottom: 10),
-                              child: Text(
-                                playersList[index]['role_name'],
-                                style: TextStyle(
-                                    color: Constants.whiteColor,
-                                    fontWeight: FontWeight.w500),
-                              ),
+              child: ListView.builder(
+                physics: const ScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: playersList.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Container(
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 30, vertical: 10),
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Constants.blackColor),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(20))),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            width: MediaQuery.of(context).size.width * 1,
+                            decoration: BoxDecoration(
+                                color: Constants.buttonRed,
+                                borderRadius: const BorderRadius.only(
+                                    topRight: Radius.circular(20),
+                                    topLeft: Radius.circular(20))),
+                            padding: const EdgeInsets.only(
+                                left: 30, top: 10, bottom: 10),
+                            child: Text(
+                              playersList[index]['role_name'],
+                              style: TextStyle(
+                                  color: Constants.whiteColor,
+                                  fontWeight: FontWeight.w500),
                             ),
-                            Container(
-                              margin: const EdgeInsets.all(20),
-                              child: GridView.builder(
-                                physics: const ScrollPhysics(),
-                                shrinkWrap: true,
-                                gridDelegate:
-                                    const SliverGridDelegateWithFixedCrossAxisCount(
-                                  childAspectRatio: 2.5,
-                                  crossAxisCount:
-                                      2, // number of items in each row
-                                  mainAxisSpacing: 1.0, // spacing between rows
-                                  crossAxisSpacing:
-                                      1.0, // spacing between columns
-                                ),
-                                // padding: EdgeInsets.all(8.0), // padding around the grid
-                                itemCount: playersList[index]['players']
-                                    .length, // total number of items
-                                itemBuilder: (context, playerIndex) {
-                                  var playerName = playersList[index]['players']
-                                      [playerIndex];
-                                  return Row(
-                                    children: [
-                                      CircleAvatar(
-                                        backgroundImage: NetworkImage(
-                                          '${playerName['profile_image_url']}',
-                                        ),
-                                        radius: 25,
-                                      ),
-                                      SizedBox(
-                                        width: Constants.labelSize,
-                                      ),
-                                      SizedBox(
-                                        width: 80,
-                                        child: Text(
-                                            maxLines: 2,
-                                            overflow: TextOverflow.ellipsis,
-                                            '${playerName['player_name']}',
-                                            style: TextStyle(
-                                                color: Constants.blackColor,
-                                                fontWeight: FontWeight.w500)),
-                                      ),
-                                    ],
-                                  );
-                                },
+                          ),
+                          Container(
+                            margin: const EdgeInsets.all(20),
+                            child: GridView.builder(
+                              physics: const ScrollPhysics(),
+                              shrinkWrap: true,
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                childAspectRatio: 2.5,
+                                crossAxisCount:
+                                    2, // number of items in each row
+                                mainAxisSpacing: 1.0, // spacing between rows
+                                crossAxisSpacing:
+                                    1.0, // spacing between columns
                               ),
-                            )
-                          ],
-                        ));
-                  },
-                ),
+                              // padding: EdgeInsets.all(8.0), // padding around the grid
+                              itemCount: playersList[index]['players']
+                                  .length, // total number of items
+                              itemBuilder: (context, playerIndex) {
+                                var playerName = playersList[index]['players']
+                                    [playerIndex];
+                                return Row(
+                                  children: [
+                                    CircleAvatar(
+                                      backgroundImage: NetworkImage(
+                                        '${playerName['profile_image_url']}',
+                                      ),
+                                      radius: 25,
+                                    ),
+                                    SizedBox(
+                                      width: Constants.labelSize,
+                                    ),
+                                    SizedBox(
+                                      width: 80,
+                                      child: Text(
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                          '${playerName['player_name']}',
+                                          style: TextStyle(
+                                              color: Constants.blackColor,
+                                              fontWeight: FontWeight.w500)),
+                                    ),
+                                  ],
+                                );
+                              },
+                            ),
+                          )
+                        ],
+                      ));
+                },
               ),
             ),
           ],
