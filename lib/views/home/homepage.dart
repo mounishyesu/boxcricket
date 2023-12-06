@@ -1,5 +1,8 @@
+import 'dart:async';
+import 'dart:convert';
 import 'dart:developer';
 import 'package:basic_utils/basic_utils.dart';
+import 'package:boxcricket/apiservice/restapi.dart';
 import 'package:boxcricket/views/login/login.dart';
 import 'package:boxcricket/views/matchschedule/matchschedule.dart';
 import 'package:boxcricket/views/signup/signup.dart';
@@ -9,6 +12,7 @@ import 'package:boxcricket/views/widgets/constants.dart';
 import 'package:boxcricket/views/widgets/responsive.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -51,8 +55,12 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  Timer? _timer;
   bool readMore = false;
   String capName = "", teamID = "";
+  List matchList = [];
+  List storiesList = [];
+  List featureadList = [];
 
   @override
   void initState() {
@@ -206,26 +214,34 @@ class _HomePageState extends State<HomePage> {
               Container(
                 margin:
                     const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-                height: MediaQuery.of(context).size.height * 0.21,
+                height: MediaQuery.of(context).size.height * 0.2,
                 child: CarouselSlider.builder(
                     disableGesture: true,
-                    itemCount: 3,
+                    itemCount: matchList.length,
                     itemBuilder: (BuildContext context, int itemIndex,
                             int pageViewIndex) =>
-                        Container(
+                       Container(
                           padding: const EdgeInsets.all(15),
                           decoration: BoxDecoration(
                               color: Constants.buttonRed,
                               borderRadius:
                                   const BorderRadius.all(Radius.circular(50))),
-                          child: Column(
+                          child:  matchList.isEmpty?Center(
+                            child: Text(
+                              'No matche data available',
+                              style: TextStyle(
+                                  color: Constants.whiteColor,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ):Column(
                             children: [
                               Container(
                                 margin: const EdgeInsets.only(left: 20),
                                 child: Align(
                                   alignment: Alignment.topLeft,
                                   child: Text(
-                                    "Fri 18, 2023",
+                                    matchList[itemIndex]['match_date']
+                                        .toString(),
                                     style:
                                         TextStyle(color: Constants.whiteColor),
                                   ),
@@ -248,7 +264,11 @@ class _HomePageState extends State<HomePage> {
                                             shape: BoxShape.circle),
                                         alignment: Alignment.center,
                                         child: Text(
-                                          "SSE",
+                                          matchList[itemIndex]
+                                                  ['match_team_one_name']
+                                              .toString()
+                                              .substring(0, 3)
+                                              .toUpperCase(),
                                           style: TextStyle(
                                               color: Constants.blackColor,
                                               fontWeight: FontWeight.w600),
@@ -265,21 +285,30 @@ class _HomePageState extends State<HomePage> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            Text("Team Name",
+                                            Text(
+                                                matchList[itemIndex]
+                                                        ['match_team_one_name']
+                                                    .toString(),
                                                 maxLines: 1,
                                                 overflow: TextOverflow.ellipsis,
                                                 style: TextStyle(
                                                   color: Constants.whiteColor,
                                                   fontSize: 12,
                                                 )),
-                                            Text("Mandal Name",
+                                            Text(
+                                                matchList[itemIndex][
+                                                        'match_team_one_mandal']
+                                                    .toString(),
                                                 maxLines: 1,
                                                 overflow: TextOverflow.ellipsis,
                                                 style: TextStyle(
                                                   color: Constants.blackColor,
                                                   fontSize: 12,
                                                 )),
-                                            Text("Team ID",
+                                            Text(
+                                                matchList[itemIndex]
+                                                        ['DummyOne_Team_ID']
+                                                    .toString(),
                                                 maxLines: 1,
                                                 overflow: TextOverflow.ellipsis,
                                                 style: TextStyle(
@@ -315,21 +344,30 @@ class _HomePageState extends State<HomePage> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            Text("Team Name",
+                                            Text(
+                                                matchList[itemIndex]
+                                                        ['match_team_two_name']
+                                                    .toString(),
                                                 maxLines: 1,
                                                 overflow: TextOverflow.ellipsis,
                                                 style: TextStyle(
                                                   color: Constants.whiteColor,
                                                   fontSize: 12,
                                                 )),
-                                            Text("Mandal Name",
+                                            Text(
+                                                matchList[itemIndex][
+                                                        'match_team_two_mandal']
+                                                    .toString(),
                                                 maxLines: 1,
                                                 overflow: TextOverflow.ellipsis,
                                                 style: TextStyle(
                                                   color: Constants.blackColor,
                                                   fontSize: 12,
                                                 )),
-                                            Text("Team ID",
+                                            Text(
+                                                matchList[itemIndex]
+                                                        ['DummyTwo_Team_ID']
+                                                    .toString(),
                                                 maxLines: 1,
                                                 overflow: TextOverflow.ellipsis,
                                                 style: TextStyle(
@@ -350,7 +388,11 @@ class _HomePageState extends State<HomePage> {
                                             shape: BoxShape.circle),
                                         alignment: Alignment.center,
                                         child: Text(
-                                          "SSE",
+                                          matchList[itemIndex]
+                                                  ['match_team_two_name']
+                                              .toString()
+                                              .substring(0, 3)
+                                              .toUpperCase(),
                                           style: TextStyle(
                                               color: Constants.blackColor,
                                               fontWeight: FontWeight.w600),
@@ -360,34 +402,34 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                 ],
                               ),
-                              SizedBox(
-                                height: Constants.labelSize * 3,
-                              ),
-                              Container(
-                                height: 25,
-                                width: 100,
-                                decoration: BoxDecoration(
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(50)),
-                                  color: Constants.darkgrey,
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(
-                                      Icons.star,
-                                      color: Constants.buttonRed,
-                                      size: 18,
-                                    ),
-                                    Text(
-                                      "4 WON",
-                                      style: TextStyle(
-                                          color: Constants.whiteColor,
-                                          fontSize: 10),
-                                    ),
-                                  ],
-                                ),
-                              )
+                              // SizedBox(
+                              //   height: Constants.labelSize * 3,
+                              // ),
+                              // Container(
+                              //   height: 25,
+                              //   width: 100,
+                              //   decoration: BoxDecoration(
+                              //     borderRadius: const BorderRadius.all(
+                              //         Radius.circular(50)),
+                              //     color: Constants.darkgrey,
+                              //   ),
+                              //   child: Row(
+                              //     mainAxisAlignment: MainAxisAlignment.center,
+                              //     children: [
+                              //       Icon(
+                              //         Icons.star,
+                              //         color: Constants.buttonRed,
+                              //         size: 18,
+                              //       ),
+                              //       Text(
+                              //         "4 WON",
+                              //         style: TextStyle(
+                              //             color: Constants.whiteColor,
+                              //             fontSize: 10),
+                              //       ),
+                              //     ],
+                              //   ),
+                              // )
                             ],
                           ),
                         ),
@@ -440,12 +482,22 @@ class _HomePageState extends State<HomePage> {
                       height: MediaQuery.of(context).size.height * 0.2,
                       child: CarouselSlider.builder(
                           disableGesture: true,
-                          itemCount: 3,
+                          itemCount: featureadList.length,
                           itemBuilder: (BuildContext context, int itemIndex,
                                   int pageViewIndex) =>
-                              Image.asset(
-                                Constants.cricImage,
-                              ),
+                              featureadList.isEmpty
+                                  ? Center(
+                                      child: Text(
+                                        'No Feature Ads available',
+                                        style: TextStyle(
+                                            color: Constants.whiteColor,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    )
+                                  : Image.network(
+                                      featureadList[itemIndex]['file_url']
+                                          .toString(),
+                                    ),
                           options: CarouselOptions(
                             height: 400,
                             aspectRatio: 16 / 9,
@@ -478,47 +530,90 @@ class _HomePageState extends State<HomePage> {
                               color: Constants.darkgrey,
                               fontWeight: FontWeight.bold),
                         )),
-                    Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Image.asset(Constants.storyImage,
-                          height: 200, width: 500, fit: BoxFit.fill),
-                    ),
-                    Align(
-                        alignment: Alignment.topLeft,
-                        child: Text(
-                          "Story Headline",
-                          style: TextStyle(
-                              color: Constants.darkgrey,
-                              fontWeight: FontWeight.bold),
-                        )),
-                    Align(
-                      alignment: Alignment.topLeft,
-                      child: Wrap(
-                        children: [
-                          Text(
-                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec pretium magna vel leo viverra, vitae tempor nibh imperdiet. Vestibulum luctus risus turpis, in sagittis turpis bibendum et. Curabitur suscipit tempor elit, in egestas velit imperdiet eget. ",
-                            maxLines: readMore ? 10 : 3,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          Container(
-                            alignment: Alignment.bottomRight,
-                            padding: const EdgeInsets.all(6),
-                            child: GestureDetector(
-                              child: Text(
-                                readMore ? "Read less" : "Read more",
-                                style: const TextStyle(color: Colors.blue),
-                              ),
-                              onTap: () {
-                                setState(() {
-                                  log('pressed');
-                                  Get.to(const TopStories());
-                                });
+                    storiesList.isEmpty
+                        ? Container(
+                            margin: const EdgeInsets.only(top: 100),
+                            alignment: Alignment.center,
+                            child: Text(
+                              'No stories available',
+                              style: TextStyle(
+                                  color: Constants.blackColor,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          )
+                        : SafeArea(
+                            bottom: true,
+                            child: ListView.builder(
+                              physics: const ScrollPhysics(),
+                              shrinkWrap: true,
+                              itemCount: storiesList.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return Column(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(10.0),
+                                      child: Image.network(
+                                          storiesList[index]['cuisine_file_url']
+                                              .toString(),
+                                          height: 200,
+                                          width: 500,
+                                          fit: BoxFit.fill),
+                                    ),
+                                    Align(
+                                        alignment: Alignment.topLeft,
+                                        child: Text(
+                                          storiesList[index]['cuisine_name']
+                                              .toString(),
+                                          style: TextStyle(
+                                              color: Constants.darkgrey,
+                                              fontWeight: FontWeight.bold),
+                                        )),
+                                    Align(
+                                      alignment: Alignment.topLeft,
+                                      child: Wrap(
+                                        children: [
+                                          Text(
+                                            storiesList[index]['description']
+                                                .toString(),
+                                            maxLines: readMore ? 10 : 3,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          Container(
+                                            alignment: Alignment.bottomRight,
+                                            padding: const EdgeInsets.all(6),
+                                            child: GestureDetector(
+                                              child: Text(
+                                                readMore
+                                                    ? "Read less"
+                                                    : "Read more",
+                                                style: const TextStyle(
+                                                    color: Colors.blue),
+                                              ),
+                                              onTap: () {
+                                                log('pressed');
+                                                Get.to(const TopStories(),
+                                                    arguments: [
+                                                      storiesList[index][
+                                                              'cuisine_file_url']
+                                                          .toString(),
+                                                      storiesList[index]
+                                                              ['cuisine_name']
+                                                          .toString(),
+                                                      storiesList[index]
+                                                              ['description']
+                                                          .toString(),
+                                                    ]);
+                                              },
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                );
                               },
                             ),
                           ),
-                        ],
-                      ),
-                    ),
                   ],
                 ),
               ),
@@ -528,6 +623,10 @@ class _HomePageState extends State<HomePage> {
   }
 
   setCapName() async {
+    Constants.easyLoader();
+    EasyLoading.show(
+      status: "Loading . . .",
+    );
     SharedPreferences registerPrefs = await SharedPreferences.getInstance();
     setState(() {
       if (registerPrefs.getString('teamCaptain').toString() == 'null' ||
@@ -541,6 +640,91 @@ class _HomePageState extends State<HomePage> {
             registerPrefs.getString('teamID').toString());
         log(capName.toString());
         log(teamID.toString());
+      }
+    });
+    getMatchList();
+  }
+
+  getMatchList() async {
+    Constants.easyLoader();
+    EasyLoading.show(
+      status: "Loading . . .",
+    );
+    await ApiService.get("Users/getMatchList").then((success) {
+      if (success.statusCode == 200) {
+        EasyLoading.addStatusCallback((status) {
+          if (status == EasyLoadingStatus.dismiss) {
+            _timer?.cancel();
+          }
+        });
+        setState(() {
+          var responseBody = json.decode(success.body);
+          matchList = responseBody['Data'];
+          log(responseBody.toString());
+          log(matchList.toString());
+          var teamOneName = matchList[0]['match_team_one_name'];
+          var teamOneMandal = matchList[0]['match_team_one_mandal'];
+          var teamTwoName = matchList[0]['match_team_two_name'];
+          var teamTwoMandal = matchList[0]['match_team_two_mandal'];
+          log(teamOneName.toString());
+          log(teamOneMandal.toString());
+          log(teamTwoName.toString());
+          log(teamTwoMandal.toString());
+          getStories();
+        });
+      } else {
+        EasyLoading.showInfo("Loading Failed");
+      }
+    });
+  }
+
+  getStories() async {
+    Constants.easyLoader();
+    EasyLoading.show(
+      status: "Loading . . .",
+    );
+    await ApiService.get("Users/getTopStories").then((success) {
+      if (success.statusCode == 200) {
+        EasyLoading.addStatusCallback((status) {
+          if (status == EasyLoadingStatus.dismiss) {
+            _timer?.cancel();
+          }
+        });
+        setState(() {
+          var responseBody = json.decode(success.body);
+          storiesList = responseBody['Data'];
+          log(responseBody.toString());
+          log(storiesList.toString());
+          getFeatureAds();
+        });
+        EasyLoading.showSuccess("Loading Success");
+      } else {
+        EasyLoading.showInfo("Loading Failed");
+      }
+    });
+  }
+
+  getFeatureAds() async {
+    Constants.easyLoader();
+    EasyLoading.show(
+      status: "Loading . . .",
+    );
+    await ApiService.get("Users/getFeatureAdds").then((success) {
+      if (success.statusCode == 200) {
+        EasyLoading.addStatusCallback((status) {
+          if (status == EasyLoadingStatus.dismiss) {
+            _timer?.cancel();
+          }
+        });
+        setState(() {
+          var responseBody = json.decode(success.body);
+          featureadList = responseBody['Data'];
+          log(responseBody.toString());
+          log(featureadList.toString());
+        });
+        EasyLoading.showSuccess("Loading Success");
+      } else {
+        EasyLoading.showInfo("Loading Failed");
       }
     });
   }

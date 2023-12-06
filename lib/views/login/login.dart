@@ -234,9 +234,9 @@ class _LoginPageState extends State<LoginPage> {
                                   null &&
                               registerPrefs.getString('teamCount').toString() !=
                                   '0')) {
-                        if (teamCount.toString() == '15' ||
+                        if (teamCount.toString() == '14' ||
                             registerPrefs.getString('teamCount').toString() ==
-                                '15') {
+                                '14') {
                           Get.offAll(() => const Home());
                         } else {
                           Get.offAll(() => const TeamDetails());
@@ -260,7 +260,7 @@ class _LoginPageState extends State<LoginPage> {
                             style: TextStyle(
                                 color: Constants.whiteColor,
                                 fontWeight: FontWeight.bold,
-                                fontSize: Constants.headerSize),
+                                fontSize: Constants.textSize),
                           ));
                     }
                   },

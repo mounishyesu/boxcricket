@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 
@@ -9,6 +10,7 @@ import 'package:boxcricket/views/teamregistration/teamregistration.dart';
 import 'package:boxcricket/views/widgets/constants.dart';
 import 'package:boxcricket/views/widgets/responsive.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -52,7 +54,7 @@ class TeamDetailScreen extends StatefulWidget {
 
 class _TeamDetailScreenState extends State<TeamDetailScreen> {
   List playersList = [];
-
+  Timer? _timer;
   String teamName="",capName="",teamCount="",capImage="";
 
   @override
@@ -134,7 +136,7 @@ class _TeamDetailScreenState extends State<TeamDetailScreen> {
               height: Constants.labelSize,
             ),
             Visibility(
-              visible: teamCount.toString() == '15'?false:true,
+              visible: teamCount.toString() == '14'?false:true,
               child: GestureDetector(
                       onTap: () => {
                         Get.to(const TeamRegistration()),
@@ -160,7 +162,16 @@ class _TeamDetailScreenState extends State<TeamDetailScreen> {
             SizedBox(
               height: Constants.labelSize,
             ),
-            SafeArea(
+            playersList.isEmpty?Container(
+              margin: EdgeInsets.symmetric(vertical: MediaQuery.of(context).size.height*0.3),
+              child: Text(
+                'No Players Found',
+                style: TextStyle(
+                    color: Constants.blackColor,
+                    fontSize: Constants.headerSize,
+                    fontWeight: FontWeight.bold),
+              ),
+            ):SafeArea(
               bottom: true,
               child: SizedBox(
                 height: MediaQuery.of(context).size.height * 0.65,
@@ -254,6 +265,10 @@ class _TeamDetailScreenState extends State<TeamDetailScreen> {
   }
 
   getPlayersData() async {
+    Constants.easyLoader();
+    EasyLoading.show(
+      status: "Loading . . .",
+    );
     SharedPreferences registerPrefs = await SharedPreferences.getInstance();
     log(registerPrefs.getString('captainNumber').toString());
     var teamID = registerPrefs.getString('teamID').toString();
@@ -268,15 +283,25 @@ class _TeamDetailScreenState extends State<TeamDetailScreen> {
     log(capImage.toString());
     log('-----------------------');
     await ApiService.post("Users/getPlayersByTeamId", encodeBody)
-        .then((success) async {
-      setState(() {
-        var responseBody = json.decode(success.body);
-        log(responseBody.toString());
-        log(responseBody.toString());
-        playersList = responseBody['team_players'];
-        log(playersList.length.toString());
-        teamName = StringUtils.capitalize(registerPrefs.getString('teamName').toString());
-      });
+        .then((success){
+      if (success.statusCode == 200) {
+        EasyLoading.addStatusCallback((status) {
+          if (status == EasyLoadingStatus.dismiss) {
+            _timer?.cancel();
+          }
+        });
+        setState(() {
+          var responseBody = json.decode(success.body);
+          log(responseBody.toString());
+          log(responseBody.toString());
+          playersList = responseBody['team_players'];
+          log(playersList.length.toString());
+          teamName = StringUtils.capitalize(registerPrefs.getString('teamName').toString());
+        });
+        EasyLoading.showSuccess("Loading Success");
+      } else {
+        EasyLoading.showInfo("Loading Failed");
+      }
     });
   }
 

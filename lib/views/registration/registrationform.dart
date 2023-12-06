@@ -53,6 +53,7 @@ class RegistrationFromScreen extends StatefulWidget {
 }
 
 class _RegistrationFromScreenState extends State<RegistrationFromScreen> {
+  final _formKey = GlobalKey<FormState>();
   dynamic argumentData = Get.arguments;
   String mandalDropdownValue = "";
   String districtDropdownValue = "";
@@ -104,25 +105,76 @@ class _RegistrationFromScreenState extends State<RegistrationFromScreen> {
       body: GestureDetector(
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
         child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  Constants.teamName,
-                  style: TextStyle(fontSize: Constants.headerSize),
-                ),
-                SizedBox(
-                  height: Constants.gapBetweenFields,
-                ),
-                Container(
-                  decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(15))),
-                  height: Constants.registrationTextFieldHeight,
-                  child: TextField(
-                    controller: teamNameController,
-                    decoration: InputDecoration(
+          child: Form(
+            key: _formKey,
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    Constants.teamName,
+                    style: TextStyle(fontSize: Constants.headerSize),
+                  ),
+                  SizedBox(
+                    height: Constants.gapBetweenFields,
+                  ),
+                  Container(
+                    decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(15))),
+                    child: TextFormField(
+                      controller: teamNameController,
+                      decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Constants.textFieldFilledColor,
+                          border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Constants.textFieldFilledColor)),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Constants.textFieldFilledColor)),
+                          enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Constants.textFieldFilledColor)),
+                          contentPadding:
+                              const EdgeInsets.only(top: 10, left: 10),
+                          hintText: Constants.registrationHintText,
+                          hintStyle: TextStyle(
+                              color: Constants.teamNameHintTextColor)),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Enter team name';
+                        }
+                        return null;
+                      },
+                      onChanged: (value) => {
+                        if (value.length > 6)
+                          {
+                            Get.defaultDialog(
+                                title: "Alert",
+                                middleText:
+                                    "Team Name Cannot Be More Than 6 Characters"),
+                            teamNameController.clear(),
+                          }
+                      },
+                    ),
+                  ),
+                  SizedBox(
+                    height: Constants.gapBetweenFields1,
+                  ),
+                  Text(
+                    Constants.captainName,
+                    style: TextStyle(fontSize: Constants.headerSize),
+                  ),
+                  SizedBox(
+                    height: Constants.gapBetweenFields,
+                  ),
+                  Container(
+                    decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(15))),
+                    child: TextFormField(
+                      controller: captainNameController,
+                      decoration: InputDecoration(
                         filled: true,
                         fillColor: Constants.textFieldFilledColor,
                         border: OutlineInputBorder(
@@ -136,670 +188,505 @@ class _RegistrationFromScreenState extends State<RegistrationFromScreen> {
                                 color: Constants.textFieldFilledColor)),
                         contentPadding:
                             const EdgeInsets.only(top: 10, left: 10),
-                        hintText: Constants.registrationHintText,
-                        hintStyle:
-                            TextStyle(color: Constants.teamNameHintTextColor)),
-                    onChanged: (value) => {
-                      if (value.length > 6)
-                        {
-                          Get.defaultDialog(
-                              title: "Alert",
-                              middleText:
-                                  "Team Name Cannot Be More Than 6 Characters"),
-                          teamNameController.clear(),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Enter captain name';
                         }
-                    },
-                  ),
-                ),
-                SizedBox(
-                  height: Constants.gapBetweenFields1,
-                ),
-                Text(
-                  Constants.captainName,
-                  style: TextStyle(fontSize: Constants.headerSize),
-                ),
-                SizedBox(
-                  height: Constants.gapBetweenFields,
-                ),
-                Container(
-                  decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(15))),
-                  height: Constants.registrationTextFieldHeight,
-                  child: TextField(
-                    controller: captainNameController,
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: Constants.textFieldFilledColor,
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Constants.textFieldFilledColor)),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Constants.textFieldFilledColor)),
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Constants.textFieldFilledColor)),
-                      contentPadding: const EdgeInsets.only(top: 10, left: 10),
+                        return null;
+                      },
                     ),
                   ),
-                ),
-                SizedBox(
-                  height: Constants.gapBetweenFields1,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          Constants.captainMobNum,
-                          style: TextStyle(fontSize: Constants.headerSize),
-                        ),
-                        SizedBox(
-                          height: Constants.gapBetweenFields,
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.6,
-                          decoration: const BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(15))),
-                          height: Constants.registrationTextFieldHeight,
-                          child: TextField(
-                            enabled: false,
-                            controller: captainMobNumController,
-                            keyboardType: TextInputType.phone,
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: Constants.textFieldFilledColor,
-                              border: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Constants.textFieldFilledColor)),
-                              focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Constants.textFieldFilledColor)),
-                              enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Constants.textFieldFilledColor)),
-                              contentPadding:
-                                  const EdgeInsets.only(top: 10, left: 10),
-                              hintText: argumentData.toString(),
-                            ),
-                            onChanged: (value) => {
-                              if (value.length > 10)
-                                {
-                                  Get.defaultDialog(
-                                    title: "Alert",
-                                    middleText: "Enter Valid Mobile Number",
-                                  ),
-                                  captainMobNumController.clear(),
-                                }
-                            },
+                  SizedBox(
+                    height: Constants.gapBetweenFields1,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            Constants.captainMobNum,
+                            style: TextStyle(fontSize: Constants.headerSize),
                           ),
-                        ),
-                      ],
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          Constants.captainAge,
-                          style: TextStyle(fontSize: Constants.headerSize),
-                        ),
-                        SizedBox(
-                          height: Constants.gapBetweenFields,
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.2,
-                          decoration: const BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(15))),
-                          height: Constants.registrationTextFieldHeight,
-                          child: TextField(
-                            controller: ageController,
-                            keyboardType: TextInputType.number,
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: Constants.textFieldFilledColor,
-                              border: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Constants.textFieldFilledColor)),
-                              focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Constants.textFieldFilledColor)),
-                              enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Constants.textFieldFilledColor)),
-                              contentPadding:
-                                  const EdgeInsets.only(top: 10, left: 10),
-                            ),
-                            onChanged: (value) => {
-                              if (value.length > 2)
-                                {
-                                  Get.defaultDialog(
-                                    title: "Alert",
-                                    middleText: "Enter Valid Age",
-                                  ),
-                                  ageController.clear(),
-                                }
-                            },
+                          SizedBox(
+                            height: Constants.gapBetweenFields,
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: Constants.gapBetweenFields1,
-                ),
-                Text(
-                  Constants.captainAadhar,
-                  style: TextStyle(fontSize: Constants.headerSize),
-                ),
-                SizedBox(
-                  height: Constants.gapBetweenFields,
-                ),
-                Container(
-                  decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(15))),
-                  height: Constants.registrationTextFieldHeight,
-                  child: TextField(
-                    controller: aadharNumController,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: Constants.textFieldFilledColor,
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Constants.textFieldFilledColor)),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Constants.textFieldFilledColor)),
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Constants.textFieldFilledColor)),
-                      contentPadding: const EdgeInsets.only(top: 10, left: 10),
-                    ),
-                    onChanged: (value) => {
-                      if (value.length > 12)
-                        {
-                          Get.defaultDialog(
-                              title: "Alert",
-                              middleText: "Enter Valid Aadhar Number"),
-                          aadharNumController.clear(),
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.6,
+                            decoration: const BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(15))),
+                            child: TextFormField(
+                              enabled: false,
+                              controller: captainMobNumController,
+                              keyboardType: TextInputType.phone,
+                              decoration: InputDecoration(
+                                filled: true,
+                                fillColor: Constants.textFieldFilledColor,
+                                border: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Constants.textFieldFilledColor)),
+                                focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Constants.textFieldFilledColor)),
+                                enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Constants.textFieldFilledColor)),
+                                contentPadding:
+                                    const EdgeInsets.only(top: 10, left: 10),
+                                hintText: argumentData.toString(),
+                              ),
+                              onChanged: (value) => {
+                                if (value.length > 10)
+                                  {
+                                    Get.defaultDialog(
+                                      title: "Alert",
+                                      middleText: "Enter Valid Mobile Number",
+                                    ),
+                                    captainMobNumController.clear(),
+                                  }
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            Constants.captainAge,
+                            style: TextStyle(fontSize: Constants.headerSize),
+                          ),
+                          SizedBox(
+                            height: Constants.gapBetweenFields,
+                          ),
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.2,
+                            decoration: const BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(15))),
+                            child: TextFormField(
+                              controller: ageController,
+                              keyboardType: TextInputType.number,
+                              decoration: InputDecoration(
+                                filled: true,
+                                fillColor: Constants.textFieldFilledColor,
+                                border: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Constants.textFieldFilledColor)),
+                                focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Constants.textFieldFilledColor)),
+                                enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Constants.textFieldFilledColor)),
+                                contentPadding:
+                                    const EdgeInsets.only(top: 10, left: 10),
+                              ),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Enter age';
+                                }
+                                return null;
+                              },
+                              onChanged: (value) => {
+                                if (value.length > 2)
+                                  {
+                                    Get.defaultDialog(
+                                      title: "Alert",
+                                      middleText: "Enter Valid Age",
+                                    ),
+                                    ageController.clear(),
+                                  }
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: Constants.gapBetweenFields1,
+                  ),
+                  Text(
+                    Constants.captainAadhar,
+                    style: TextStyle(fontSize: Constants.headerSize),
+                  ),
+                  SizedBox(
+                    height: Constants.gapBetweenFields,
+                  ),
+                  Container(
+                    decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(15))),
+                    child: TextFormField(
+                      controller: aadharNumController,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Constants.textFieldFilledColor,
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Constants.textFieldFilledColor)),
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Constants.textFieldFilledColor)),
+                        enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Constants.textFieldFilledColor)),
+                        contentPadding:
+                            const EdgeInsets.only(top: 10, left: 10),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Enter captain aadhar number';
                         }
-                    },
+                        return null;
+                      },
+                      onChanged: (value) => {
+                        if (value.length > 12)
+                          {
+                            Get.defaultDialog(
+                                title: "Alert",
+                                middleText: "Enter Valid Aadhar Number"),
+                            aadharNumController.clear(),
+                          }
+                      },
+                    ),
                   ),
-                ),
-                SizedBox(
-                  height: Constants.gapBetweenFields1,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Column(
-                      children: [
-                        Text(
-                          Constants.aadharFrontside,
-                          style: TextStyle(fontSize: Constants.subHeaderSize),
-                        ),
-                        SizedBox(
-                          height: Constants.gapBetweenFields,
-                        ),
-                        GestureDetector(
-                          onTap: () => frontimageDialog(),
-                          child: frontNames.isEmpty
-                              ? DottedBorder(
-                                  child: IconButton(
-                                    onPressed: () => frontimageDialog(),
-                                    icon: Constants.cameraIcon,
-                                    iconSize: 30,
+                  SizedBox(
+                    height: Constants.gapBetweenFields1,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Column(
+                        children: [
+                          Text(
+                            Constants.aadharFrontside,
+                            style: TextStyle(fontSize: Constants.subHeaderSize),
+                          ),
+                          SizedBox(
+                            height: Constants.gapBetweenFields,
+                          ),
+                          GestureDetector(
+                            onTap: () => frontimageDialog(),
+                            child: frontNames.isEmpty
+                                ? DottedBorder(
+                                    child: IconButton(
+                                      onPressed: () => frontimageDialog(),
+                                      icon: Constants.cameraIcon,
+                                      iconSize: 30,
+                                    ),
+                                  )
+                                : Image.file(
+                                    File(frontPaths[0]),
+                                    height: 150,
                                   ),
-                                )
-                              : Image.file(
-                                  File(frontPaths[0]),
-                                  height: 150,
-                                ),
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Text(
-                          Constants.aadharBackside,
-                          style: TextStyle(fontSize: Constants.subHeaderSize),
-                        ),
-                        SizedBox(
-                          height: Constants.gapBetweenFields,
-                        ),
-                        GestureDetector(
-                          onTap: () => backimageDialog(),
-                          child: backNames.isEmpty
-                              ? DottedBorder(
-                                  child: IconButton(
-                                    onPressed: () => backimageDialog(),
-                                    icon: Constants.cameraIcon,
-                                    iconSize: 30,
+                          ),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          Text(
+                            Constants.aadharBackside,
+                            style: TextStyle(fontSize: Constants.subHeaderSize),
+                          ),
+                          SizedBox(
+                            height: Constants.gapBetweenFields,
+                          ),
+                          GestureDetector(
+                            onTap: () => backimageDialog(),
+                            child: backNames.isEmpty
+                                ? DottedBorder(
+                                    child: IconButton(
+                                      onPressed: () => backimageDialog(),
+                                      icon: Constants.cameraIcon,
+                                      iconSize: 30,
+                                    ),
+                                  )
+                                : Image.file(
+                                    File(backPaths[0]),
+                                    height: 150,
                                   ),
-                                )
-                              : Image.file(
-                                  File(backPaths[0]),
-                                  height: 150,
-                                ),
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Text(
-                          Constants.profilePic,
-                          style: TextStyle(fontSize: Constants.subHeaderSize),
-                        ),
-                        SizedBox(
-                          height: Constants.gapBetweenFields,
-                        ),
-                        GestureDetector(
-                          onTap: () => imageDialog(),
-                          child: names.isEmpty
-                              ? DottedBorder(
-                                  child: IconButton(
-                                    onPressed: () => imageDialog(),
-                                    icon: Constants.cameraIcon,
-                                    iconSize: 30,
+                          ),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          Text(
+                            Constants.profilePic,
+                            style: TextStyle(fontSize: Constants.subHeaderSize),
+                          ),
+                          SizedBox(
+                            height: Constants.gapBetweenFields,
+                          ),
+                          GestureDetector(
+                            onTap: () => imageDialog(),
+                            child: names.isEmpty
+                                ? DottedBorder(
+                                    child: IconButton(
+                                      onPressed: () => imageDialog(),
+                                      icon: Constants.cameraIcon,
+                                      iconSize: 30,
+                                    ),
+                                  )
+                                : Image.file(
+                                    File(paths[0]),
+                                    height: 150,
                                   ),
-                                )
-                              : Image.file(
-                                  File(paths[0]),
-                                  height: 150,
-                                ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: Constants.gapBetweenFields1,
-                ),
-                Text(
-                  Constants.address,
-                  style: TextStyle(fontSize: Constants.headerSize),
-                ),
-                SizedBox(
-                  height: Constants.gapBetweenFields,
-                ),
-                Container(
-                  decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(15))),
-                  height: Constants.registrationAddressTextFieldHeight,
-                  child: TextField(
-                    controller: addressController,
-                    maxLines: 3,
-                    minLines: 1,
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: Constants.textFieldFilledColor,
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Constants.textFieldFilledColor)),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Constants.textFieldFilledColor)),
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Constants.textFieldFilledColor)),
-                      contentPadding: const EdgeInsets.only(top: 10, left: 10),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: Constants.gapBetweenFields1,
+                  ),
+                  Text(
+                    Constants.address,
+                    style: TextStyle(fontSize: Constants.headerSize),
+                  ),
+                  SizedBox(
+                    height: Constants.gapBetweenFields,
+                  ),
+                  Container(
+                    decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(15))),
+                    height: Constants.registrationAddressTextFieldHeight,
+                    child: TextFormField(
+                      controller: addressController,
+                      maxLines: 3,
+                      minLines: 1,
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Constants.textFieldFilledColor,
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Constants.textFieldFilledColor)),
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Constants.textFieldFilledColor)),
+                        enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Constants.textFieldFilledColor)),
+                        contentPadding:
+                            const EdgeInsets.only(top: 10, left: 10),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Enter address';
+                        }
+                        return null;
+                      },
                     ),
                   ),
-                ),
-                Text(
-                  Constants.panchayathi,
-                  style: TextStyle(fontSize: Constants.headerSize),
-                ),
-                SizedBox(
-                  height: Constants.gapBetweenFields,
-                ),
-                Container(
-                  decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(15))),
-                  height: Constants.registrationTextFieldHeight,
-                  child: TextField(
-                    controller: panchayathiController,
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: Constants.textFieldFilledColor,
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Constants.textFieldFilledColor)),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Constants.textFieldFilledColor)),
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Constants.textFieldFilledColor)),
-                      contentPadding: const EdgeInsets.only(top: 10, left: 10),
+                  Text(
+                    Constants.panchayathi,
+                    style: TextStyle(fontSize: Constants.headerSize),
+                  ),
+                  SizedBox(
+                    height: Constants.gapBetweenFields,
+                  ),
+                  Container(
+                    decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(15))),
+                    child: TextFormField(
+                      controller: panchayathiController,
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Constants.textFieldFilledColor,
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Constants.textFieldFilledColor)),
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Constants.textFieldFilledColor)),
+                        enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Constants.textFieldFilledColor)),
+                        contentPadding:
+                            const EdgeInsets.only(top: 10, left: 10),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Enter panchayathi name';
+                        }
+                        return null;
+                      },
                     ),
                   ),
-                ),
-                SizedBox(
-                  height: Constants.gapBetweenFields1,
-                ),
-                Text(
-                  Constants.mandal,
-                  style: TextStyle(fontSize: Constants.headerSize),
-                ),
-                SizedBox(
-                  height: Constants.gapBetweenFields,
-                ),
-                Container(
-                  decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(15))),
-                  // height: ,
-                  child: DropdownButtonFormField(
-                    decoration: InputDecoration(
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Constants.textFieldFilledColor)),
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Constants.textFieldFilledColor)),
-                      filled: true,
-                      fillColor: Constants.textFieldFilledColor,
-                    ),
-                    onChanged: (newValue) {
-                      setState(() {
-                        mandalDropdownValue = newValue.toString();
-                        log(mandalDropdownValue);
-                      });
-                    },
-                    items: mandalList.map((item) {
-                      return DropdownMenuItem<String>(
-                        value: item['mandalam_id'],
-                        child: Text(
-                          item['mandalam_name'].toString(),
-                        ),
-                      );
-                    }).toList(),
+                  SizedBox(
+                    height: Constants.gapBetweenFields1,
                   ),
-                ),
-                SizedBox(
-                  height: Constants.gapBetweenFields1,
-                ),
-                Text(
-                  Constants.district,
-                  style: TextStyle(fontSize: Constants.headerSize),
-                ),
-                SizedBox(
-                  height: Constants.gapBetweenFields,
-                ),
-                Container(
-                  decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(15))),
-                  // height: ,
-                  child: DropdownButtonFormField(
-                    decoration: InputDecoration(
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Constants.textFieldFilledColor)),
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Constants.textFieldFilledColor)),
-                      filled: true,
-                      fillColor: Constants.textFieldFilledColor,
-                    ),
-                    onChanged: (newValue) {
-                      setState(() {
-                        districtDropdownValue = newValue.toString();
-                        log(districtDropdownValue);
-                      });
-                    },
-                    items: districtList.map((item) {
-                      return DropdownMenuItem<String>(
-                        value: item['district_id'],
-                        child: Text(
-                          item['district_name'].toString(),
-                        ),
-                      );
-                    }).toList(),
+                  Text(
+                    Constants.mandal,
+                    style: TextStyle(fontSize: Constants.headerSize),
                   ),
-                ),
-                SizedBox(
-                  height: Constants.gapBetweenFields1,
-                ),
-              ],
+                  SizedBox(
+                    height: Constants.gapBetweenFields,
+                  ),
+                  Container(
+                    decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(15))),
+                    child: DropdownButtonFormField(
+                      decoration: InputDecoration(
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Constants.textFieldFilledColor)),
+                        enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Constants.textFieldFilledColor)),
+                        filled: true,
+                        fillColor: Constants.textFieldFilledColor,
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Select mandal';
+                        }
+                        return null;
+                      },
+                      onChanged: (newValue) {
+                        setState(() {
+                          mandalDropdownValue = newValue.toString();
+                          log(mandalDropdownValue);
+                        });
+                      },
+                      items: mandalList.map((item) {
+                        return DropdownMenuItem<String>(
+                          value: item['mandalam_id'],
+                          child: Text(
+                            item['mandalam_name'].toString(),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                  SizedBox(
+                    height: Constants.gapBetweenFields1,
+                  ),
+                  Text(
+                    Constants.district,
+                    style: TextStyle(fontSize: Constants.headerSize),
+                  ),
+                  SizedBox(
+                    height: Constants.gapBetweenFields,
+                  ),
+                  Container(
+                    decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(15))),
+                    child: DropdownButtonFormField(
+                      decoration: InputDecoration(
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Constants.textFieldFilledColor)),
+                        enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Constants.textFieldFilledColor)),
+                        filled: true,
+                        fillColor: Constants.textFieldFilledColor,
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Select district';
+                        }
+                        return null;
+                      },
+                      onChanged: (newValue) {
+                        setState(() {
+                          districtDropdownValue = newValue.toString();
+                          log(districtDropdownValue);
+                        });
+                      },
+                      items: districtList.map((item) {
+                        return DropdownMenuItem<String>(
+                          value: item['district_id'],
+                          child: Text(
+                            item['district_name'].toString(),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                  SizedBox(
+                    height: Constants.gapBetweenFields1,
+                  ),
+                ],
+              ),
             ),
           ),
         ),
       ),
       bottomNavigationBar: GestureDetector(
         onTap: () => {
-          if (teamNameController.text.isEmpty ||
-              teamNameController.text.length < 3)
+          if (_formKey.currentState!.validate())
             {
-              Get.snackbar("Alert", Constants.registrationTeamNameAlertMsg,
-                  backgroundColor: Constants.buttonRed,
-                  overlayBlur: 5,
-                  titleText: Text(
-                    'Alert',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: Constants.headerSize,
-                        color: Constants.whiteColor),
-                  ),
-                  messageText: Text(
-                    Constants.registrationTeamNameAlertMsg,
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: Constants.textSize,
-                        color: Constants.whiteColor),
-                  )),
-            }
-          else if (captainNameController.text.isEmpty ||
-              captainNameController.text.length < 3)
-            {
-              Get.snackbar("Alert", Constants.loginAlertMsg,
-                  overlayBlur: 5,
-                  backgroundColor: Constants.buttonRed,
-                  titleText: Text(
-                    'Alert',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: Constants.headerSize,
-                        color: Constants.whiteColor),
-                  ),
-                  messageText: Text(
-                    Constants.registrationCapNameAlertMsg,
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: Constants.textSize,
-                        color: Constants.whiteColor),
-                  )),
-            }
-          else if (ageController.text.isEmpty || ageController.text.length < 2)
-            {
-              Get.snackbar("Alert", Constants.ageAlertMsg,
-                  overlayBlur: 5,
-                  backgroundColor: Constants.buttonRed,
-                  titleText: Text(
-                    'Alert',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: Constants.headerSize,
-                        color: Constants.whiteColor),
-                  ),
-                  messageText: Text(
-                    Constants.ageAlertMsg,
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: Constants.textSize,
-                        color: Constants.whiteColor),
-                  )),
-            }
-          else if (aadharNumController.text.isEmpty ||
-              aadharNumController.text.length < 12)
-            {
-              Get.snackbar("Alert", Constants.aadharAlertMsg,
-                  overlayBlur: 5,
-                  backgroundColor: Constants.buttonRed,
-                  titleText: Text(
-                    'Alert',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: Constants.headerSize,
-                        color: Constants.whiteColor),
-                  ),
-                  messageText: Text(
-                    Constants.aadharAlertMsg,
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: Constants.textSize,
-                        color: Constants.whiteColor),
-                  )),
-            }
-          else if (frontNames.isEmpty)
-            {
-              Get.snackbar("Alert", Constants.aadharFrontAlertMsg,
-                  overlayBlur: 5,
-                  backgroundColor: Constants.buttonRed,
-                  titleText: Text(
-                    'Alert',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: Constants.headerSize,
-                        color: Constants.whiteColor),
-                  ),
-                  messageText: Text(
-                    Constants.aadharFrontAlertMsg,
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: Constants.textSize,
-                        color: Constants.whiteColor),
-                  )),
-            }
-          else if (backNames.isEmpty)
-            {
-              Get.snackbar("Alert", Constants.aadharBackAlertMsg,
-                  overlayBlur: 5,
-                  backgroundColor: Constants.buttonRed,
-                  titleText: Text(
-                    'Alert',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: Constants.headerSize,
-                        color: Constants.whiteColor),
-                  ),
-                  messageText: Text(
-                    Constants.aadharBackAlertMsg,
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: Constants.textSize,
-                        color: Constants.whiteColor),
-                  )),
-            }
-          else if (names.isEmpty)
-            {
-              Get.snackbar("Alert", Constants.profileAlertMsg,
-                  overlayBlur: 5,
-                  backgroundColor: Constants.buttonRed,
-                  titleText: Text(
-                    'Alert',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: Constants.headerSize,
-                        color: Constants.whiteColor),
-                  ),
-                  messageText: Text(
-                    Constants.profileAlertMsg,
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: Constants.textSize,
-                        color: Constants.whiteColor),
-                  )),
-            }
-          else if (addressController.text.isEmpty ||
-              addressController.text.length < 3)
-            {
-              Get.snackbar("Alert", Constants.addressAlertMsg,
-                  overlayBlur: 5,
-                  backgroundColor: Constants.buttonRed,
-                  titleText: Text(
-                    'Alert',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: Constants.headerSize,
-                        color: Constants.whiteColor),
-                  ),
-                  messageText: Text(
-                    Constants.addressAlertMsg,
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: Constants.textSize,
-                        color: Constants.whiteColor),
-                  )),
-            }
-          else if (panchayathiController.text.isEmpty)
-            {
-              Get.snackbar("Alert", Constants.panchayatAlertMsg,
-                  overlayBlur: 5,
-                  backgroundColor: Constants.buttonRed,
-                  titleText: Text(
-                    'Alert',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: Constants.headerSize,
-                        color: Constants.whiteColor),
-                  ),
-                  messageText: Text(
-                    Constants.panchayatAlertMsg,
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: Constants.textSize,
-                        color: Constants.whiteColor),
-                  )),
-            }
-          else if (mandalDropdownValue.isEmpty)
-            {
-              Get.snackbar("Alert", Constants.mandalAlertMsg,
-                  overlayBlur: 5,
-                  backgroundColor: Constants.buttonRed,
-                  titleText: Text(
-                    'Alert',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: Constants.headerSize,
-                        color: Constants.whiteColor),
-                  ),
-                  messageText: Text(
-                    Constants.mandalAlertMsg,
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: Constants.textSize,
-                        color: Constants.whiteColor),
-                  )),
-            }
-          else if (districtDropdownValue.isEmpty)
-            {
-              Get.snackbar("Alert", Constants.districtAlertMsg,
-                  overlayBlur: 5,
-                  backgroundColor: Constants.buttonRed,
-                  titleText: Text(
-                    'Alert',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: Constants.headerSize,
-                        color: Constants.whiteColor),
-                  ),
-                  messageText: Text(
-                    Constants.districtAlertMsg,
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: Constants.textSize,
-                        color: Constants.whiteColor),
-                  )),
-            }
-          else
-            {
-              makeRegistrationApiCall(),
-              log("---------------Details Entere---------------"),
+              if (frontNames.isEmpty)
+                {
+                  Get.snackbar("Alert", Constants.aadharFrontAlertMsg,
+                      overlayBlur: 5,
+                      backgroundColor: Constants.buttonRed,
+                      titleText: Text(
+                        'Alert',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: Constants.headerSize,
+                            color: Constants.whiteColor),
+                      ),
+                      messageText: Text(
+                        Constants.aadharFrontAlertMsg,
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: Constants.textSize,
+                            color: Constants.whiteColor),
+                      )),
+                }
+              else if (backNames.isEmpty)
+                {
+                  Get.snackbar("Alert", Constants.aadharBackAlertMsg,
+                      overlayBlur: 5,
+                      backgroundColor: Constants.buttonRed,
+                      titleText: Text(
+                        'Alert',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: Constants.headerSize,
+                            color: Constants.whiteColor),
+                      ),
+                      messageText: Text(
+                        Constants.aadharBackAlertMsg,
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: Constants.textSize,
+                            color: Constants.whiteColor),
+                      )),
+                }
+              else if (names.isEmpty)
+                {
+                  Get.snackbar("Alert", Constants.profileAlertMsg,
+                      overlayBlur: 5,
+                      backgroundColor: Constants.buttonRed,
+                      titleText: Text(
+                        'Alert',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: Constants.headerSize,
+                            color: Constants.whiteColor),
+                      ),
+                      messageText: Text(
+                        Constants.profileAlertMsg,
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: Constants.textSize,
+                            color: Constants.whiteColor),
+                      )),
+                }
+              else
+                {
+                  makeRegistrationApiCall(),
+                  log("---------------Details Entere---------------"),
+                }
             }
         },
         child: Container(
@@ -1209,8 +1096,7 @@ class _RegistrationFromScreenState extends State<RegistrationFromScreen> {
             //           color: Constants.whiteColor),
             //     ));
             Get.offAll(() => const SetPin());
-          }
-          else {
+          } else {
             log('errorList--------------');
 
             var errorList = responseBody['errors'];

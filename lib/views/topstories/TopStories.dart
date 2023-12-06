@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:boxcricket/views/home/homepage.dart';
 import 'package:boxcricket/views/widgets/constants.dart';
 import 'package:boxcricket/views/widgets/responsive.dart';
@@ -43,6 +45,16 @@ class TopStoriesPage extends StatefulWidget {
 }
 
 class _TopStoriesPageState extends State<TopStoriesPage> {
+  dynamic getArgumentedData = Get.arguments;
+
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    log(getArgumentedData.toString());
+    log(getArgumentedData[0].toString());
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,20 +77,19 @@ class _TopStoriesPageState extends State<TopStoriesPage> {
           children: [
             Padding(
               padding: const EdgeInsets.all(10.0),
-              child: Image.asset(Constants.storyImage,
+              child: Image.network(getArgumentedData[0].toString(),
                   height: 200, width: 500, fit: BoxFit.fill),
             ),
             Align(
                 alignment: Alignment.topLeft,
-                child: Text(
-                  "Story Headline",
+                child: Text(getArgumentedData[1].toString(),
                   style: TextStyle(
                       color: Constants.darkgrey, fontWeight: FontWeight.bold,fontSize: Constants.headerSize),
                 )),
             Align(
                 alignment: Alignment.topLeft,
                 child: Text(
-                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec pretium magna vel leo viverra, vitae tempor nibh imperdiet. Vestibulum luctus risus turpis, in sagittis turpis bibendum et. Curabitur suscipit tempor elit, in egestas velit imperdiet eget. ",
+                  getArgumentedData[2].toString(),
                   style: TextStyle(
                     color: Constants.darkgrey,
                   ),

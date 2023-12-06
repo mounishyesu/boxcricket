@@ -54,6 +54,7 @@ class TeamRegistrationScreen extends StatefulWidget {
 }
 
 class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
+  final _formKey = GlobalKey<FormState>();
   String specializationDropdownValue = "";
   String jerseyDropdownValue = "";
   String shirtSizeDropdownValue = "";
@@ -97,592 +98,462 @@ class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
             size: Constants.backIconSize,
             color: Constants.backIconColor,
           ),
-          onPressed: () => Get.offAll(const TeamDetails()),
+          onPressed: () => Get.offAll(() => const TeamDetails()),
         ),
       ),
       body: GestureDetector(
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
         child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  height: 50,
-                  alignment: Alignment.center,
-                  width: MediaQuery.of(context).size.width * 1,
-                  decoration: BoxDecoration(
-                      color: Constants.blueColor,
-                      borderRadius:
-                          const BorderRadius.all(Radius.circular(20))),
-                  child: Text(
-                    teamName.toString(),
-                    style: TextStyle(
-                        fontSize: Constants.loginBtnTextSize,
-                        color: Constants.whiteColor),
-                  ),
-                ),
-                SizedBox(
-                  height: Constants.gapBetweenFields,
-                ),
-                Container(
+          child: Form(
+            key: _formKey,
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    height: 50,
                     alignment: Alignment.center,
+                    width: MediaQuery.of(context).size.width * 1,
+                    decoration: BoxDecoration(
+                        color: Constants.blueColor,
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(20))),
                     child: Text(
-                      "You can add only 11 - 15 Team Players Only",
-                      style: TextStyle(fontSize: Constants.headerSize),
-                    )),
-                SizedBox(
-                  height: Constants.gapBetweenFields1,
-                ),
-                Text(
-                  Constants.playerName,
-                  style: TextStyle(fontSize: Constants.headerSize),
-                ),
-                SizedBox(
-                  height: Constants.gapBetweenFields,
-                ),
-                Container(
-                  decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(15))),
-                  height: Constants.registrationTextFieldHeight,
-                  child: TextField(
-                    controller: playerNameController,
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: Constants.textFieldFilledColor,
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Constants.textFieldFilledColor)),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Constants.textFieldFilledColor)),
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Constants.textFieldFilledColor)),
-                      contentPadding: const EdgeInsets.only(top: 10, left: 10),
+                      teamName.toString(),
+                      style: TextStyle(
+                          fontSize: Constants.loginBtnTextSize,
+                          color: Constants.whiteColor),
                     ),
-                    onChanged: (value) => {},
                   ),
-                ),
-                SizedBox(
-                  height: Constants.gapBetweenFields1,
-                ),
-                Text(
-                  Constants.specialization,
-                  style: TextStyle(fontSize: Constants.headerSize),
-                ),
-                SizedBox(
-                  height: Constants.gapBetweenFields,
-                ),
-                Container(
-                  decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(15))),
-                  // height: ,
-                  child: DropdownButtonFormField(
-                    decoration: InputDecoration(
-                      // hintText: Constants.specializationHintText,
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Constants.textFieldFilledColor)),
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Constants.textFieldFilledColor)),
-                      filled: true,
-                      fillColor: Constants.textFieldFilledColor,
-                    ),
-                    onChanged: (newValue) {
-                      setState(() {
-                        specializationDropdownValue = newValue.toString();
-                        log(specializationDropdownValue);
-                      });
-                    },
-                    items: specializationList.map((item) {
-                      return DropdownMenuItem<String>(
-                        value: item['id'],
-                        child: Text(
-                          item['name'].toString(),
-                        ),
-                      );
-                    }).toList(),
+                  SizedBox(
+                    height: Constants.gapBetweenFields,
                   ),
-                ),
-                SizedBox(
-                  height: Constants.gapBetweenFields1,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          Constants.playerMobNum,
-                          style: TextStyle(fontSize: Constants.headerSize),
-                        ),
-                        SizedBox(
-                          height: Constants.gapBetweenFields,
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.6,
-                          decoration: const BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(15))),
-                          height: Constants.registrationTextFieldHeight,
-                          child: TextField(
-                            controller: playerMobNumController,
-                            keyboardType: TextInputType.phone,
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: Constants.textFieldFilledColor,
-                              border: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Constants.textFieldFilledColor)),
-                              focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Constants.textFieldFilledColor)),
-                              enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Constants.textFieldFilledColor)),
-                              contentPadding:
-                                  const EdgeInsets.only(top: 10, left: 10),
-                            ),
-                            onChanged: (value) => {
-                              if (value.length > 10)
-                                {
-                                  Get.defaultDialog(
-                                    title: "Alert",
-                                    middleText: "Enter Valid Mobile Number",
-                                  ),
-                                  playerMobNumController.clear(),
-                                }
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          Constants.captainAge,
-                          style: TextStyle(fontSize: Constants.headerSize),
-                        ),
-                        SizedBox(
-                          height: Constants.gapBetweenFields,
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.2,
-                          decoration: const BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(15))),
-                          height: Constants.registrationTextFieldHeight,
-                          child: TextField(
-                            controller: playerAgeController,
-                            keyboardType: TextInputType.number,
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: Constants.textFieldFilledColor,
-                              border: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Constants.textFieldFilledColor)),
-                              focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Constants.textFieldFilledColor)),
-                              enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Constants.textFieldFilledColor)),
-                              contentPadding:
-                                  const EdgeInsets.only(top: 10, left: 10),
-                            ),
-                            onChanged: (value) => {
-                              if (value.length > 2)
-                                {
-                                  Get.defaultDialog(
-                                    title: "Alert",
-                                    middleText: "Enter Valid Age",
-                                  ),
-                                  playerAgeController.clear(),
-                                }
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: Constants.gapBetweenFields1,
-                ),
-                Text(
-                  Constants.playerAadhar,
-                  style: TextStyle(fontSize: Constants.headerSize),
-                ),
-                SizedBox(
-                  height: Constants.gapBetweenFields,
-                ),
-                Container(
-                  decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(15))),
-                  height: Constants.registrationTextFieldHeight,
-                  child: TextField(
-                    controller: playerAadharController,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: Constants.textFieldFilledColor,
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Constants.textFieldFilledColor)),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Constants.textFieldFilledColor)),
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Constants.textFieldFilledColor)),
-                      contentPadding: const EdgeInsets.only(top: 10, left: 10),
-                    ),
-                    onChanged: (value) => {
-                      log(value.length.toString()),
-                      if (value.length > 12)
-                        {
-                          Get.defaultDialog(
-                              title: "Alert",
-                              middleText: "Enter Valid Aadhar Number"),
-                          playerAadharController.clear(),
+                  Container(
+                      alignment: Alignment.center,
+                      child: Text(
+                        "You can add only 11 - 15 Team Players Only",
+                        style: TextStyle(fontSize: Constants.headerSize),
+                      )),
+                  SizedBox(
+                    height: Constants.gapBetweenFields1,
+                  ),
+                  Text(
+                    Constants.playerName,
+                    style: TextStyle(fontSize: Constants.headerSize),
+                  ),
+                  SizedBox(
+                    height: Constants.gapBetweenFields,
+                  ),
+                  Container(
+                    decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(15))),
+                    // height: Constants.registrationTextFieldHeight,
+                    child: TextFormField(
+                      controller: playerNameController,
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Constants.textFieldFilledColor,
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Constants.textFieldFilledColor)),
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Constants.textFieldFilledColor)),
+                        enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Constants.textFieldFilledColor)),
+                        contentPadding:
+                            const EdgeInsets.only(top: 10, left: 10),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Enter player name';
                         }
-                    },
-                  ),
-                ),
-                SizedBox(
-                  height: Constants.gapBetweenFields,
-                ),
-                Text(
-                  Constants.tshirtSize,
-                  style: TextStyle(fontSize: Constants.headerSize),
-                ),
-                SizedBox(
-                  height: Constants.gapBetweenFields,
-                ),
-                Container(
-                  decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(15))),
-                  // height: ,
-                  child: DropdownButtonFormField(
-                    decoration: InputDecoration(
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Constants.textFieldFilledColor)),
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Constants.textFieldFilledColor)),
-                      filled: true,
-                      fillColor: Constants.textFieldFilledColor,
+                        return null;
+                      },
+                      onChanged: (value) => {},
                     ),
-                    onChanged: (newValue) {
-                      setState(() {
-                        shirtSizeDropdownValue = newValue.toString();
-                        log(shirtSizeDropdownValue);
-                      });
-                    },
-                    items: shirtSizeList.map((item) {
-                      return DropdownMenuItem<String>(
-                        value: item['shirt_id'],
-                        child: Text(
-                          item['shirt_name'].toString(),
-                        ),
-                      );
-                    }).toList(),
                   ),
-                ),
-                SizedBox(
-                  height: Constants.gapBetweenFields,
-                ),
-                Text(
-                  Constants.jerseyNumber,
-                  style: TextStyle(fontSize: Constants.headerSize),
-                ),
-                SizedBox(
-                  height: Constants.gapBetweenFields,
-                ),
-                Container(
-                  decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(15))),
-                  height: Constants.registrationTextFieldHeight,
-                  child: TextField(
-                    controller: playerjerseyNumController,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: Constants.textFieldFilledColor,
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Constants.textFieldFilledColor)),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Constants.textFieldFilledColor)),
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Constants.textFieldFilledColor)),
-                      contentPadding: const EdgeInsets.only(top: 10, left: 10),
-                    ),
-                    onChanged: (value) => {
-                      if (value.length > 3)
-                        {
-                          Get.defaultDialog(
-                            title: "Alert",
-                            middleText:
-                                "Jersey Number can contain only 3 numbers",
-                          ),
-                          playerjerseyNumController.clear(),
+                  SizedBox(
+                    height: Constants.gapBetweenFields1,
+                  ),
+                  Text(
+                    Constants.specialization,
+                    style: TextStyle(fontSize: Constants.headerSize),
+                  ),
+                  SizedBox(
+                    height: Constants.gapBetweenFields,
+                  ),
+                  Container(
+                    decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(15))),
+                    child: DropdownButtonFormField(
+                      decoration: InputDecoration(
+                        // hintText: Constants.specializationHintText,
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Constants.textFieldFilledColor)),
+                        enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Constants.textFieldFilledColor)),
+                        filled: true,
+                        fillColor: Constants.textFieldFilledColor,
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Select player specialization';
                         }
-                    },
+                        return null;
+                      },
+                      onChanged: (newValue) {
+                        setState(() {
+                          specializationDropdownValue = newValue.toString();
+                          log(specializationDropdownValue);
+                        });
+                      },
+                      items: specializationList.map((item) {
+                        return DropdownMenuItem<String>(
+                          value: item['id'],
+                          child: Text(
+                            item['name'].toString(),
+                          ),
+                        );
+                      }).toList(),
+                    ),
                   ),
-                ),
-                // Container(
-                //   decoration: const BoxDecoration(
-                //       borderRadius: BorderRadius.all(Radius.circular(15))),
-                //   // height: ,
-                //   child: DropdownButtonFormField(
-                //     decoration: InputDecoration(
-                //       focusedBorder: OutlineInputBorder(
-                //           borderSide: BorderSide(
-                //               color: Constants.textFieldFilledColor)),
-                //       enabledBorder: OutlineInputBorder(
-                //           borderSide: BorderSide(
-                //               color: Constants.textFieldFilledColor)),
-                //       filled: true,
-                //       fillColor: Constants.textFieldFilledColor,
-                //     ),
-                //     onChanged: (newValue) {
-                //       setState(() {
-                //         jerseyDropdownValue = newValue.toString();
-                //         log(jerseyDropdownValue);
-                //       });
-                //     },
-                //     items: jerseyList.map((item) {
-                //       return DropdownMenuItem<String>(
-                //         value: item['id'],
-                //         child: Text(
-                //           item['number'].toString(),
-                //         ),
-                //       );
-                //     }).toList(),
-                //   ),
-                // ),
-                SizedBox(
-                  height: Constants.gapBetweenFields1,
-                ),
-                Center(
-                  child: Column(
+                  SizedBox(
+                    height: Constants.gapBetweenFields1,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        Constants.profilePic,
-                        style: TextStyle(fontSize: Constants.subHeaderSize),
-                      ),
-                      SizedBox(
-                        height: Constants.gapBetweenFields,
-                      ),
-                      GestureDetector(
-                        onTap: () => imageDialog(),
-                        child: names.isEmpty
-                            ? DottedBorder(
-                                child: IconButton(
-                                  onPressed: () => imageDialog(),
-                                  icon: Constants.cameraIcon,
-                                  iconSize: 30,
-                                ),
-                              )
-                            : Image.file(
-                                File(paths[0]),
-                                height: 150,
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            Constants.playerMobNum,
+                            style: TextStyle(fontSize: Constants.headerSize),
+                          ),
+                          SizedBox(
+                            height: Constants.gapBetweenFields,
+                          ),
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.6,
+                            decoration: const BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(15))),
+                            child: TextFormField(
+                              controller: playerMobNumController,
+                              keyboardType: TextInputType.phone,
+                              decoration: InputDecoration(
+                                filled: true,
+                                fillColor: Constants.textFieldFilledColor,
+                                border: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Constants.textFieldFilledColor)),
+                                focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Constants.textFieldFilledColor)),
+                                enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Constants.textFieldFilledColor)),
+                                contentPadding:
+                                    const EdgeInsets.only(top: 10, left: 10),
                               ),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Enter player mobile number';
+                                }
+                                return null;
+                              },
+                              onChanged: (value) => {
+                                if (value.length > 10)
+                                  {
+                                    Get.defaultDialog(
+                                      title: "Alert",
+                                      middleText: "Enter Valid Mobile Number",
+                                    ),
+                                    playerMobNumController.clear(),
+                                  }
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            Constants.captainAge,
+                            style: TextStyle(fontSize: Constants.headerSize),
+                          ),
+                          SizedBox(
+                            height: Constants.gapBetweenFields,
+                          ),
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.2,
+                            decoration: const BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(15))),
+                            child: TextFormField(
+                              controller: playerAgeController,
+                              keyboardType: TextInputType.number,
+                              decoration: InputDecoration(
+                                filled: true,
+                                fillColor: Constants.textFieldFilledColor,
+                                border: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Constants.textFieldFilledColor)),
+                                focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Constants.textFieldFilledColor)),
+                                enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Constants.textFieldFilledColor)),
+                                contentPadding:
+                                    const EdgeInsets.only(top: 10, left: 10),
+                              ),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Enter age';
+                                }
+                                return null;
+                              },
+                              onChanged: (value) => {
+                                if (value.length > 2)
+                                  {
+                                    Get.defaultDialog(
+                                      title: "Alert",
+                                      middleText: "Enter Valid Age",
+                                    ),
+                                    playerAgeController.clear(),
+                                  }
+                              },
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                ),
-                SizedBox(
-                  height: Constants.gapBetweenFields1,
-                ),
-              ],
+                  SizedBox(
+                    height: Constants.gapBetweenFields1,
+                  ),
+                  Text(
+                    Constants.playerAadhar,
+                    style: TextStyle(fontSize: Constants.headerSize),
+                  ),
+                  SizedBox(
+                    height: Constants.gapBetweenFields,
+                  ),
+                  Container(
+                    decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(15))),
+                    child: TextFormField(
+                      controller: playerAadharController,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Constants.textFieldFilledColor,
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Constants.textFieldFilledColor)),
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Constants.textFieldFilledColor)),
+                        enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Constants.textFieldFilledColor)),
+                        contentPadding:
+                            const EdgeInsets.only(top: 10, left: 10),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Enter player aadhar number';
+                        }
+                        return null;
+                      },
+                      onChanged: (value) => {
+                        log(value.length.toString()),
+                        if (value.length > 12)
+                          {
+                            Get.defaultDialog(
+                                title: "Alert",
+                                middleText: "Enter Valid Aadhar Number"),
+                            playerAadharController.clear(),
+                          }
+                      },
+                    ),
+                  ),
+                  SizedBox(
+                    height: Constants.gapBetweenFields,
+                  ),
+                  Text(
+                    Constants.tshirtSize,
+                    style: TextStyle(fontSize: Constants.headerSize),
+                  ),
+                  SizedBox(
+                    height: Constants.gapBetweenFields,
+                  ),
+                  Container(
+                    decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(15))),
+                    child: DropdownButtonFormField(
+                      decoration: InputDecoration(
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Constants.textFieldFilledColor)),
+                        enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Constants.textFieldFilledColor)),
+                        filled: true,
+                        fillColor: Constants.textFieldFilledColor,
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Select player T shirt size';
+                        }
+                        return null;
+                      },
+                      onChanged: (newValue) {
+                        setState(() {
+                          shirtSizeDropdownValue = newValue.toString();
+                          log(shirtSizeDropdownValue);
+                        });
+                      },
+                      items: shirtSizeList.map((item) {
+                        return DropdownMenuItem<String>(
+                          value: item['shirt_id'],
+                          child: Text(
+                            item['shirt_name'].toString(),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                  SizedBox(
+                    height: Constants.gapBetweenFields,
+                  ),
+                  Text(
+                    Constants.jerseyNumber,
+                    style: TextStyle(fontSize: Constants.headerSize),
+                  ),
+                  SizedBox(
+                    height: Constants.gapBetweenFields,
+                  ),
+                  Container(
+                    decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(15))),
+                    child: TextFormField(
+                      controller: playerjerseyNumController,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Constants.textFieldFilledColor,
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Constants.textFieldFilledColor)),
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Constants.textFieldFilledColor)),
+                        enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Constants.textFieldFilledColor)),
+                        contentPadding:
+                            const EdgeInsets.only(top: 10, left: 10),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Enter player jersey';
+                        }
+                        return null;
+                      },
+                      onChanged: (value) => {
+                        if (value.length > 3)
+                          {
+                            Get.defaultDialog(
+                              title: "Alert",
+                              middleText:
+                                  "Jersey Number can contain only 3 numbers",
+                            ),
+                            playerjerseyNumController.clear(),
+                          }
+                      },
+                    ),
+                  ),
+                  SizedBox(
+                    height: Constants.gapBetweenFields1,
+                  ),
+                  Center(
+                    child: Column(
+                      children: [
+                        Text(
+                          Constants.profilePic,
+                          style: TextStyle(fontSize: Constants.subHeaderSize),
+                        ),
+                        SizedBox(
+                          height: Constants.gapBetweenFields,
+                        ),
+                        GestureDetector(
+                          onTap: () => imageDialog(),
+                          child: names.isEmpty
+                              ? DottedBorder(
+                                  child: IconButton(
+                                    onPressed: () => imageDialog(),
+                                    icon: Constants.cameraIcon,
+                                    iconSize: 30,
+                                  ),
+                                )
+                              : Image.file(
+                                  File(paths[0]),
+                                  height: 150,
+                                ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: Constants.gapBetweenFields1,
+                  ),
+                ],
+              ),
             ),
           ),
         ),
       ),
       bottomNavigationBar: GestureDetector(
         onTap: () => {
-          if (playerNameController.text.isEmpty)
+          if (_formKey.currentState!.validate())
             {
-              Get.snackbar("Alert", Constants.registrationPlayerNameAlertMsg,
-                  overlayBlur: 5,
-                  backgroundColor: Constants.buttonRed,
-                  titleText: Text(
-                    'Alert',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: Constants.headerSize,
-                        color: Constants.whiteColor),
+              if (names.isEmpty)
+                {
+                  Get.snackbar(
+                    "Alert",
+                    Constants.profileAlertMsg,
+                    overlayBlur: 5,
+                    backgroundColor: Constants.buttonRed,
+                    titleText: Text(
+                      'Alert',
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: Constants.headerSize,
+                          color: Constants.whiteColor),
+                    ),
+                    messageText: Text(
+                      Constants.profileAlertMsg,
+                      style: TextStyle(
+                          fontSize: Constants.textSize,
+                          fontWeight: FontWeight.bold,
+                          color: Constants.whiteColor),
+                    ),
                   ),
-                  messageText: Text(
-                    Constants.registrationPlayerNameAlertMsg,
-                    style: TextStyle(
-                        fontSize: Constants.textSize,
-                        fontWeight: FontWeight.bold,
-                        color: Constants.whiteColor),
-                  )),
-            }
-          else if (specializationDropdownValue.isEmpty)
-            {
-              Get.snackbar("Alert", Constants.specializationAlertMsg,
-                  overlayBlur: 5,
-                  backgroundColor: Constants.buttonRed,
-                  titleText: Text(
-                    'Alert',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: Constants.headerSize,
-                        color: Constants.whiteColor),
-                  ),
-                  messageText: Text(
-                    Constants.specializationAlertMsg,
-                    style: TextStyle(
-                        fontSize: Constants.textSize,
-                        fontWeight: FontWeight.bold,
-                        color: Constants.whiteColor),
-                  )),
-            }
-          else if (playerMobNumController.text.isEmpty ||
-              playerMobNumController.text.length < 10)
-            {
-              Get.snackbar("Alert", Constants.loginAlertMsg,
-                  overlayBlur: 5,
-                  backgroundColor: Constants.buttonRed,
-                  titleText: Text(
-                    'Alert',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: Constants.headerSize,
-                        color: Constants.whiteColor),
-                  ),
-                  messageText: Text(
-                    Constants.loginAlertMsg,
-                    style: TextStyle(
-                        fontSize: Constants.textSize,
-                        fontWeight: FontWeight.bold,
-                        color: Constants.whiteColor),
-                  )),
-            }
-          else if (playerAgeController.text.isEmpty ||
-              playerAgeController.text.length < 2)
-            {
-              Get.snackbar("Alert", Constants.ageAlertMsg,
-                  overlayBlur: 5,
-                  backgroundColor: Constants.buttonRed,
-                  titleText: Text(
-                    'Alert',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: Constants.headerSize,
-                        color: Constants.whiteColor),
-                  ),
-                  messageText: Text(
-                    Constants.ageAlertMsg,
-                    style: TextStyle(
-                        fontSize: Constants.textSize,
-                        fontWeight: FontWeight.bold,
-                        color: Constants.whiteColor),
-                  )),
-            }
-          else if (playerAadharController.text.isEmpty ||
-              playerAadharController.text.length < 12)
-            {
-              Get.snackbar("Alert", Constants.aadharAlertMsg,
-                  overlayBlur: 5,
-                  backgroundColor: Constants.buttonRed,
-                  titleText: Text(
-                    'Alert',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: Constants.headerSize,
-                        color: Constants.whiteColor),
-                  ),
-                  messageText: Text(
-                    Constants.aadharAlertMsg,
-                    style: TextStyle(
-                        fontSize: Constants.textSize,
-                        fontWeight: FontWeight.bold,
-                        color: Constants.whiteColor),
-                  )),
-            }
-          else if (shirtSizeDropdownValue.isEmpty)
-            {
-              Get.snackbar("Alert", Constants.shirtAlertMsg,
-                  overlayBlur: 5,
-                  backgroundColor: Constants.buttonRed,
-                  titleText: Text(
-                    'Alert',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: Constants.headerSize,
-                        color: Constants.whiteColor),
-                  ),
-                  messageText: Text(
-                    Constants.shirtAlertMsg,
-                    style: TextStyle(
-                        fontSize: Constants.textSize,
-                        fontWeight: FontWeight.bold,
-                        color: Constants.whiteColor),
-                  )),
-            }
-          else if (playerjerseyNumController.text.isEmpty)
-            {
-              Get.snackbar("Alert", Constants.jerseyAlertMsg,
-                  overlayBlur: 5,
-                  backgroundColor: Constants.buttonRed,
-                  titleText: Text(
-                    'Alert',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: Constants.headerSize,
-                        color: Constants.whiteColor),
-                  ),
-                  messageText: Text(
-                    Constants.jerseyAlertMsg,
-                    style: TextStyle(
-                        fontSize: Constants.textSize,
-                        fontWeight: FontWeight.bold,
-                        color: Constants.whiteColor),
-                  )),
-            }
-          else if (names.isEmpty)
-            {
-              Get.snackbar(
-                "Alert",
-                Constants.profileAlertMsg,
-                overlayBlur: 5,
-                backgroundColor: Constants.buttonRed,
-                titleText: Text(
-                  'Alert',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: Constants.headerSize,
-                      color: Constants.whiteColor),
-                ),
-                messageText: Text(
-                  Constants.profileAlertMsg,
-                  style: TextStyle(
-                      fontSize: Constants.textSize,
-                      fontWeight: FontWeight.bold,
-                      color: Constants.whiteColor),
-                ),
-              ),
-            }
-          else
-            {
-              log('Pressed Continue'),
-              log(shirtSizeDropdownValue),
-              makePlayerAddApiCall(),
-              // Get.to(const MatchSchedule()),
+                }
+              else
+                {
+                  log('Pressed Continue'),
+                  log(shirtSizeDropdownValue),
+                  makePlayerAddApiCall(),
+                }
             }
         },
         child: Container(
@@ -911,215 +782,218 @@ class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
         setState(() {
           if (responseBody['status'] == true) {
             saveteamDetails(responseBody);
-            // Get.snackbar("Success", responseBody['message'].toString(),
-            //     overlayBlur: 5,
-            //     backgroundColor: Constants.green,
-            //     titleText: Text(
-            //       'Alert',
-            //       style: TextStyle(
-            //           fontWeight: FontWeight.bold,
-            //           fontSize: Constants.headerSize,
-            //           color: Constants.whiteColor),
-            //     ),
-            //     messageText: Text(
-            //       responseBody['message'].toString(),
-            //       style: TextStyle(
-            //         fontSize: Constants.textSize,
-            //         color: Constants.whiteColor,
-            //         fontWeight: FontWeight.bold,
-            //       ),
-            //     ));
-            if(responseBody['teamCount'].toString() == '15'){
-              Get.offAll(()=>const Congratulations());
-            }else{
-              Get.offAll(const TeamDetails());
-            }
-          } else {
-            var errorList = responseBody['errors'];
-            if (errorList['team_id'] != null) {
-              Get.snackbar("Alert", errorList['team_id'].toString(),
-                  overlayBlur: 5,
-                  backgroundColor: Constants.buttonRed,
-                  titleText: Text(
-                    'Alert',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: Constants.headerSize,
-                        color: Constants.whiteColor),
+            Get.snackbar("Success", responseBody['message'].toString(),
+                overlayBlur: 5,
+                backgroundColor: Constants.green,
+                titleText: Text(
+                  'Alert',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: Constants.headerSize,
+                      color: Constants.whiteColor),
+                ),
+                messageText: Text(
+                  responseBody['message'].toString(),
+                  style: TextStyle(
+                    fontSize: Constants.textSize,
+                    color: Constants.whiteColor,
+                    fontWeight: FontWeight.bold,
                   ),
-                  messageText: Text(
-                    errorList['team_id'].toString(),
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: Constants.textSize,
-                        color: Constants.whiteColor),
-                  ));
-            } else if (errorList['player_name'] != null) {
-              Get.snackbar("Alert", errorList['player_name'].toString(),
-                  overlayBlur: 5,
-                  backgroundColor: Constants.buttonRed,
-                  titleText: Text(
-                    'Alert',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: Constants.headerSize,
-                        color: Constants.whiteColor),
-                  ),
-                  messageText: Text(
-                    errorList['player_name'].toString(),
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: Constants.textSize,
-                        color: Constants.whiteColor),
-                  ));
-            } else if (errorList['player_specialization'] != null) {
-              Get.snackbar("Alert", errorList['player_specialization'].toString(),
-                  overlayBlur: 5,
-                  backgroundColor: Constants.buttonRed,
-                  titleText: Text(
-                    'Alert',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: Constants.headerSize,
-                        color: Constants.whiteColor),
-                  ),
-                  messageText: Text(
-                    errorList['player_specialization'].toString(),
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: Constants.textSize,
-                        color: Constants.whiteColor),
-                  ));
-            } else if (errorList['player_mobile'] != null) {
-              Get.snackbar("Alert", errorList['player_mobile'].toString(),
-                  overlayBlur: 5,
-                  backgroundColor: Constants.buttonRed,
-                  titleText: Text(
-                    'Alert',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: Constants.headerSize,
-                        color: Constants.whiteColor),
-                  ),
-                  messageText: Text(
-                    errorList['player_mobile'].toString(),
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: Constants.textSize,
-                        color: Constants.whiteColor),
-                  ));
-            } else if (errorList['player_age'] != null) {
-              Get.snackbar("Alert", errorList['player_age'].toString(),
-                  overlayBlur: 5,
-                  backgroundColor: Constants.buttonRed,
-                  titleText: Text(
-                    'Alert',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: Constants.headerSize,
-                        color: Constants.whiteColor),
-                  ),
-                  messageText: Text(
-                    errorList['player_age'].toString(),
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: Constants.textSize,
-                        color: Constants.whiteColor),
-                  ));
-            } else if (errorList['player_aadhar'] != null) {
-              Get.snackbar("Alert", errorList['player_aadhar'].toString(),
-                  overlayBlur: 5,
-                  backgroundColor: Constants.buttonRed,
-                  titleText: Text(
-                    'Alert',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: Constants.headerSize,
-                        color: Constants.whiteColor),
-                  ),
-                  messageText: Text(
-                    errorList['player_aadhar'].toString(),
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: Constants.textSize,
-                        color: Constants.whiteColor),
-                  ));
-            } else if (errorList['player_shirt_size'] != null) {
-              Get.snackbar("Alert", errorList['player_shirt_size'].toString(),
-                  overlayBlur: 5,
-                  backgroundColor: Constants.buttonRed,
-                  titleText: Text(
-                    'Alert',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: Constants.headerSize,
-                        color: Constants.whiteColor),
-                  ),
-                  messageText: Text(
-                    errorList['player_shirt_size'].toString(),
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: Constants.textSize,
-                        color: Constants.whiteColor),
-                  ));
-            } else if (errorList['player_shirt_size'] != null) {
-              Get.snackbar("Alert", errorList['player_shirt_size'].toString(),
-                  overlayBlur: 5,
-                  backgroundColor: Constants.buttonRed,
-                  titleText: Text(
-                    'Alert',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: Constants.headerSize,
-                        color: Constants.whiteColor),
-                  ),
-                  messageText: Text(
-                    errorList['player_shirt_size'].toString(),
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: Constants.textSize,
-                        color: Constants.whiteColor),
-                  ));
-            } else if (errorList['player_jersey'] != null) {
-              Get.snackbar("Alert", errorList['player_jersey'].toString(),
-                  overlayBlur: 5,
-                  backgroundColor: Constants.buttonRed,
-                  titleText: Text(
-                    'Alert',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: Constants.headerSize,
-                        color: Constants.whiteColor),
-                  ),
-                  messageText: Text(
-                    errorList['player_jersey'].toString(),
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: Constants.textSize,
-                        color: Constants.whiteColor),
-                  ));
+                ));
+            if (responseBody['teamCount'].toString() == '14') {
+              Get.offAll(() => const Congratulations());
+            } else {
+              Get.offAll(() => const TeamDetails());
             }
           }
         });
         EasyLoading.showSuccess(responseBody['message'].toString());
       } else {
-        EasyLoading.showInfo("Loading Failed");
+        var errorList = responseBody['errors'];
+        if (errorList['team_id'] != null) {
+          Get.snackbar("Alert", errorList['team_id'].toString(),
+              overlayBlur: 5,
+              backgroundColor: Constants.buttonRed,
+              titleText: Text(
+                'Alert',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: Constants.headerSize,
+                    color: Constants.whiteColor),
+              ),
+              messageText: Text(
+                errorList['team_id'].toString(),
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: Constants.textSize,
+                    color: Constants.whiteColor),
+              ));
+        }
+        else if (errorList['player_name'] != null) {
+          Get.snackbar("Alert", errorList['player_name'].toString(),
+              overlayBlur: 5,
+              backgroundColor: Constants.buttonRed,
+              titleText: Text(
+                'Alert',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: Constants.headerSize,
+                    color: Constants.whiteColor),
+              ),
+              messageText: Text(
+                errorList['player_name'].toString(),
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: Constants.textSize,
+                    color: Constants.whiteColor),
+              ));
+        }
+        else if (errorList['player_specialization'] != null) {
+          Get.snackbar("Alert", errorList['player_specialization'].toString(),
+              overlayBlur: 5,
+              backgroundColor: Constants.buttonRed,
+              titleText: Text(
+                'Alert',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: Constants.headerSize,
+                    color: Constants.whiteColor),
+              ),
+              messageText: Text(
+                errorList['player_specialization'].toString(),
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: Constants.textSize,
+                    color: Constants.whiteColor),
+              ));
+        }
+        else if (errorList['player_mobile'] != null) {
+          Get.snackbar("Alert", errorList['player_mobile'].toString(),
+              overlayBlur: 5,
+              backgroundColor: Constants.buttonRed,
+              titleText: Text(
+                'Alert',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: Constants.headerSize,
+                    color: Constants.whiteColor),
+              ),
+              messageText: Text(
+                errorList['player_mobile'].toString(),
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: Constants.textSize,
+                    color: Constants.whiteColor),
+              ));
+        }
+        else if (errorList['player_age'] != null) {
+          Get.snackbar("Alert", errorList['player_age'].toString(),
+              overlayBlur: 5,
+              backgroundColor: Constants.buttonRed,
+              titleText: Text(
+                'Alert',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: Constants.headerSize,
+                    color: Constants.whiteColor),
+              ),
+              messageText: Text(
+                errorList['player_age'].toString(),
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: Constants.textSize,
+                    color: Constants.whiteColor),
+              ));
+        }
+        else if (errorList['player_aadhar'] != null) {
+          Get.snackbar("Alert", errorList['player_aadhar'].toString(),
+              overlayBlur: 5,
+              backgroundColor: Constants.buttonRed,
+              titleText: Text(
+                'Alert',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: Constants.headerSize,
+                    color: Constants.whiteColor),
+              ),
+              messageText: Text(
+                errorList['player_aadhar'].toString(),
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: Constants.textSize,
+                    color: Constants.whiteColor),
+              ));
+        }
+        else if (errorList['player_shirt_size'] != null) {
+          Get.snackbar("Alert", errorList['player_shirt_size'].toString(),
+              overlayBlur: 5,
+              backgroundColor: Constants.buttonRed,
+              titleText: Text(
+                'Alert',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: Constants.headerSize,
+                    color: Constants.whiteColor),
+              ),
+              messageText: Text(
+                errorList['player_shirt_size'].toString(),
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: Constants.textSize,
+                    color: Constants.whiteColor),
+              ));
+        }
+        else if (errorList['player_shirt_size'] != null) {
+          Get.snackbar("Alert", errorList['player_shirt_size'].toString(),
+              overlayBlur: 5,
+              backgroundColor: Constants.buttonRed,
+              titleText: Text(
+                'Alert',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: Constants.headerSize,
+                    color: Constants.whiteColor),
+              ),
+              messageText: Text(
+                errorList['player_shirt_size'].toString(),
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: Constants.textSize,
+                    color: Constants.whiteColor),
+              ));
+        }
+        else if (errorList['player_jersey'] != null) {
+          Get.snackbar("Alert", errorList['player_jersey'].toString(),
+              overlayBlur: 5,
+              backgroundColor: Constants.buttonRed,
+              titleText: Text(
+                'Alert',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: Constants.headerSize,
+                    color: Constants.whiteColor),
+              ),
+              messageText: Text(
+                errorList['player_jersey'].toString(),
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: Constants.textSize,
+                    color: Constants.whiteColor),
+              ));
+        }
+        EasyLoading.showInfo("Player Adding Failed");
       }
     });
   }
 }
 
-
 saveteamDetails(resposnse) async {
   SharedPreferences registerPrefs = await SharedPreferences.getInstance();
 
-
-  registerPrefs.setString(
-      "teamCount", resposnse['teamCount'].toString());
+  registerPrefs.setString("teamCount", resposnse['teamCount'].toString());
 
   log("==================");
   log(resposnse.toString());
   log(registerPrefs.getString('teamCount').toString());
   log("==================");
 }
-
