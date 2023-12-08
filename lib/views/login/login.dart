@@ -95,16 +95,21 @@ class _LoginPageState extends State<LoginPage> {
                       log("aunthentication success");
                       SharedPreferences registerPrefs =
                           await SharedPreferences.getInstance();
-                      log(logPIN);
                       log(teamCount.toString());
                       log(registerPrefs.getString('teamCount').toString());
                       if ((teamCount.toString() != null &&
-                              teamCount.toString() != '0') ||
+                          teamCount.toString() != '0') ||
                           (registerPrefs.getString('teamCount').toString() !=
-                                  null &&
+                              null &&
                               registerPrefs.getString('teamCount').toString() !=
                                   '0')) {
-                        Get.offAll(() => const TeamDetails());
+                        if (teamCount.toString() == '15' ||
+                            registerPrefs.getString('teamCount').toString() ==
+                                '15') {
+                          Get.offAll(() => const Home());
+                        } else {
+                          Get.offAll(() => const TeamDetails());
+                        }
                       } else {
                         Get.offAll(() => const TeamRegistration());
                       }
@@ -234,9 +239,9 @@ class _LoginPageState extends State<LoginPage> {
                                   null &&
                               registerPrefs.getString('teamCount').toString() !=
                                   '0')) {
-                        if (teamCount.toString() == '14' ||
+                        if (teamCount.toString() == '15' ||
                             registerPrefs.getString('teamCount').toString() ==
-                                '14') {
+                                '15') {
                           Get.offAll(() => const Home());
                         } else {
                           Get.offAll(() => const TeamDetails());

@@ -46,6 +46,7 @@ class Constants {
   static String registrationHeader = "Registration";
   static String teamregistrationHeader = "Team Registration";
   static String matchScheduleHeader = "Match Schedule";
+  static String matchScoreCard = "Score Card";
   static String setpinHeader = "Final Step!";
   static String topstoriesHeader = "Top Stories";
   static String loginHintText = "Enter Your Mobile Number";

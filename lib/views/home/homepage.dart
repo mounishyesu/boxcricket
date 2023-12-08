@@ -5,6 +5,7 @@ import 'package:basic_utils/basic_utils.dart';
 import 'package:boxcricket/apiservice/restapi.dart';
 import 'package:boxcricket/views/login/login.dart';
 import 'package:boxcricket/views/matchschedule/matchschedule.dart';
+import 'package:boxcricket/views/scorecard/scorecard.dart';
 import 'package:boxcricket/views/signup/signup.dart';
 import 'package:boxcricket/views/teamdashboard/teamdetails.dart';
 import 'package:boxcricket/views/topstories/TopStories.dart';
@@ -233,209 +234,215 @@ class _HomePageState extends State<HomePage> {
                                   color: Constants.whiteColor,
                                   fontWeight: FontWeight.bold),
                             ),
-                          ):Column(
-                            children: [
-                              Container(
-                                margin: const EdgeInsets.only(left: 20),
-                                child: Align(
-                                  alignment: Alignment.topLeft,
-                                  child: Text(
-                                    matchList[itemIndex]['match_date']
-                                        .toString(),
-                                    style:
-                                        TextStyle(color: Constants.whiteColor),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                height: Constants.defaultPadding,
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Container(
-                                        height: 50,
-                                        width: 50,
-                                        decoration: BoxDecoration(
-                                            color: Constants.whiteColor,
-                                            shape: BoxShape.circle),
-                                        alignment: Alignment.center,
-                                        child: Text(
-                                          matchList[itemIndex]
-                                                  ['match_team_one_name']
-                                              .toString()
-                                              .substring(0, 3)
-                                              .toUpperCase(),
-                                          style: TextStyle(
-                                              color: Constants.blackColor,
-                                              fontWeight: FontWeight.w600),
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        width: 5,
-                                      ),
-                                      SizedBox(
-                                        width: 100,
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                                matchList[itemIndex]
-                                                        ['match_team_one_name']
-                                                    .toString(),
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
-                                                  color: Constants.whiteColor,
-                                                  fontSize: 12,
-                                                )),
-                                            Text(
-                                                matchList[itemIndex][
-                                                        'match_team_one_mandal']
-                                                    .toString(),
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
-                                                  color: Constants.blackColor,
-                                                  fontSize: 12,
-                                                )),
-                                            Text(
-                                                matchList[itemIndex]
-                                                        ['DummyOne_Team_ID']
-                                                    .toString(),
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
-                                                  color: Constants.blackColor,
-                                                  fontSize: 12,
-                                                )),
-                                          ],
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                  Container(
-                                    margin: const EdgeInsets.only(right: 20),
-                                    child: Column(
-                                      children: [
-                                        Icon(
-                                          Icons.arrow_back,
-                                          color: Constants.whiteColor,
-                                          size: 15,
-                                        ),
-                                        Icon(Icons.arrow_forward_rounded,
-                                            color: Constants.whiteColor,
-                                            size: 15),
-                                      ],
+                          ):GestureDetector(
+                            onTap: (){
+                              // Get.to(const ScoreCard(),arguments: matchList[itemIndex]['match_id']);
+                              // print(matchList[itemIndex]['match_id']);
+                            },
+                            child: Column(
+                              children: [
+                                Container(
+                                  margin: const EdgeInsets.only(left: 20),
+                                  child: Align(
+                                    alignment: Alignment.topLeft,
+                                    child: Text(
+                                      matchList[itemIndex]['match_date']
+                                          .toString(),
+                                      style:
+                                          TextStyle(color: Constants.whiteColor),
                                     ),
                                   ),
-                                  Row(
-                                    children: [
-                                      SizedBox(
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                                matchList[itemIndex]
-                                                        ['match_team_two_name']
-                                                    .toString(),
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
-                                                  color: Constants.whiteColor,
-                                                  fontSize: 12,
-                                                )),
-                                            Text(
-                                                matchList[itemIndex][
-                                                        'match_team_two_mandal']
-                                                    .toString(),
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
-                                                  color: Constants.blackColor,
-                                                  fontSize: 12,
-                                                )),
-                                            Text(
-                                                matchList[itemIndex]
-                                                        ['DummyTwo_Team_ID']
-                                                    .toString(),
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
-                                                  color: Constants.blackColor,
-                                                  fontSize: 12,
-                                                )),
-                                          ],
+                                ),
+                                SizedBox(
+                                  height: Constants.defaultPadding,
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Container(
+                                          height: 50,
+                                          width: 50,
+                                          decoration: BoxDecoration(
+                                              color: Constants.whiteColor,
+                                              shape: BoxShape.circle),
+                                          alignment: Alignment.center,
+                                          child: Text(
+                                            matchList[itemIndex]
+                                                    ['match_team_one_name']
+                                                .toString()
+                                                .substring(0, 3)
+                                                .toUpperCase(),
+                                            style: TextStyle(
+                                                color: Constants.blackColor,
+                                                fontWeight: FontWeight.w600),
+                                          ),
                                         ),
-                                      ),
-                                      const SizedBox(
-                                        width: 5,
-                                      ),
-                                      Container(
-                                        height: 50,
-                                        width: 50,
-                                        decoration: BoxDecoration(
+                                        const SizedBox(
+                                          width: 5,
+                                        ),
+                                        SizedBox(
+                                          width: 100,
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                  matchList[itemIndex]
+                                                          ['match_team_one_name']
+                                                      .toString(),
+                                                  maxLines: 1,
+                                                  overflow: TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                    color: Constants.whiteColor,
+                                                    fontSize: 12,
+                                                  )),
+                                              Text(
+                                                  matchList[itemIndex][
+                                                          'match_team_one_mandal']
+                                                      .toString(),
+                                                  maxLines: 1,
+                                                  overflow: TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                    color: Constants.blackColor,
+                                                    fontSize: 12,
+                                                  )),
+                                              Text(
+                                                  matchList[itemIndex]
+                                                          ['DummyOne_Team_ID']
+                                                      .toString(),
+                                                  maxLines: 1,
+                                                  overflow: TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                    color: Constants.blackColor,
+                                                    fontSize: 12,
+                                                  )),
+                                            ],
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                    Container(
+                                      margin: const EdgeInsets.only(right: 20),
+                                      child: Column(
+                                        children: [
+                                          Icon(
+                                            Icons.arrow_back,
                                             color: Constants.whiteColor,
-                                            shape: BoxShape.circle),
-                                        alignment: Alignment.center,
-                                        child: Text(
-                                          matchList[itemIndex]
-                                                  ['match_team_two_name']
-                                              .toString()
-                                              .substring(0, 3)
-                                              .toUpperCase(),
-                                          style: TextStyle(
-                                              color: Constants.blackColor,
-                                              fontWeight: FontWeight.w600),
-                                        ),
+                                            size: 15,
+                                          ),
+                                          Icon(Icons.arrow_forward_rounded,
+                                              color: Constants.whiteColor,
+                                              size: 15),
+                                        ],
                                       ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              // SizedBox(
-                              //   height: Constants.labelSize * 3,
-                              // ),
-                              // Container(
-                              //   height: 25,
-                              //   width: 100,
-                              //   decoration: BoxDecoration(
-                              //     borderRadius: const BorderRadius.all(
-                              //         Radius.circular(50)),
-                              //     color: Constants.darkgrey,
-                              //   ),
-                              //   child: Row(
-                              //     mainAxisAlignment: MainAxisAlignment.center,
-                              //     children: [
-                              //       Icon(
-                              //         Icons.star,
-                              //         color: Constants.buttonRed,
-                              //         size: 18,
-                              //       ),
-                              //       Text(
-                              //         "4 WON",
-                              //         style: TextStyle(
-                              //             color: Constants.whiteColor,
-                              //             fontSize: 10),
-                              //       ),
-                              //     ],
-                              //   ),
-                              // )
-                            ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        SizedBox(
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                  matchList[itemIndex]
+                                                          ['match_team_two_name']
+                                                      .toString(),
+                                                  maxLines: 1,
+                                                  overflow: TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                    color: Constants.whiteColor,
+                                                    fontSize: 12,
+                                                  )),
+                                              Text(
+                                                  matchList[itemIndex][
+                                                          'match_team_two_mandal']
+                                                      .toString(),
+                                                  maxLines: 1,
+                                                  overflow: TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                    color: Constants.blackColor,
+                                                    fontSize: 12,
+                                                  )),
+                                              Text(
+                                                  matchList[itemIndex]
+                                                          ['DummyTwo_Team_ID']
+                                                      .toString(),
+                                                  maxLines: 1,
+                                                  overflow: TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                    color: Constants.blackColor,
+                                                    fontSize: 12,
+                                                  )),
+                                            ],
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          width: 5,
+                                        ),
+                                        Container(
+                                          height: 50,
+                                          width: 50,
+                                          decoration: BoxDecoration(
+                                              color: Constants.whiteColor,
+                                              shape: BoxShape.circle),
+                                          alignment: Alignment.center,
+                                          child: Text(
+                                            matchList[itemIndex]
+                                                    ['match_team_two_name']
+                                                .toString()
+                                                .substring(0, 3)
+                                                .toUpperCase(),
+                                            style: TextStyle(
+                                                color: Constants.blackColor,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                // SizedBox(
+                                //   height: Constants.labelSize * 3,
+                                // ),
+                                // Container(
+                                //   height: 25,
+                                //   width: 100,
+                                //   decoration: BoxDecoration(
+                                //     borderRadius: const BorderRadius.all(
+                                //         Radius.circular(50)),
+                                //     color: Constants.darkgrey,
+                                //   ),
+                                //   child: Row(
+                                //     mainAxisAlignment: MainAxisAlignment.center,
+                                //     children: [
+                                //       Icon(
+                                //         Icons.star,
+                                //         color: Constants.buttonRed,
+                                //         size: 18,
+                                //       ),
+                                //       Text(
+                                //         "4 WON",
+                                //         style: TextStyle(
+                                //             color: Constants.whiteColor,
+                                //             fontSize: 10),
+                                //       ),
+                                //     ],
+                                //   ),
+                                // )
+                              ],
+                            ),
                           ),
                         ),
                     options: CarouselOptions(
                       height: 400,
-                      aspectRatio: 16 / 9,
+                      aspectRatio: 4/3,
                       viewportFraction: 0.95,
                       initialPage: 0,
                       enableInfiniteScroll: true,

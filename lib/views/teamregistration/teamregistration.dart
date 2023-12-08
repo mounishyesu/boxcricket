@@ -800,7 +800,7 @@ class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
                     fontWeight: FontWeight.bold,
                   ),
                 ));
-            if (responseBody['teamCount'].toString() == '14') {
+            if (responseBody['teamCount'].toString() == '15') {
               Get.offAll(() => const Congratulations());
             } else {
               Get.offAll(() => const TeamDetails());

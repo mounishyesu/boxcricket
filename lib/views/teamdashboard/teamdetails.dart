@@ -136,7 +136,7 @@ class _TeamDetailScreenState extends State<TeamDetailScreen> {
               height: Constants.labelSize,
             ),
             Visibility(
-              visible: teamCount.toString() == '14'?false:true,
+              visible: teamCount.toString() == '15'?false:true,
               child: GestureDetector(
                       onTap: () => {
                         Get.to(const TeamRegistration()),

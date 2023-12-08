@@ -1,4 +1,4 @@
-package com.example.boxcricket
+package com.adnetics.splcricket
 
 import io.flutter.embedding.android.FlutterFragmentActivity
 
