@@ -337,24 +337,18 @@ class _MatchScheduleScreenState extends State<MatchScheduleScreen> {
                                                               DataCell(Row(
                                                                 children: [
                                                                   Container(
-                                                                    height:
-                                                                    50,
+                                                                    alignment: Alignment.center,
+                                                                    height: 50,
                                                                     width: 50,
                                                                     decoration: BoxDecoration(
-                                                                        color: Constants
-                                                                            .buttonRed,
-                                                                        shape:
-                                                                        BoxShape.circle),
-                                                                    alignment:
-                                                                    Alignment
-                                                                        .center,
-                                                                    child:
-                                                                    Text(
-                                                                      "SSE",
-                                                                      style: TextStyle(
-                                                                          color:
-                                                                          Constants.whiteColor,
-                                                                          fontWeight: FontWeight.w600),
+                                                                      border: Border.all(color: Constants.blueGrey),
+                                                                      shape: BoxShape.circle,
+                                                                    ),
+                                                                    child: CircleAvatar(
+                                                                      backgroundImage: NetworkImage(
+                                                                        matchScheduleInfoList[index]['opponent_image'].toString(),
+                                                                      ),
+                                                                      radius: 30,
                                                                     ),
                                                                   ),
                                                                   const SizedBox(
@@ -370,18 +364,16 @@ class _MatchScheduleScreenState extends State<MatchScheduleScreen> {
                                                                       crossAxisAlignment:
                                                                       CrossAxisAlignment.start,
                                                                       children: [
-                                                                        Text(
-                                                                            "Team Name",
+                                                                        Text(matchScheduleInfoList[index]['opponent'].toString(),
                                                                             maxLines: 1,
                                                                             overflow: TextOverflow.ellipsis,
                                                                             style: TextStyle(color: Constants.buttonRed, fontSize: 12, fontWeight: FontWeight.w500)),
                                                                         Text(
-                                                                            "Mandal Name",
+                                                                            matchScheduleInfoList[index]['opponent_manadalam'].toString(),
                                                                             maxLines: 1,
                                                                             overflow: TextOverflow.ellipsis,
                                                                             style: TextStyle(color: Constants.blackColor, fontSize: 12, fontWeight: FontWeight.w500)),
-                                                                        Text(
-                                                                            "Team ID",
+                                                                        Text(matchScheduleInfoList[index]['opponent_id'].toString(),
                                                                             maxLines: 1,
                                                                             overflow: TextOverflow.ellipsis,
                                                                             style: TextStyle(color: Constants.blackColor, fontSize: 12, fontWeight: FontWeight.w500)),
