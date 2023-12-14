@@ -44,9 +44,9 @@ class Constants {
   static String cricketFan = "I'M A CRICKET FAN";
   static String termsAndConditions = "Terms & Conditions";
   static String registrationHeader = "Registration";
-  static String teamregistrationHeader = "Team Registration";
+  static String teamregistrationHeader = "Add Player";
   static String matchScheduleHeader = "Match Schedule";
-  static String matchScoreCard = "Score Card";
+  static String matchScoreCard = "Scorecard";
   static String setpinHeader = "Final Step!";
   static String topstoriesHeader = "Top Stories";
   static String loginHintText = "Enter Your Mobile Number";
@@ -124,7 +124,8 @@ class Constants {
   static Color blueGrey = Colors.blueGrey;
   static String logoImage = "assets/images/spl_logo.png";
   static String ballImage = "assets/images/ball.png";
-  static String bgImage = "assets/images/bgimage.png";
+  static String bgImage = "assets/images/bgImage.png";
+  static String tncbgImage = "assets/images/tncbgImage.png";
   static String defaultUserImage = "assets/images/user.jpg";
   static String successImage = "assets/images/congratulations.jpg";
   static String cricImage = "assets/images/cricketimage.png";
@@ -144,7 +145,7 @@ class Constants {
       ..indicatorWidget = SizedBox(
         width: 80,
         height: 80,
-        child: SpinKitCubeGrid(
+        child: SpinKitCircle(
           color: buttonRed,
           size: 60.0,
         ),

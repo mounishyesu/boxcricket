@@ -4,6 +4,8 @@ import 'dart:developer';
 
 import 'package:boxcricket/apiservice/restapi.dart';
 import 'package:boxcricket/views/home/homepage.dart';
+import 'package:boxcricket/views/login/login.dart';
+import 'package:boxcricket/views/otp/fanotpscreen.dart';
 import 'package:boxcricket/views/teamdashboard/teamdetails.dart';
 import 'package:boxcricket/views/teamregistration/teamregistration.dart';
 import 'package:boxcricket/views/widgets/constants.dart';
@@ -69,7 +71,9 @@ class _SingnUpScreenState extends State<SingnUpScreen> {
             width: MediaQuery.of(context).size.width * 1,
             decoration: BoxDecoration(
                 image: DecorationImage(
-                    image: AssetImage(Constants.bgImage), fit: BoxFit.cover)),
+                    image: AssetImage(Constants.bgImage),
+                    fit: BoxFit.contain,
+                    alignment: Alignment.center)),
             child: Column(
               children: [
                 SizedBox(
@@ -84,19 +88,31 @@ class _SingnUpScreenState extends State<SingnUpScreen> {
                       fontSize: Constants.welcomeTextSize),
                 )),
                 SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.3,
+                  height: MediaQuery.of(context).size.height * 0.38,
                 ),
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.8,
                   child: TextField(
                     controller: mobileNumberController,
                     keyboardType: TextInputType.phone,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                      ),
-                      labelText: "Enter Your Mobile Number",
-                    ),
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(10)),
+                            borderSide:
+                                BorderSide(color: Constants.blackColor)),
+                        enabledBorder: OutlineInputBorder(
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(10)),
+                            borderSide: BorderSide(
+                                color: Constants.blackColor, width: 2)),
+                        focusedBorder: OutlineInputBorder(
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(10)),
+                            borderSide: BorderSide(
+                                color: Constants.blackColor, width: 2)),
+                        labelText: "Enter Your Mobile Number",
+                        labelStyle: TextStyle(color: Constants.blackColor)),
                     onChanged: (value) => {
                       if (value.length > 10)
                         {
@@ -160,7 +176,6 @@ class _SingnUpScreenState extends State<SingnUpScreen> {
                       {
                         sendOtpApiService(
                             mobileNumberController.text.toString()),
-                        // Get.to(const OtpVerification()),
                       }
                   },
                   child: Container(
@@ -189,7 +204,51 @@ class _SingnUpScreenState extends State<SingnUpScreen> {
                 ),
                 GestureDetector(
                   onTap: () => {
-                    Get.to(() => const Home()),
+                    // Get.to(() => const Home()),
+                    if (mobileNumberController.text.toString().isEmpty)
+                      {
+                        Get.snackbar("Alert", Constants.loginAlertMsg,
+                            overlayBlur: 5,
+                            backgroundColor: Constants.buttonRed,
+                            titleText: Text(
+                              'Alert',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: Constants.headerSize,
+                                  color: Constants.whiteColor),
+                            ),
+                            messageText: Text(
+                              Constants.loginAlertMsg,
+                              style: TextStyle(
+                                  fontSize: Constants.textSize,
+                                  fontWeight: FontWeight.bold,
+                                  color: Constants.whiteColor),
+                            )),
+                      }
+                    else if (mobileNumberController.text.length < 10)
+                      {
+                        Get.snackbar("Alert", Constants.loginAlertMsg,
+                            overlayBlur: 5,
+                            backgroundColor: Constants.buttonRed,
+                            titleText: Text(
+                              'Alert',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: Constants.headerSize,
+                                  color: Constants.whiteColor),
+                            ),
+                            messageText: Text(
+                              Constants.loginAlertMsg,
+                              style: TextStyle(
+                                  fontSize: Constants.textSize,
+                                  fontWeight: FontWeight.bold,
+                                  color: Constants.whiteColor),
+                            )),
+                      }
+                    else
+                      {
+                        fanOtpApi(mobileNumberController.text.toString()),
+                      }
                   },
                   child: Container(
                     margin: const EdgeInsets.only(top: 30),
@@ -219,7 +278,7 @@ class _SingnUpScreenState extends State<SingnUpScreen> {
   sendOtpApiService(mobNumber) async {
     Constants.easyLoader();
     EasyLoading.show(
-      status: "sending OTP",
+      status: "Loding...",
     );
     var requestBody = jsonEncode({"mobile_number": mobNumber});
     await ApiService.otpPostCall("Users/MobileOtp", requestBody)
@@ -237,37 +296,36 @@ class _SingnUpScreenState extends State<SingnUpScreen> {
           if (responseBody['status'] == true &&
               responseBody['data']['OTP'] != "") {
             if (responseBody['data']['isExist'] == false) {
+              saveDetails(responseBody);
+              Get.snackbar(
+                'Alert',
+                responseBody['message'],
+                titleText: Text(
+                  'Alert',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: Constants.headerSize,
+                      color: Constants.whiteColor),
+                ),
+                backgroundColor: Constants.green,
+                overlayBlur: 5,
+                messageText: Text(
+                  responseBody['message'],
+                  style: TextStyle(
+                      fontSize: Constants.textSize,
+                      fontWeight: FontWeight.bold,
+                      color: Constants.whiteColor),
+                ),
+              );
               Future.delayed(const Duration(seconds: 2), () async {
-                Get.to(const OtpVerification(), arguments: responseBody);
+                Get.to(()=>const OtpVerification(), arguments: responseBody);
               });
             } else {
               saveUserDetails(responseBody);
               if (responseBody['data']['teamCount'] > 0) {
-                Get.offAll(() => const TeamDetails());
-              } else {
-                Get.to(() => const TeamRegistration());
+                Get.offAll(() => const Login());
               }
             }
-            // Get.snackbar(
-            //   'Alert',
-            //   responseBody['message'],
-            //   titleText: Text(
-            //     'Alert',
-            //     style: TextStyle(
-            //         fontWeight: FontWeight.bold,
-            //         fontSize: Constants.headerSize,
-            //         color: Constants.whiteColor),
-            //   ),
-            //   backgroundColor: Constants.green,
-            //   overlayBlur: 5,
-            //   messageText: Text(
-            //     responseBody['message'],
-            //     style: TextStyle(
-            //         fontSize: Constants.textSize,
-            //         fontWeight: FontWeight.bold,
-            //         color: Constants.whiteColor),
-            //   ),
-            // );
           } else {
             Get.snackbar('Alert', Constants.someThingWentWrong,
                 backgroundColor: Constants.buttonRed,
@@ -294,6 +352,97 @@ class _SingnUpScreenState extends State<SingnUpScreen> {
       }
     });
   }
+
+  fanOtpApi(mobNumber) async {
+    Constants.easyLoader();
+    EasyLoading.show(
+      status: "Loading . . .",
+    );
+    var encodeBody = jsonEncode({"mobile_number": mobNumber});
+    log('-----------------------');
+    log(encodeBody);
+    log('-----------------------');
+    await ApiService.post("Users/FANMobileOtp", encodeBody).then((success) {
+      if (success.statusCode == 200) {
+        EasyLoading.addStatusCallback((status) {
+          if (status == EasyLoadingStatus.dismiss) {
+            _timer?.cancel();
+          }
+        });
+        setState(() {
+          var responseBody = json.decode(success.body);
+          log(responseBody.toString());
+          log('-----------------------------------------------------------------------');
+          if (responseBody['status'] == true &&
+              responseBody['data']['OTP'] != "") {
+            if(responseBody['user']==null){
+              Get.snackbar(
+                'Alert',
+                responseBody['message'],
+                titleText: Text(
+                  'Alert',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: Constants.headerSize,
+                      color: Constants.whiteColor),
+                ),
+                backgroundColor: Constants.green,
+                overlayBlur: 5,
+                messageText: Text(
+                  responseBody['message'],
+                  style: TextStyle(
+                      fontSize: Constants.textSize,
+                      fontWeight: FontWeight.bold,
+                      color: Constants.whiteColor),
+                ),
+              );
+              Future.delayed(const Duration(seconds: 2), () async {
+                Get.to(()=>const FanOtpVerification(), arguments: responseBody);
+              });
+            }else{
+              saveFanDetails(responseBody);
+              Future.delayed(const Duration(seconds: 2), () async {
+                Get.offAll(()=>const Login());
+              });
+            }
+
+          } else {
+            Get.snackbar('Alert', Constants.someThingWentWrong,
+                backgroundColor: Constants.buttonRed,
+                titleText: Text(
+                  'Alert',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: Constants.headerSize,
+                      color: Constants.whiteColor),
+                ),
+                overlayBlur: 5,
+                messageText: Text(
+                  Constants.someThingWentWrong,
+                  style: TextStyle(
+                      fontSize: Constants.textSize,
+                      fontWeight: FontWeight.bold,
+                      color: Constants.whiteColor),
+                ));
+          }
+        });
+        EasyLoading.showSuccess("Loading Success");
+      } else {
+        EasyLoading.showInfo("Loading Failed");
+      }
+    });
+  }
+}
+
+saveDetails(resposnse)async{
+  SharedPreferences registerPrefs = await SharedPreferences.getInstance();
+  registerPrefs.setString("userRole", resposnse["data"]['role'].toString());
+  registerPrefs.setString(
+      "captainNumber", resposnse["data"]['Mobile Number'].toString());
+  log("==================");
+  log(registerPrefs.getString('captainNumber').toString());
+  log(registerPrefs.getString('userRole').toString());
+  log("==================");
 }
 
 saveUserDetails(resposnse) async {
@@ -313,6 +462,7 @@ saveUserDetails(resposnse) async {
       "loginPIN", resposnse["data"]['user']['pin'].toString());
   registerPrefs.setString("capProfilePic",
       resposnse["data"]['user']['profile_image_url'].toString());
+  registerPrefs.setString("userRole", resposnse["data"]['role'].toString());
   log("==================");
   log(resposnse.toString());
   log(registerPrefs.getString('userDetails').toString());
@@ -322,5 +472,23 @@ saveUserDetails(resposnse) async {
   log(registerPrefs.getString('teamName').toString());
   log(registerPrefs.getString('teamCount').toString());
   log(registerPrefs.getString('loginPIN').toString());
+  log(registerPrefs.getString('userRole').toString());
+  log("==================");
+}
+
+saveFanDetails(resposnse) async {
+  SharedPreferences registerPrefs = await SharedPreferences.getInstance();
+  registerPrefs.setString("captainNumber", resposnse['data']["Mobile_Number"].toString());
+  registerPrefs.setString("loginPIN", resposnse['user']['fan_pin'].toString());
+  registerPrefs.setString("teamID", resposnse['user']['fan_id'].toString());
+  registerPrefs.setString("userRole", resposnse['role'].toString());
+
+  log("==================");
+  log(resposnse.toString());
+  log(resposnse['data']["Mobile_Number"].toString());
+  log(registerPrefs.getString('captainNumber').toString());
+  log(registerPrefs.getString('loginPIN').toString());
+  log(registerPrefs.getString('teamID').toString());
+  log(registerPrefs.getString('userRole').toString());
   log("==================");
 }

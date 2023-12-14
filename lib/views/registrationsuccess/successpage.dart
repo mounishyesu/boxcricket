@@ -50,7 +50,7 @@ class _CongratulationsScreenState extends State<CongratulationsScreen> {
       body: Column(
         children: [
           SizedBox(
-            height: MediaQuery.of(context).size.height * 0.1,
+            height: MediaQuery.of(context).size.height * 0.02,
           ),
           Center(
               child: Image.asset(

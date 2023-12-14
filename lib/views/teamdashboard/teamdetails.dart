@@ -55,7 +55,7 @@ class TeamDetailScreen extends StatefulWidget {
 class _TeamDetailScreenState extends State<TeamDetailScreen> {
   List playersList = [];
   Timer? _timer;
-  String teamName="",capName="",teamCount="",capImage="";
+  String teamName = "", capName = "", teamCount = "", capImage = "";
 
   @override
   void initState() {
@@ -104,7 +104,7 @@ class _TeamDetailScreenState extends State<TeamDetailScreen> {
                     color: Constants.singinBgColor,
                     shape: BoxShape.circle,
                   ),
-                  child:  CircleAvatar(
+                  child: CircleAvatar(
                     backgroundImage: NetworkImage(
                       capImage.toString(),
                     ),
@@ -117,7 +117,8 @@ class _TeamDetailScreenState extends State<TeamDetailScreen> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(capName.toString(),
+                    Text(
+                      capName.toString(),
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: Constants.loginBtnTextSize),
@@ -136,125 +137,130 @@ class _TeamDetailScreenState extends State<TeamDetailScreen> {
               height: Constants.labelSize,
             ),
             Visibility(
-              visible: teamCount.toString() == '15'?false:true,
+              visible: teamCount.toString() == '15' ? false : true,
               child: GestureDetector(
-                      onTap: () => {
-                        Get.to(const TeamRegistration()),
-                      },
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 10),
-                        alignment: Alignment.center,
-                        height: Constants.registrationTextFieldHeight,
-                        decoration: BoxDecoration(
-                            color: Constants.blackColor,
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(30))),
-                        child: Text(
-                          Constants.addPlayerButton,
-                          style: TextStyle(
-                              color: Constants.buttonTextColor,
-                              fontSize: Constants.loginBtnTextSize),
-                        ),
-                      ),
-                    ),
+                onTap: () => {
+                  Get.to(const TeamRegistration()),
+                },
+                child: Container(
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  alignment: Alignment.center,
+                  height: Constants.registrationTextFieldHeight,
+                  decoration: BoxDecoration(
+                      color: Constants.blackColor,
+                      borderRadius:
+                          const BorderRadius.all(Radius.circular(30))),
+                  child: Text(
+                    Constants.addPlayerButton,
+                    style: TextStyle(
+                        color: Constants.buttonTextColor,
+                        fontSize: Constants.loginBtnTextSize),
+                  ),
+                ),
+              ),
             ),
             SizedBox(
               height: Constants.labelSize,
             ),
-            playersList.isEmpty?Container(
-              margin: EdgeInsets.symmetric(vertical: MediaQuery.of(context).size.height*0.3),
-              child: Text(
-                'No Players Found',
-                style: TextStyle(
-                    color: Constants.blackColor,
-                    fontSize: Constants.headerSize,
-                    fontWeight: FontWeight.bold),
-              ),
-            ):SafeArea(
-              bottom: true,
-              child: ListView.builder(
-                physics: const ScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: playersList.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Container(
-                      margin: const EdgeInsets.symmetric(
-                          horizontal: 30, vertical: 10),
-                      decoration: BoxDecoration(
-                          border: Border.all(color: Constants.blackColor),
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(20))),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            width: MediaQuery.of(context).size.width * 1,
+            playersList.isEmpty
+                ? Container(
+                    margin: EdgeInsets.symmetric(
+                        vertical: MediaQuery.of(context).size.height * 0.3),
+                    child: Text(
+                      'No Players Found',
+                      style: TextStyle(
+                          color: Constants.blackColor,
+                          fontSize: Constants.headerSize,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  )
+                : SafeArea(
+                    bottom: true,
+                    child: ListView.builder(
+                      physics: const ScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: playersList.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Container(
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 15, vertical: 10),
                             decoration: BoxDecoration(
-                                color: Constants.buttonRed,
-                                borderRadius: const BorderRadius.only(
-                                    topRight: Radius.circular(20),
-                                    topLeft: Radius.circular(20))),
-                            padding: const EdgeInsets.only(
-                                left: 30, top: 10, bottom: 10),
-                            child: Text(
-                              playersList[index]['role_name'],
-                              style: TextStyle(
-                                  color: Constants.whiteColor,
-                                  fontWeight: FontWeight.w500),
-                            ),
-                          ),
-                          Container(
-                            margin: const EdgeInsets.all(20),
-                            child: GridView.builder(
-                              physics: const ScrollPhysics(),
-                              shrinkWrap: true,
-                              gridDelegate:
-                                  const SliverGridDelegateWithFixedCrossAxisCount(
-                                childAspectRatio: 2.5,
-                                crossAxisCount:
-                                    2, // number of items in each row
-                                mainAxisSpacing: 1.0, // spacing between rows
-                                crossAxisSpacing:
-                                    1.0, // spacing between columns
-                              ),
-                              // padding: EdgeInsets.all(8.0), // padding around the grid
-                              itemCount: playersList[index]['players']
-                                  .length, // total number of items
-                              itemBuilder: (context, playerIndex) {
-                                var playerName = playersList[index]['players']
-                                    [playerIndex];
-                                return Row(
-                                  children: [
-                                    CircleAvatar(
-                                      backgroundImage: NetworkImage(
-                                        '${playerName['profile_image_url']}',
-                                      ),
-                                      radius: 25,
+                                border: Border.all(color: Constants.blackColor),
+                                borderRadius: const BorderRadius.all(
+                                    Radius.circular(20))),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  width: MediaQuery.of(context).size.width * 1,
+                                  decoration: BoxDecoration(
+                                      color: Constants.buttonRed,
+                                      borderRadius: const BorderRadius.only(
+                                          topRight: Radius.circular(20),
+                                          topLeft: Radius.circular(20))),
+                                  padding: const EdgeInsets.only(
+                                      left: 30, top: 10, bottom: 10),
+                                  child: Text(
+                                    playersList[index]['role_name'],
+                                    style: TextStyle(
+                                        color: Constants.whiteColor,
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                ),
+                                Container(
+                                  margin: const EdgeInsets.all(20),
+                                  child: GridView.builder(
+                                    physics: const ScrollPhysics(),
+                                    shrinkWrap: true,
+                                    gridDelegate:
+                                        const SliverGridDelegateWithFixedCrossAxisCount(
+                                      childAspectRatio: 2.5,
+                                      crossAxisCount:
+                                          2, // number of items in each row
+                                      mainAxisSpacing:
+                                          1.0, // spacing between rows
+                                      crossAxisSpacing:
+                                          1.0, // spacing between columns
                                     ),
-                                    SizedBox(
-                                      width: Constants.labelSize,
-                                    ),
-                                    SizedBox(
-                                      width: 80,
-                                      child: Text(
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                          '${playerName['player_name']}',
-                                          style: TextStyle(
-                                              color: Constants.blackColor,
-                                              fontWeight: FontWeight.w500)),
-                                    ),
-                                  ],
-                                );
-                              },
-                            ),
-                          )
-                        ],
-                      ));
-                },
-              ),
-            ),
+                                    // padding: EdgeInsets.all(8.0), // padding around the grid
+                                    itemCount: playersList[index]['players']
+                                        .length, // total number of items
+                                    itemBuilder: (context, playerIndex) {
+                                      var playerName = playersList[index]
+                                          ['players'][playerIndex];
+                                      return Row(
+                                        children: [
+                                          CircleAvatar(
+                                            backgroundImage: NetworkImage(
+                                              '${playerName['profile_image_url']}',
+                                            ),
+                                            radius: 25,
+                                          ),
+                                          SizedBox(
+                                            width: Constants.labelSize,
+                                          ),
+                                          SizedBox(
+                                            width: 80,
+                                            child: Text(
+                                                maxLines: 2,
+                                                overflow: TextOverflow.ellipsis,
+                                                '${playerName['player_name']}',
+                                                style: TextStyle(
+                                                    color: Constants.blackColor,
+                                                    fontWeight:
+                                                        FontWeight.w500)),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  ),
+                                )
+                              ],
+                            ));
+                      },
+                    ),
+                  ),
           ],
         ),
       ),
@@ -269,7 +275,8 @@ class _TeamDetailScreenState extends State<TeamDetailScreen> {
     SharedPreferences registerPrefs = await SharedPreferences.getInstance();
     log(registerPrefs.getString('captainNumber').toString());
     var teamID = registerPrefs.getString('teamID').toString();
-    capName =  StringUtils.capitalize(registerPrefs.getString('teamCaptain').toString());
+    capName = StringUtils.capitalize(
+        registerPrefs.getString('teamCaptain').toString());
     teamCount = registerPrefs.getString('teamCount').toString();
     capImage = registerPrefs.getString('capProfilePic').toString();
     var encodeBody = jsonEncode({"team_id": teamID.toString()});
@@ -280,7 +287,7 @@ class _TeamDetailScreenState extends State<TeamDetailScreen> {
     log(capImage.toString());
     log('-----------------------');
     await ApiService.post("Users/getPlayersByTeamId", encodeBody)
-        .then((success){
+        .then((success) {
       if (success.statusCode == 200) {
         EasyLoading.addStatusCallback((status) {
           if (status == EasyLoadingStatus.dismiss) {
@@ -293,7 +300,8 @@ class _TeamDetailScreenState extends State<TeamDetailScreen> {
           log(responseBody.toString());
           playersList = responseBody['team_players'];
           log(playersList.length.toString());
-          teamName = StringUtils.capitalize(registerPrefs.getString('teamName').toString());
+          teamName = StringUtils.capitalize(
+              registerPrefs.getString('teamName').toString());
         });
         EasyLoading.showSuccess("Loading Success");
       } else {
@@ -301,6 +309,4 @@ class _TeamDetailScreenState extends State<TeamDetailScreen> {
       }
     });
   }
-
-
 }

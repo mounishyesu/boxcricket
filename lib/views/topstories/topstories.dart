@@ -47,7 +47,6 @@ class TopStoriesPage extends StatefulWidget {
 class _TopStoriesPageState extends State<TopStoriesPage> {
   dynamic getArgumentedData = Get.arguments;
 
-
   @override
   void initState() {
     // TODO: implement initState
@@ -55,11 +54,14 @@ class _TopStoriesPageState extends State<TopStoriesPage> {
     log(getArgumentedData.toString());
     log(getArgumentedData[0].toString());
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(Constants.topstoriesHeader),
+        title: Text(
+          getArgumentedData[1].toString(),
+        ),
         titleTextStyle: TextStyle(
             fontSize: Constants.loginBtnTextSize, color: Constants.blackColor),
         leading: IconButton(
@@ -68,33 +70,35 @@ class _TopStoriesPageState extends State<TopStoriesPage> {
             size: Constants.backIconSize,
             color: Constants.backIconColor,
           ),
-          onPressed: () => Get.offAll(()=>const Home()),
+          onPressed: () => Get.back(),
         ),
       ),
       body: Container(
         margin: const EdgeInsets.symmetric(horizontal: 20),
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Image.network(getArgumentedData[0].toString(),
-                  height: 200, width: 500, fit: BoxFit.fill),
-            ),
-            Align(
-                alignment: Alignment.topLeft,
-                child: Text(getArgumentedData[1].toString(),
-                  style: TextStyle(
-                      color: Constants.darkgrey, fontWeight: FontWeight.bold,fontSize: Constants.headerSize),
-                )),
-            Align(
-                alignment: Alignment.topLeft,
-                child: Text(
-                  getArgumentedData[2].toString(),
-                  style: TextStyle(
-                    color: Constants.darkgrey,
-                  ),
-                )),
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Image.network(getArgumentedData[0].toString(),
+                    height: 200, width: 500, fit: BoxFit.fill),
+              ),
+              // Align(
+              //     alignment: Alignment.topLeft,
+              //     child: Text(getArgumentedData[1].toString(),
+              //       style: TextStyle(
+              //           color: Constants.darkgrey, fontWeight: FontWeight.bold,fontSize: Constants.headerSize),
+              //     )),
+              Align(
+                  alignment: Alignment.topLeft,
+                  child: Text(
+                    getArgumentedData[2].toString(),
+                    style: TextStyle(
+                      color: Constants.darkgrey,
+                    ),
+                  )),
+            ],
+          ),
         ),
       ),
     );

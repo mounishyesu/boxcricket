@@ -13,18 +13,18 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class SetPin extends StatefulWidget {
-  const SetPin({super.key});
+class FanSetPin extends StatefulWidget {
+  const FanSetPin({super.key});
 
   @override
-  State<SetPin> createState() => _SetPinState();
+  State<FanSetPin> createState() => _FanSetPinState();
 }
 
-class _SetPinState extends State<SetPin> {
+class _FanSetPinState extends State<FanSetPin> {
   @override
   Widget build(BuildContext context) {
     return Responsive(
-      mobile: const SetPinScreen(),
+      mobile: const FanSetPinScreen(),
       desktop: Row(
         children: [
           Expanded(
@@ -33,7 +33,7 @@ class _SetPinState extends State<SetPin> {
               children: [
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 1,
-                  child: const SetPinScreen(),
+                  child: const FanSetPinScreen(),
                 ),
               ],
             ),
@@ -44,14 +44,14 @@ class _SetPinState extends State<SetPin> {
   }
 }
 
-class SetPinScreen extends StatefulWidget {
-  const SetPinScreen({super.key});
+class FanSetPinScreen extends StatefulWidget {
+  const FanSetPinScreen({super.key});
 
   @override
-  State<SetPinScreen> createState() => _SetPinScreenState();
+  State<FanSetPinScreen> createState() => _FanSetPinScreenState();
 }
 
-class _SetPinScreenState extends State<SetPinScreen> {
+class _FanSetPinScreenState extends State<FanSetPinScreen> {
   TextEditingController pinController = TextEditingController();
   TextEditingController confirmPinController = TextEditingController();
   Timer? _timer;
@@ -62,14 +62,6 @@ class _SetPinScreenState extends State<SetPinScreen> {
         title: Text(Constants.setpinHeader),
         titleTextStyle: TextStyle(
             fontSize: Constants.loginBtnTextSize, color: Constants.blackColor),
-        // leading: IconButton(
-        //   icon: Icon(
-        //     Icons.arrow_circle_left_sharp,
-        //     size: Constants.backIconSize,
-        //     color: Constants.backIconColor,
-        //   ),
-        //   onPressed: () => Get.back(),
-        // ),
       ),
       body: GestureDetector(
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
@@ -317,12 +309,14 @@ class _SetPinScreenState extends State<SetPinScreen> {
     );
     SharedPreferences registerPrefs = await SharedPreferences.getInstance();
     log(registerPrefs.getString('captainNumber').toString());
-    var encodeBody = jsonEncode({
-      "mobile_number": registerPrefs.getString('captainNumber').toString(),
-      "new_pin": confirmPinController.text
-    });
-    log(encodeBody);
-    await ApiService.post("Users/createPin", encodeBody).then((success) async {
+
+    Map<String, dynamic> formMap = {
+      "fan_mobile": registerPrefs.getString('captainNumber').toString(),
+      "fan_pin": confirmPinController.text,
+    };
+    log(formMap.toString());
+    await ApiService.post("Users/userFanRegistration", formMap)
+        .then((success) async {
       var responseBody = json.decode(success.body);
       if (success.statusCode == 200) {
         EasyLoading.addStatusCallback((status) {
@@ -334,23 +328,23 @@ class _SetPinScreenState extends State<SetPinScreen> {
           log(responseBody.toString());
           if (responseBody['status'] == true) {
             savePinDetails(responseBody);
-            // Get.snackbar("Alert", responseBody['message'].toString(),
-            //     overlayBlur: 5,
-            //     backgroundColor: Constants.green,
-            //     titleText: Text(
-            //       'Alert',
-            //       style: TextStyle(
-            //           color: Constants.whiteColor,
-            //           fontWeight: FontWeight.bold,
-            //           fontSize: Constants.headerSize),
-            //     ),
-            //     messageText: Text(
-            //       responseBody['message'].toString(),
-            //       style: TextStyle(
-            //           color: Constants.whiteColor,
-            //           fontWeight: FontWeight.bold,
-            //           fontSize: Constants.textSize),
-            //     ));
+            Get.snackbar("Alert", responseBody['message'].toString(),
+                overlayBlur: 5,
+                backgroundColor: Constants.green,
+                titleText: Text(
+                  'Alert',
+                  style: TextStyle(
+                      color: Constants.whiteColor,
+                      fontWeight: FontWeight.bold,
+                      fontSize: Constants.headerSize),
+                ),
+                messageText: Text(
+                  responseBody['message'].toString(),
+                  style: TextStyle(
+                      color: Constants.whiteColor,
+                      fontWeight: FontWeight.bold,
+                      fontSize: Constants.textSize),
+                ));
             Get.offAll(() => const Login());
           }
         });
@@ -366,25 +360,12 @@ savePinDetails(resposnseBody) async {
   SharedPreferences registerPrefs = await SharedPreferences.getInstance();
 
   registerPrefs.setString(
-      "teamID", resposnseBody["team"]['team_id'].toString());
-
-  registerPrefs.setString(
-      "teamName", resposnseBody["team"]['team_name'].toString());
-
-  registerPrefs.setString(
-      "teamCaptain", resposnseBody['team']['team_captain'].toString());
-
-  registerPrefs.setString(
-      "captainNumber", resposnseBody['team']['captain_mobile'].toString());
-
-  registerPrefs.setString("loginPIN", resposnseBody['team']['pin'].toString());
-  registerPrefs.setString("teamCount", resposnseBody['teamCount'].toString());
+      "captainNumber", resposnseBody['user']['fan_mobile'].toString());
+  registerPrefs.setString("loginPIN", resposnseBody['user']['fan_pin'].toString());
+  registerPrefs.setString("userRole", resposnseBody['role'].toString());
 
   log('------------------');
-  log(registerPrefs.getString('teamID').toString());
-  log(registerPrefs.getString('loginPIN').toString());
-  log(registerPrefs.getString('teamName').toString());
-  log(registerPrefs.getString('teamCaptain').toString());
-  log(registerPrefs.getString('teamCount').toString());
   log(registerPrefs.getString('captainNumber').toString());
+  log(registerPrefs.getString('loginPIN').toString());
+  log(registerPrefs.getString('userRole').toString());
 }

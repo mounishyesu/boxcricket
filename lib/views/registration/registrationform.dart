@@ -1339,10 +1339,12 @@ saveUserRegistrationDetails(resposnseBody) async {
       "teamCount", resposnseBody['team']['teamCount'].toString());
   registerPrefs.setString(
       "capProfilePic", resposnseBody["team"]['profile_image_url'].toString());
+  registerPrefs.setString("userRole", resposnseBody['role'].toString());
   log('=====================<>===========');
   log(resposnseBody.toString());
 
   log(registerPrefs.getString('teamID').toString());
+  log(registerPrefs.getString('userRole').toString());
   log(registerPrefs.getString('teamName').toString());
   log(registerPrefs.getString('teamCaptain').toString());
   log(registerPrefs.getString('captainNumber').toString());

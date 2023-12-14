@@ -39,15 +39,24 @@ class _SplashScreenState extends State<SplashScreen>
     log(registerPrefs.getString('teamID').toString());
     log(registerPrefs.getString('captainNumber').toString());
     log(registerPrefs.getString('loginPIN').toString());
+    log(registerPrefs.getString('userRole').toString());
     log(registerPrefs.getString('teamCount').toString());
     log("page checking");
-    if (registerPrefs.getString('teamID') == null) {
-      Timer(const Duration(seconds: 3), () => Get.offAll(()=>const SingnUpPage()));
-    } else {
+    if(registerPrefs.getString('userRole').toString() == 'TEAM'){
+      if (registerPrefs.getString('teamID') == null) {
+        Timer(const Duration(seconds: 3), () => Get.offAll(()=>const SingnUpPage()));
+      } else {
+        if (registerPrefs.getString('loginPIN').toString() != 'null' && registerPrefs.getString('loginPIN').toString() != "" ) {
+          Timer(const Duration(seconds: 3), () => Get.offAll(()=>const Login()));
+        } else {
+          Timer(const Duration(seconds: 3), () => Get.offAll(()=>const SetPin()));
+        }
+      }
+    }else{
       if (registerPrefs.getString('loginPIN').toString() != 'null' && registerPrefs.getString('loginPIN').toString() != "" ) {
         Timer(const Duration(seconds: 3), () => Get.offAll(()=>const Login()));
-      } else {
-        Timer(const Duration(seconds: 3), () => Get.offAll(()=>const SetPin()));
+      }else{
+        Timer(const Duration(seconds: 3), () => Get.offAll(()=>const SingnUpPage()));
       }
     }
   }
@@ -78,8 +87,8 @@ class _SplashScreenState extends State<SplashScreen>
                     children: <Widget>[
                       Image.asset(
                         Constants.logoImage,
-                        height: 350,
-                        width: 350,
+                        height: 300,
+                        width: 300,
                       ),
                     ],
                   ),

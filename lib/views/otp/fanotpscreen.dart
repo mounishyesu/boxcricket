@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:boxcricket/apiservice/restapi.dart';
+import 'package:boxcricket/views/login/login.dart';
 import 'package:boxcricket/views/teamdashboard/teamdetails.dart';
 import 'package:boxcricket/views/teamregistration/teamregistration.dart';
 import 'package:boxcricket/views/termsandconditions/termsandconditions.dart';
@@ -12,14 +13,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class OtpVerification extends StatefulWidget {
-  const OtpVerification({super.key});
+class FanOtpVerification extends StatefulWidget {
+  const FanOtpVerification({super.key});
 
   @override
-  State<OtpVerification> createState() => _OtpVerificationState();
+  State<FanOtpVerification> createState() => _FanOtpVerificationState();
 }
 
-class _OtpVerificationState extends State<OtpVerification> {
+class _FanOtpVerificationState extends State<FanOtpVerification> {
   @override
   Widget build(BuildContext context) {
     return Responsive(
@@ -60,8 +61,8 @@ class _OtpScreenState extends State<OtpScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    log(argumentData.toString());
     log('argumentData');
+    log(argumentData.toString());
     timer = Timer.periodic(const Duration(seconds: 1), (_) {
       if (secondsRemaining != 0) {
         setState(() {
@@ -125,7 +126,7 @@ class _OtpScreenState extends State<OtpScreen> {
                       fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  "${Constants.onNumber} + 91${argumentData['data']['Mobile Number']}",
+                  "${Constants.onNumber} + 91${argumentData['data']['Mobile_Number'].toString()}",
                   style: TextStyle(color: Constants.darkgrey),
                 ),
                 SizedBox(
@@ -202,7 +203,7 @@ class _OtpScreenState extends State<OtpScreen> {
                           ),
                           backgroundColor: Constants.buttonRed);
                     } else {
-                      if (argumentData['data']['isExist'] == false) {
+                      saveFanDetails(argumentData);
                         Get.snackbar("Alert", Constants.otpVerified,
                             overlayBlur: 5,
                             duration: const Duration(seconds: 2),
@@ -222,20 +223,8 @@ class _OtpScreenState extends State<OtpScreen> {
                             ),
                             backgroundColor: Constants.green);
                         Future.delayed(const Duration(seconds: 2), () async {
-                          Get.to(() => const TermsAndConditions(),
-                              arguments: argumentData['data']['Mobile Number']
-                                  .toString());
-                          log('========>>');
-                          log(argumentData['data']['Mobile Number']);
+                          Get.to(() => const TermsAndConditions());
                         });
-                      } else {
-                        saveUserDetails(argumentData);
-                        if (argumentData['data']['teamCount'] > 0) {
-                          Get.offAll(() => const TeamDetails());
-                        } else {
-                          Get.to(() => const TeamRegistration());
-                        }
-                      }
                     }
                   },
                   child: Container(
@@ -308,13 +297,14 @@ class _OtpScreenState extends State<OtpScreen> {
     setState(() {
       secondsRemaining = 30;
       enableResend = false;
-      // sendOtpApiService(argumentData['data']['Mobile Number'].toString());
+      // sendOtpApiService(argumentData['data']['Mobile_Number'].toString());
     });
   }
 
   sendOtpApiService(mobNumber) async {
     var requestBody = jsonEncode({"mobile_number": mobNumber});
-    await ApiService.otpPostCall("MobileOtp", requestBody).then((success) {
+    await ApiService.otpPostCall("MobileOtp", requestBody)
+        .then((success) {
       String data = success.body; //store response as string
       var responseBody = json.decode(data);
       print(responseBody);
@@ -371,31 +361,13 @@ class _OtpScreenState extends State<OtpScreen> {
   }
 }
 
-saveUserDetails(resposnse) async {
+saveFanDetails(resposnse) async {
   SharedPreferences registerPrefs = await SharedPreferences.getInstance();
-  registerPrefs.setString("userDetails", resposnse["data"]['user'].toString());
-  registerPrefs.setString(
-      "teamID", resposnse["data"]['user']['team_id'].toString());
-  registerPrefs.setString(
-      "teamName", resposnse["data"]['user']['team_name'].toString());
-  registerPrefs.setString(
-      "teamCaptain", resposnse["data"]['user']['team_captain'].toString());
-  registerPrefs.setString(
-      "captainNumber", resposnse["data"]['Mobile Number'].toString());
-  registerPrefs.setString(
-      "teamCount", resposnse["data"]['teamCount'].toString());
-  registerPrefs.setString(
-      "loginPIN", resposnse["data"]['user']['pin'].toString());
-  registerPrefs.setString("capProfilePic",
-      resposnse["data"]['user']['profile_image_url'].toString());
+  registerPrefs.setString("captainNumber", resposnse['data']["Mobile_Number"].toString());
+
   log("==================");
   log(resposnse.toString());
-  log(registerPrefs.getString('userDetails').toString());
-  log(registerPrefs.getString('teamID').toString());
-  log(registerPrefs.getString('teamCaptain').toString());
+  log(resposnse['data']["Mobile_Number"].toString());
   log(registerPrefs.getString('captainNumber').toString());
-  log(registerPrefs.getString('teamName').toString());
-  log(registerPrefs.getString('teamCount').toString());
-  log(registerPrefs.getString('loginPIN').toString());
   log("==================");
 }

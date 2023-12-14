@@ -52,7 +52,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   TextEditingController pinController = TextEditingController();
-  String capName = "", logPIN = "", teamCount = "";
+  String capName = "", logPIN = "", teamCount = "", userRole = "";
 
   @override
   void initState() {
@@ -97,21 +97,32 @@ class _LoginPageState extends State<LoginPage> {
                           await SharedPreferences.getInstance();
                       log(teamCount.toString());
                       log(registerPrefs.getString('teamCount').toString());
-                      if ((teamCount.toString() != null &&
-                          teamCount.toString() != '0') ||
-                          (registerPrefs.getString('teamCount').toString() !=
-                              null &&
-                              registerPrefs.getString('teamCount').toString() !=
-                                  '0')) {
-                        if (teamCount.toString() == '15' ||
-                            registerPrefs.getString('teamCount').toString() ==
-                                '15') {
-                          Get.offAll(() => const Home());
+                      if (registerPrefs.getString('userRole').toString() ==
+                          'TEAM') {
+                        if ((teamCount.toString() != 'null' &&
+                                teamCount.toString() != '0') ||
+                            (registerPrefs.getString('teamCount').toString() !=
+                                    'null' &&
+                                registerPrefs
+                                        .getString('teamCount')
+                                        .toString() !=
+                                    '0')) {
+                          if (teamCount.toString() == '15' ||
+                              registerPrefs.getString('teamCount').toString() ==
+                                  '15') {
+                            Get.offAll(() => const Home());
+                          } else {
+                            Get.offAll(() => const TeamDetails(),
+                                arguments: '0');
+                          }
                         } else {
-                          Get.offAll(() => const TeamDetails());
+                          Get.offAll(() => const TeamRegistration());
                         }
-                      } else {
-                        Get.offAll(() => const TeamRegistration());
+                      } else if (registerPrefs
+                              .getString('userRole')
+                              .toString() ==
+                          'FAN') {
+                        Get.offAll(() => const Home());
                       }
                     } else {
                       log("failed");
@@ -229,28 +240,41 @@ class _LoginPageState extends State<LoginPage> {
                   onTap: () async {
                     SharedPreferences registerPrefs =
                         await SharedPreferences.getInstance();
+                    log('-------------------');
                     log(logPIN);
+                    log(registerPrefs.getString('userRole').toString());
                     log(teamCount.toString());
                     log(registerPrefs.getString('teamCount').toString());
+
                     if (logPIN.toString() == pinController.text) {
-                      if ((teamCount.toString() != null &&
-                              teamCount.toString() != '0') ||
-                          (registerPrefs.getString('teamCount').toString() !=
-                                  null &&
-                              registerPrefs.getString('teamCount').toString() !=
-                                  '0')) {
-                        if (teamCount.toString() == '15' ||
-                            registerPrefs.getString('teamCount').toString() ==
-                                '15') {
-                          Get.offAll(() => const Home());
+                      if (registerPrefs.getString('userRole').toString() ==
+                          'TEAM') {
+                        if ((teamCount.toString() != 'null' &&
+                                teamCount.toString() != '1') ||
+                            (registerPrefs.getString('teamCount').toString() !=
+                                    'null' &&
+                                registerPrefs
+                                        .getString('teamCount')
+                                        .toString() !=
+                                    '1')) {
+                          if (teamCount.toString() == '15' ||
+                              registerPrefs.getString('teamCount').toString() ==
+                                  '15') {
+                            Get.offAll(() => const Home());
+                          } else {
+                            Get.offAll(() => const TeamDetails());
+                          }
                         } else {
-                          Get.offAll(() => const TeamDetails());
+                          Get.offAll(() => const TeamRegistration());
                         }
-                      } else {
-                        Get.offAll(() => const TeamRegistration());
+                      } else if (registerPrefs
+                              .getString('userRole')
+                              .toString() ==
+                          'FAN') {
+                        Get.offAll(() => const Home());
                       }
                     } else {
-                      Get.snackbar("Alert", "PIN is Incorrect",
+                      Get.snackbar("Alert", "Invalid PIN",
                           overlayBlur: 5,
                           backgroundColor: Constants.buttonRed,
                           titleText: Text(
@@ -261,7 +285,7 @@ class _LoginPageState extends State<LoginPage> {
                                 fontSize: Constants.headerSize),
                           ),
                           messageText: Text(
-                            "PIN is Incorrect",
+                            "Invalid PIN",
                             style: TextStyle(
                                 color: Constants.whiteColor,
                                 fontWeight: FontWeight.bold,
@@ -310,12 +334,19 @@ class _LoginPageState extends State<LoginPage> {
             ),
             Container(
                 alignment: Alignment.center,
-                child: Text(
-                  'Hi ${capName.toString()}!',
-                  style: TextStyle(
-                      fontSize: Constants.loginBtnTextSize,
-                      fontWeight: FontWeight.bold),
-                ))
+                child: userRole == "TEAM"
+                    ? Text(
+                        'Hi ${capName.toString()}!',
+                        style: TextStyle(
+                            fontSize: Constants.loginBtnTextSize,
+                            fontWeight: FontWeight.bold),
+                      )
+                    : Text(
+                        'Hi !',
+                        style: TextStyle(
+                            fontSize: Constants.loginBtnTextSize,
+                            fontWeight: FontWeight.bold),
+                      ))
           ],
         ),
       ),
@@ -329,10 +360,12 @@ class _LoginPageState extends State<LoginPage> {
     log(registerPrefs.getString('teamCount').toString());
     setState(() {
       capName = registerPrefs.getString('teamCaptain').toString();
+      userRole = registerPrefs.getString('userRole').toString();
       logPIN = registerPrefs.getString('loginPIN').toString();
       teamCount = registerPrefs.getString('teamCount').toString();
       log('check details');
       log(capName);
+      log(userRole);
       log(logPIN);
       log(teamCount);
     });

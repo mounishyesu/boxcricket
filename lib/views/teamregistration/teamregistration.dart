@@ -89,17 +89,18 @@ class _TeamRegistrationScreenState extends State<TeamRegistrationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Text(Constants.teamregistrationHeader),
         titleTextStyle: TextStyle(
             fontSize: Constants.loginBtnTextSize, color: Constants.blackColor),
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_circle_left_sharp,
-            size: Constants.backIconSize,
-            color: Constants.backIconColor,
-          ),
-          onPressed: () => Get.offAll(() => const TeamDetails()),
-        ),
+        // leading: IconButton(
+        //   icon: Icon(
+        //     Icons.arrow_circle_left_sharp,
+        //     size: Constants.backIconSize,
+        //     color: Constants.backIconColor,
+        //   ),
+        //   onPressed: () => Get.offAll(() => const TeamDetails()),
+        // ),
       ),
       body: GestureDetector(
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
