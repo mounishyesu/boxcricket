@@ -1096,12 +1096,15 @@ class _RegistrationFromScreenState extends State<RegistrationFromScreen> {
             //           color: Constants.whiteColor),
             //     ));
             Get.offAll(() => const SetPin());
-          } else {
-            log('errorList--------------');
+          }
+          EasyLoading.showSuccess(responseBody['message'].toString());
+        } else {
+          log('errorList--------------');
 
-            var errorList = responseBody['errors'];
+          var errorList = responseBody['errors'];
 
-            if (errorList['team_captain'] != null) {
+          if (errorList['team_captain'] != null) {
+            Future.delayed(const Duration(seconds: 2), () {
               Get.snackbar("Alert", errorList['team_captain'].toString(),
                   overlayBlur: 5,
                   backgroundColor: Constants.buttonRed,
@@ -1119,7 +1122,9 @@ class _RegistrationFromScreenState extends State<RegistrationFromScreen> {
                         fontSize: Constants.textSize,
                         color: Constants.whiteColor),
                   ));
-            } else if (errorList['team_name'] != null) {
+            });
+          } else if (errorList['team_name'] != null) {
+            Future.delayed(const Duration(seconds: 2), () {
               Get.snackbar("Alert", errorList['team_name'].toString(),
                   overlayBlur: 5,
                   backgroundColor: Constants.buttonRed,
@@ -1137,7 +1142,9 @@ class _RegistrationFromScreenState extends State<RegistrationFromScreen> {
                         fontSize: Constants.textSize,
                         color: Constants.whiteColor),
                   ));
-            } else if (errorList['captain_mobile'] != null) {
+            });
+          } else if (errorList['captain_mobile'] != null) {
+            Future.delayed(const Duration(seconds: 2), () async {
               Get.snackbar("Alert", errorList['captain_mobile'].toString(),
                   overlayBlur: 5,
                   backgroundColor: Constants.buttonRed,
@@ -1155,7 +1162,9 @@ class _RegistrationFromScreenState extends State<RegistrationFromScreen> {
                         fontSize: Constants.textSize,
                         color: Constants.whiteColor),
                   ));
-            } else if (errorList['age'] != null) {
+            });
+          } else if (errorList['age'] != null) {
+            Future.delayed(const Duration(seconds: 2), () {
               Get.snackbar("Alert", errorList['age'].toString(),
                   overlayBlur: 5,
                   backgroundColor: Constants.buttonRed,
@@ -1173,7 +1182,9 @@ class _RegistrationFromScreenState extends State<RegistrationFromScreen> {
                         fontSize: Constants.textSize,
                         color: Constants.whiteColor),
                   ));
-            } else if (errorList['aadhar'] != null) {
+            });
+          } else if (errorList['aadhar'] != null) {
+            Future.delayed(const Duration(seconds: 2), () {
               Get.snackbar("Alert", errorList['aadhar'].toString(),
                   overlayBlur: 5,
                   backgroundColor: Constants.buttonRed,
@@ -1191,7 +1202,9 @@ class _RegistrationFromScreenState extends State<RegistrationFromScreen> {
                         fontSize: Constants.textSize,
                         color: Constants.whiteColor),
                   ));
-            } else if (errorList['address'] != null) {
+            });
+          } else if (errorList['address'] != null) {
+            Future.delayed(const Duration(seconds: 2), () {
               Get.snackbar("Alert", errorList['address'].toString(),
                   overlayBlur: 5,
                   backgroundColor: Constants.buttonRed,
@@ -1209,7 +1222,9 @@ class _RegistrationFromScreenState extends State<RegistrationFromScreen> {
                         fontSize: Constants.textSize,
                         color: Constants.whiteColor),
                   ));
-            } else if (errorList['panchayathi'] != null) {
+            });
+          } else if (errorList['panchayathi'] != null) {
+            Future.delayed(const Duration(seconds: 2), () {
               Get.snackbar("Alert", errorList['panchayathi'].toString(),
                   overlayBlur: 5,
                   backgroundColor: Constants.buttonRed,
@@ -1227,7 +1242,9 @@ class _RegistrationFromScreenState extends State<RegistrationFromScreen> {
                         fontSize: Constants.textSize,
                         color: Constants.whiteColor),
                   ));
-            } else if (errorList['mandalam'] != null) {
+            });
+          } else if (errorList['mandalam'] != null) {
+            Future.delayed(const Duration(seconds: 2), () {
               Get.snackbar("Alert", errorList['mandalam'].toString(),
                   overlayBlur: 5,
                   backgroundColor: Constants.buttonRed,
@@ -1245,7 +1262,9 @@ class _RegistrationFromScreenState extends State<RegistrationFromScreen> {
                         fontSize: Constants.textSize,
                         color: Constants.whiteColor),
                   ));
-            } else if (errorList['district'] != null) {
+            });
+          } else if (errorList['district'] != null) {
+            Future.delayed(const Duration(seconds: 2), () {
               Get.snackbar("Alert", errorList['district'].toString(),
                   overlayBlur: 5,
                   backgroundColor: Constants.buttonRed,
@@ -1263,10 +1282,8 @@ class _RegistrationFromScreenState extends State<RegistrationFromScreen> {
                         fontSize: Constants.textSize,
                         color: Constants.whiteColor),
                   ));
-            }
+            });
           }
-          EasyLoading.showSuccess(responseBody['message'].toString());
-        } else {
           EasyLoading.showInfo("Registration Failed");
         }
       });

@@ -865,12 +865,12 @@ class _HomePageState extends State<HomePage> {
           log(responseBody.toString());
           log(matchList.toString());
           log(matchList.length.toString());
-          getStories();
         });
       } else {
         EasyLoading.showInfo("Loading Failed");
       }
     });
+    getStories();
   }
 
   getStories() async {
@@ -899,13 +899,13 @@ class _HomePageState extends State<HomePage> {
           }
           log('------------------storiesList----');
           log(storyList.toString());
-          getFeatureAds();
         });
         EasyLoading.showSuccess("Loading Success");
       } else {
         EasyLoading.showInfo("Loading Failed");
       }
     });
+    getFeatureAds();
   }
 
   getFeatureAds() async {
